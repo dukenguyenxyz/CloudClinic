@@ -7,7 +7,13 @@ dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
-// API Routes
+// Import Routes
+const authRoute = require('./routes/auth');
+
+// Route Middlewares
+app.use('/api/user', authRoute);
+
+// Default Route
 app.get('/api', (req, res) => res.send('Hello world!'));
 
 // Concurrent Mode in Production
