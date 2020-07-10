@@ -1,12 +1,25 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
+const path = require('path');
 
 dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
-app.get('/', (req, res) => res.send('Hello world!'));
+// API Routes
+app.get('/api', (req, res) => res.send('Hello world!'));
+
+// Concurrent Mode in Production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../frontend/build'));
+
+  app.get('*', (req, res) =>
+    res.sendFile(
+      path.resolve(__dirname, '../', 'frontend', 'build', 'index.html')
+    )
+  );
+}
 
 const PORT = process.env.PORT || 5000;
 

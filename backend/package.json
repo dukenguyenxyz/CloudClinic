@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "build": "nodemon index"
+    "nodemon": "nodemon index",
+    "frontend": "npm start --prefix \"../frontend\"",
+    "dev": "concurrently \"npm run nodemon\" \"npm run frontend\""
   },
   "repository": {
     "type": "git",
