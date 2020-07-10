@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node index",
     "build": "nodemon index"
-    // "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -19,6 +18,7 @@
   },
   "homepage": "https://github.com/dukeraphaelng/CloudClinic#readme",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.22"
