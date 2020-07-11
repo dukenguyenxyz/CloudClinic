@@ -12,11 +12,12 @@ const colors = require('colors');
 // Access dotenv
 dotenv.config({ path: './config/config.env' });
 
-// Create instance of express
-const app = express();
-
 // Import Routes
 const authRoute = require('./src/routes/auth');
+const samplePrivateRoute = require('./src/routes/samplePrivate');
+
+// Create instance of express
+const app = express();
 
 // Connect to MongoDB with Mongoose
 mongoose.connect(
@@ -34,6 +35,7 @@ app.use(express.json());
 
 // Route Middlewares
 app.use('/api/users', authRoute);
+app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route
 app.get('/api', (req, res) => res.send('Hello world!'));
