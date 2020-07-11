@@ -15,7 +15,10 @@ dotenv.config({ path: './config/config.env' });
 // Create instance of express
 const app = express();
 
-// Setup Mongoose & MongoDB
+// Import Routes
+const authRoute = require('./src/routes/auth');
+
+// Connect to MongoDB with Mongoose
 mongoose.connect(
   'mongodb://127.0.0.1:27017/cloudclinic',
   {
@@ -26,11 +29,11 @@ mongoose.connect(
   () => console.log(`Cloudclinic database connected`.magenta.bold)
 );
 
-// Import Routes
-const authRoute = require('./src/routes/auth');
+// Middleware
+app.use(express.json());
 
 // Route Middlewares
-app.use('/api/user', authRoute);
+app.use('/api/users', authRoute);
 
 // Default Route
 app.get('/api', (req, res) => res.send('Hello world!'));
