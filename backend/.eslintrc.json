@@ -6,6 +6,7 @@
     "no-unused-vars": "warn",
     "no-console": "off",
     "func-names": "off",
-    "no-process-exit": "off"
+    "no-process-exit": "off",
+    "no-underscore-dangle": "off"
   }
 }
