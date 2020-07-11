@@ -1,3 +1,2 @@
-<img src="./cloudclinic-logo.svg?sanitize=true" alt="CloudClinic" style="max-width:20%;">
-
+<img src="./cloudclinic-logo.png" width="200">
 # Team: Duke Nguyen, Hugh Greethead, Harry Buisman
