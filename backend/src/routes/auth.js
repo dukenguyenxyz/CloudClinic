@@ -1,21 +1,18 @@
 // Instruction: https://www.youtube.com/watch?v=2jqok-WgelI
-// Hapi update: https://github.com/hapijs/joi/issues/2145
 
 const router = require('express').Router();
-const Joi = require('@hapi/joi'); // Validation
 const User = require('../models/User');
-
-const schema = Joi.object({
-  name: Joi.string().min(6).required(),
-  email: Joi.string().min(6).required().email(),
-  password: Joi.string().min(6).required(),
-});
+const { signUpValidation, signInValidation } = require('./validation');
 
 // Sign up
 router.post('/signup', async (req, res) => {
   // Validation before creation
-  const { error } = schema.validate(req.body);
+  const { error } = signUpValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+
+  // Check for unique email
+  const emailExist = await User.findOne({ email: req.body.email });
+  if (emailExist) return res.status(400).send('email already exists');
 
   // Create new user from request body
   const user = new User({
