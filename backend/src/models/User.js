@@ -18,10 +18,14 @@ const userSchema = new mongoose.Schema({
   },
   title: {
     type: String,
+    min: 6,
+    max: 255,
     trim: true,
   },
   sex: {
-    type: Boolean,
+    type: String,
+    enum: ['male', 'female'],
+    default: null,
   },
   weight: {
     type: Number,
@@ -39,10 +43,10 @@ const userSchema = new mongoose.Schema({
   },
   address: {
     number: { type: Number, min: 1, max: 5000 },
-    street: { type: String, min: 1, max: 255 },
-    city: { type: String, min: 1, max: 255 },
-    state: { type: String, min: 1, max: 255 },
-    country: { type: String, min: 1, max: 255 },
+    street: { type: String, min: 1, max: 255, trim: true },
+    city: { type: String, min: 1, max: 255, trim: true },
+    state: { type: String, min: 1, max: 255, trim: true },
+    country: { type: String, min: 1, max: 255, trim: true },
     postcode: { type: Number, min: 1, max: 10000 },
   },
   email: {
@@ -51,6 +55,7 @@ const userSchema = new mongoose.Schema({
     min: 255,
     max: 6,
     trim: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -76,19 +81,47 @@ const userSchema = new mongoose.Schema({
   clientInfo: {
     medicalHistory: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
+        },
         startDate: { type: Date },
         condition: { type: String, min: 1, max: 255, trim: true },
         notes: { type: String, min: 1, max: 1000 },
       },
     ],
-    allergies: { type: String },
+    allergies: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
+        },
+        name: { type: String, min: 1, max: 255, trim: true },
+        severity: { type: Number, min: 1, max: 5, default: 1 },
+      },
+    ],
     medication: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
+        },
         drugName: { type: String, min: 1, max: 255, trim: true },
         dosage: { type: Number, min: 1, max: 10000 },
         manufacturer: { type: String, min: 1, max: 255, trim: true },
       },
     ],
+    createDate: {
+      type: Date,
+      default: Date.now,
+    },
+    modifiedDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
 });
 
