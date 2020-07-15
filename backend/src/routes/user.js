@@ -91,6 +91,12 @@ router.post('/signoutall', verifyToken, async (req, res) => {
   }
 });
 
+// Get own user's profile
+router.get('/profile', verifyToken, async (req, res) => {
+  res.send(req.user);
+});
+
+// // GET DOCTORS ROUTE (ADD MORE VALIDATION HERE)
 // Users (All)
 router.get('/', async (req, res) => {
   try {
@@ -118,6 +124,8 @@ router.get('/:id', async (req, res) => {
     res.status(500).send();
   }
 });
+
+// // GET CLIENTS ROUTE
 
 // Update profile
 router.patch('/:id', verifyToken, async (req, res) => {
