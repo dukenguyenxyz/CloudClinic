@@ -63,16 +63,13 @@ router.post('/signin', async (req, res) => {
 // Sign out
 
 // Users (All)
-router.get('/', (req, res) => {
-  User.find({}, (err, users) => {
-    const userMap = {};
-
-    users.forEach(function (user) {
-      userMap[user._id] = user;
-    });
-
-    res.send(userMap);
-  });
+router.get('/', async (req, res) => {
+  try{
+    const users = await User.find({})
+    res.send(users)
+  }catch (err){
+    res.status(500).send()
+  }
 });
 
 // User (One)
