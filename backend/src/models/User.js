@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const calendarSchema = require('./Calendar');
 
 const userSchema = new mongoose.Schema({
@@ -257,5 +259,30 @@ userSchema.pre('save', async function (next) {
 });
 
 const User = mongoose.model('User', userSchema);
+
+userSchema.statics.findByCredentials = async (email, password) => {
+  // // Obscure 400 incorrect email or password messages to prevent hacking
+  // Method 1 // return res.status(400).send('email or password is incorrect');
+  // Method 2 preferred: throw new Error(...)
+
+  // Check if email exists
+  const user = await User.findOne({ email });
+  if (!user) throw new Error('email or password is incorrect');
+
+  // Check if password is correct
+  const isMatchedPass = await bcrypt.compare(password, user.password);
+  if (!isMatchedPass) throw new Error('email or password is incorrect');
+};
+
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign(
+    { _id: user._id.toString() },
+    process.env.TOKEN_SECRET
+  );
+  return token;
+
+  // Method 2 (in route) res.header('auth-token', token).send(token);
+};
 
 module.exports = User;
