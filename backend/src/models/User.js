@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Session = require('./Session');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -256,6 +257,20 @@ userSchema.pre('save', async function (next) {
   if (user.isModified('password')) {
     const salt = await bcrypt.genSalt(8);
     user.password = await bcrypt.hash(user.password, salt);
+  }
+
+  next();
+});
+
+userSchema.pre('remove', async function (next) {
+  const user = this;
+  if (user.isDoctor) {
+    await Session.deleteMany({ doctor: user._id });
+  } else {
+    await Session.updateMany(
+      { client: user._id, startDate: { $gt: Date.now() } },
+      { client: null }
+    );
   }
 
   next();
