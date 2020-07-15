@@ -2,7 +2,6 @@
 
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 const verifyToken = require('./verifyToken');
@@ -18,21 +17,25 @@ router.post('/signup', async (req, res) => {
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) return res.status(400).send('email already exists');
 
-  // Password hashing
-  const salt = await bcrypt.genSalt(8);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  // // Password hashing
+  // const salt = await bcrypt.genSalt(8);
+  // const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
   // Create new user from request body
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPassword,
-  });
+  const user = new User(
+    // {
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   password: hashedPassword,
+    // },
+    req.body
+  );
 
   // Try to save otherwise send error
   try {
     await user.save();
-    res.send({ user: user._id, email: user.email });
+    const token = await user.generateAuthToken;
+    res.status(201).send({ user: user._id, email: user.email, token });
   } catch (e) {
     res.status(400).send(e);
   }
