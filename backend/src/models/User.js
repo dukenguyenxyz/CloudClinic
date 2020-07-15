@@ -245,6 +245,14 @@ const userSchema = new mongoose.Schema({
       default: Date.now,
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 userSchema.pre('save', async function (next) {
@@ -274,12 +282,18 @@ userSchema.statics.findByCredentials = async (email, password) => {
   if (!isMatchedPass) throw new Error('email or password is incorrect');
 };
 
+// Create and assign a token
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
     { _id: user._id.toString() },
     process.env.TOKEN_SECRET
   );
+
+  // Concat new token to tokens array
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
   return token;
 
   // Method 2 (in route) res.header('auth-token', token).send(token);
