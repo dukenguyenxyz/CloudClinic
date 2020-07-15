@@ -18,7 +18,7 @@ router.post('/signup', async (req, res) => {
   if (emailExist) return res.status(400).send('email already exists');
 
   // Password hashing
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(8);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
   // Create new user from request body
