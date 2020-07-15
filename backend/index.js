@@ -13,7 +13,7 @@ const colors = require('colors');
 dotenv.config({ path: './config/config.env' });
 
 // Import Routes
-const authRoute = require('./src/routes/auth');
+const usersRoute = require('./src/routes/user');
 const samplePrivateRoute = require('./src/routes/samplePrivate');
 
 // Create instance of express
@@ -26,7 +26,7 @@ require('./config/mongodb');
 app.use(express.json());
 
 // Route Middlewares
-app.use('/api/users', authRoute);
+app.use('/api/users', usersRoute);
 app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route
