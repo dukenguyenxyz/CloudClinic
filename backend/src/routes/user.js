@@ -65,12 +65,38 @@ router.post('/signin', async (req, res) => {
   }
 });
 
-// Sign out
+// Sign out of current session
+router.post('/signout', verifyToken, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+    await req.user.save();
+
+    res.send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+// Sign out of all sessions
+router.post('/signoutall', verifyToken, async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+
+    res.send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
 // Users (All)
 router.get('/', async (req, res) => {
   try {
     const users = await User.find({});
+
+    // Only send appropriate data
     res.send(users);
   } catch (e) {
     res.status(500).send();
@@ -86,6 +112,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send();
     }
 
+    // Only send appropriate data
     res.send(user);
   } catch (e) {
     res.status(500).send();
