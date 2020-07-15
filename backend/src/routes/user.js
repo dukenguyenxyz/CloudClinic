@@ -1,7 +1,6 @@
 // Instruction: https://www.youtube.com/watch?v=2jqok-WgelI
 
 const router = require('express').Router();
-const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
 const verifyToken = require('./verifyToken');
@@ -17,19 +16,8 @@ router.post('/signup', async (req, res) => {
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) return res.status(400).send('email already exists');
 
-  // // Password hashing
-  // const salt = await bcrypt.genSalt(8);
-  // const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
   // Create new user from request body
-  const user = new User(
-    // {
-    //   name: req.body.name,
-    //   email: req.body.email,
-    //   password: hashedPassword,
-    // },
-    req.body
-  );
+  const user = new User(req.body);
 
   // Try to save otherwise send error
   try {
@@ -43,14 +31,11 @@ router.post('/signup', async (req, res) => {
 
 // Sign in
 router.post('/signin', async (req, res) => {
-  try {
-    // Validation before creation
-    const { error } = signInValidation(req.body);
-    if (error) {
-      // Method 1 // return res.status(400).send(error.details[0].message);
-      throw new Error(error.details[0].message);
-    }
+  // Validation before creation
+  const { error } = signInValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
+  try {
     // Check if email & password are correct
     const user = await User.findByCredentials(
       req.body.email,
