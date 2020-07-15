@@ -112,7 +112,7 @@ router.get('/', async (req, res) => {
 // User (One)
 router.get('/:id', async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params._id);
 
     if (!user) {
       return res.status(404).send();
@@ -128,7 +128,7 @@ router.get('/:id', async (req, res) => {
 // // GET CLIENTS ROUTE
 
 // Update profile
-router.patch('/:id', verifyToken, async (req, res) => {
+router.patch('/profile', verifyToken, async (req, res) => {
   const updates = Object.keys(req.body);
 
   const allowedUpdates = [
@@ -152,32 +152,21 @@ router.patch('/:id', verifyToken, async (req, res) => {
     return res.status(400).send({ error: 'invalid updates' });
 
   try {
-    const user = await User.findById(req.params.id);
-
     updates.forEach((update) => {
-      user[update] = req.body[update];
+      req.user[update] = req.body[update];
     });
 
-    await user.save();
-
-    if (!user) {
-      return res.status(404).send();
-    }
+    await req.user.save();
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
 // Delete account
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/profile', verifyToken, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.send(user);
+    await req.user.remove();
+    res.send(req.user);
   } catch (e) {
     res.status(500).send();
   }
