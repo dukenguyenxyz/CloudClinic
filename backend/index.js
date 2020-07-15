@@ -13,7 +13,8 @@ const colors = require('colors');
 dotenv.config({ path: './config/config.env' });
 
 // Import Routes
-const usersRoute = require('./src/routes/user');
+const usersRoute = require('./src/routes/users');
+const sessionsRoute = require('./src/routes/sessions');
 const samplePrivateRoute = require('./src/routes/samplePrivate');
 
 // Create instance of express
@@ -27,6 +28,7 @@ app.use(express.json());
 
 // Route Middlewares
 app.use('/api/users', usersRoute);
+app.use('/api/calendar', sessionsRoute);
 app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route

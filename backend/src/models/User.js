@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const calendarSchema = require('./Calendar');
-
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -97,8 +95,16 @@ const userSchema = new mongoose.Schema({
   },
   isDoctor: {
     type: Boolean,
-    default: false,
+    required: true,
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   doctorInfo: {
     licence: {
       type: String,
@@ -150,9 +156,6 @@ const userSchema = new mongoose.Schema({
         maxlength: 255,
       },
     ],
-    calendar: {
-      calendarSchema,
-    },
     rating: {
       type: Number,
       min: 0,
@@ -245,14 +248,6 @@ const userSchema = new mongoose.Schema({
       default: Date.now,
     },
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
 });
 
 userSchema.pre('save', async function (next) {
