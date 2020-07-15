@@ -3,6 +3,7 @@
 const router = require('express').Router();
 
 const User = require('../models/User');
+const Session = require('../models/Session');
 const verifyToken = require('./verifyToken');
 const { signUpValidation, signInValidation } = require('./validation');
 
@@ -85,7 +86,7 @@ router.get('/profile', verifyToken, async (req, res) => {
 // Users (All)
 router.get('/', async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({ isDoctor: true });
 
     // Only send appropriate data
     res.send(users);
@@ -97,7 +98,7 @@ router.get('/', async (req, res) => {
 // User (One)
 router.get('/:id', async (req, res) => {
   try {
-    const user = await User.findById(req.params._id);
+    const user = await User.find({ _id: req.params._id, isDoctor: true });
 
     if (!user) {
       return res.status(404).send();
@@ -111,6 +112,53 @@ router.get('/:id', async (req, res) => {
 });
 
 // // GET CLIENTS ROUTE
+
+// Get all
+router.get('/clients', verifyToken, async (req, res) => {
+  if (!req.user.isDoctor) {
+    res.status(404).send({ error: 'Forbidden' });
+  }
+
+  try {
+    const bookedSessions = await Session.find({ doctor: req.user._id });
+    if (!bookedSessions) {
+      res.status(404).send();
+    }
+
+    const bookedWithClients = bookedSessions.map((session) => session.client);
+
+    // Assign all users to the user of bookedSessions
+    const users = await User.find({ _id: { $in: bookedWithClients } });
+
+    // Only send appropriate data
+    res.send(users);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+// Get Single
+router.get('/clients/:id', verifyToken, async (req, res) => {
+  try {
+    const bookedSessions = await Session.find({
+      doctor: req.user._id,
+      client: req.params._id,
+    });
+    if (!bookedSessions) {
+      res.status(404).send();
+    }
+    const user = await User.find({ _id: req.params._id, isDoctor: false });
+
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    // Only send appropriate data
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
 // Update profile
 router.patch('/profile', verifyToken, async (req, res) => {

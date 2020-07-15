@@ -1,6 +1,5 @@
 // Essential packages
 const express = require('express');
-const mongoose = require('mongoose');
 
 // Subimportant packages
 const dotenv = require('dotenv');
