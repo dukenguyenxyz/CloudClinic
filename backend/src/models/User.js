@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    minlength: 6,
+    minlength: 2,
     maxlength: 255,
     trim: true,
   },
@@ -38,43 +38,43 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     minlength: 10,
-    maxlength: 12,
+    maxlength: 24,
     trim: true,
   },
   address: {
     number: {
       type: Number,
       min: 1,
-      max: 5000
+      max: 5000,
     },
     street: {
       type: String,
       minlength: 1,
       maxlength: 255,
-      trim: true
+      trim: true,
     },
     city: {
       type: String,
       minlength: 1,
       maxlength: 255,
-      trim: true
+      trim: true,
     },
     state: {
       type: String,
       minlength: 1,
       maxlength: 255,
-      trim: true
+      trim: true,
     },
     country: {
       type: String,
       minlength: 1,
       maxlength: 255,
-      trim: true
+      trim: true,
     },
     postcode: {
       type: Number,
       min: 1,
-      max: 10000
+      max: 1000000,
     },
   },
   email: {
@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema({
     licence: {
       type: String,
       min: 6,
-      max: 12
+      max: 12,
     },
     accreditation: [{
       type: String,
@@ -111,7 +111,7 @@ const userSchema = new mongoose.Schema({
       type: String,
       minlength: 1,
       maxlength: 255,
-      trim: true
+      trim: true,
     },
     subSpecialtyField: {
       type: String,
@@ -126,8 +126,8 @@ const userSchema = new mongoose.Schema({
     }, ],
     yearsExperience: {
       type: Number,
-      min: 1,
-      max: 100
+      min: 0,
+      max: 100,
     },
     tags: [{
       type: String,
@@ -144,8 +144,8 @@ const userSchema = new mongoose.Schema({
     },
     rating: {
       type: Number,
-      min: 1,
-      max: 5
+      min: 0,
+      max: 5,
     },
   },
   clientInfo: {
@@ -162,13 +162,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         minlength: 1,
         maxlength: 255,
-        trim: true
+        trim: true,
       },
       notes: {
         type: String,
         minlength: 1,
         maxlength: 1000,
-        trim: true
+        trim: true,
       },
     }, ],
     allergies: [{
@@ -181,13 +181,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         minlength: 1,
         maxlength: 255,
-        trim: true
+        trim: true,
       },
       severity: {
         type: Number,
         min: 1,
         max: 5,
-        default: 1
+        default: 1,
       },
     }, ],
     medication: [{
@@ -200,12 +200,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         minlength: 1,
         maxlength: 255,
-        trim: true
+        trim: true,
       },
       dosage: {
         type: Number,
         min: 1,
-        max: 10000
+        max: 10000,
       },
       manufacturer: {
         type: String,
