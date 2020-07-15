@@ -102,11 +102,13 @@ const userSchema = new mongoose.Schema({
       min: 6,
       max: 12,
     },
-    accreditation: [{
-      type: String,
-      minlength: 1,
-      maxlength: 255,
-    }, ],
+    accreditation: [
+      {
+        type: String,
+        minlength: 1,
+        maxlength: 255,
+      },
+    ],
     specialtyField: {
       type: String,
       minlength: 1,
@@ -119,28 +121,34 @@ const userSchema = new mongoose.Schema({
       maxlength: 255,
       trim: true,
     },
-    education: [{
-      type: String,
-      minlength: 1,
-      maxlength: 255,
-    }, ],
+    education: [
+      {
+        type: String,
+        minlength: 1,
+        maxlength: 255,
+      },
+    ],
     yearsExperience: {
       type: Number,
       min: 0,
       max: 100,
     },
-    tags: [{
-      type: String,
-      minlength: 1,
-      maxlength: 255,
-    }, ],
-    languagesSpoken: [{
-      type: String,
-      minlength: 1,
-      maxlength: 255,
-    }, ],
+    tags: [
+      {
+        type: String,
+        minlength: 1,
+        maxlength: 255,
+      },
+    ],
+    languagesSpoken: [
+      {
+        type: String,
+        minlength: 1,
+        maxlength: 255,
+      },
+    ],
     calendar: {
-      calendarSchema
+      calendarSchema,
     },
     rating: {
       type: Number,
@@ -149,71 +157,77 @@ const userSchema = new mongoose.Schema({
     },
   },
   clientInfo: {
-    medicalHistory: [{
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        index: true,
-        auto: true,
+    medicalHistory: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
+        },
+        startDate: {
+          type: Date,
+        },
+        condition: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
+        },
+        notes: {
+          type: String,
+          minlength: 1,
+          maxlength: 1000,
+          trim: true,
+        },
       },
-      startDate: {
-        type: Date
+    ],
+    allergies: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
+        },
+        name: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
+        },
+        severity: {
+          type: Number,
+          min: 1,
+          max: 5,
+          default: 1,
+        },
       },
-      condition: {
-        type: String,
-        minlength: 1,
-        maxlength: 255,
-        trim: true,
+    ],
+    medication: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
+        },
+        name: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
+        },
+        dosage: {
+          type: Number,
+          min: 1,
+          max: 10000,
+        },
+        manufacturer: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
+        },
       },
-      notes: {
-        type: String,
-        minlength: 1,
-        maxlength: 1000,
-        trim: true,
-      },
-    }, ],
-    allergies: [{
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        index: true,
-        auto: true,
-      },
-      name: {
-        type: String,
-        minlength: 1,
-        maxlength: 255,
-        trim: true,
-      },
-      severity: {
-        type: Number,
-        min: 1,
-        max: 5,
-        default: 1,
-      },
-    }, ],
-    medication: [{
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        index: true,
-        auto: true,
-      },
-      name: {
-        type: String,
-        minlength: 1,
-        maxlength: 255,
-        trim: true,
-      },
-      dosage: {
-        type: Number,
-        min: 1,
-        max: 10000,
-      },
-      manufacturer: {
-        type: String,
-        minlength: 1,
-        maxlength: 255,
-        trim: true,
-      },
-    }, ],
+    ],
     bloodType: {
       type: String,
       uppercase: true,
