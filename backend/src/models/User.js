@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const calendarSchema = require('./Calendar');
 
 const userSchema = new mongoose.Schema({
@@ -244,4 +245,17 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.pre('save', async function (next) {
+  const user = this;
+
+  if (user.isModified('password')) {
+    const salt = await bcrypt.genSalt(8);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+
+  next();
+});
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
