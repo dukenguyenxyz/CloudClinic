@@ -25,6 +25,8 @@ require('./config/mongodb');
 // Middleware
 app.use(express.json());
 
+// Add a single baseUrl Route ('/api') here for DRY
+
 // Route Middlewares
 app.use('/api/users', usersRoute);
 app.use('/api/calendar', sessionsRoute);
