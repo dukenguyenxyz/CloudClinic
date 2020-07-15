@@ -32,8 +32,8 @@ router.post('/signup', async (req, res) => {
   try {
     await user.save();
     res.send({ user: user._id, email: user.email });
-  } catch (err) {
-    res.status(400).send(err);
+  } catch (e) {
+    res.status(400).send(e);
   }
 });
 
@@ -67,7 +67,7 @@ router.get('/', async (req, res) => {
   try{
     const users = await User.find({})
     res.send(users)
-  }catch (err){
+  }catch (e){
     res.status(500).send()
   }
 });
@@ -83,10 +83,40 @@ router.get('/:id', async (req, res => {
     }
 
     res.send(user)
-  }catch (err) {
-    res.status(500).send
+  }catch (e) {
+    res.status(500).send()
   }
   
 }))
+
+// Update profile
+router.patch('/:id', async(req, res) => {
+  const updates = Object.keys(req.body)
+  
+  const allowedUpdates = ['firstName', 'lastName', 'title', 'sex', 'weight', 'phoneNumber', 'address', 'password']
+  const identityInfo = req.params.isDoctor ? 'doctorInfo' : 'clientInfo'
+  allowedUpdates.push(identityInfo)
+
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+  if (!isValidOperation) return res.status(400).send({error: 'invalid updates'})
+
+  try{
+    const user = await User.findById(req.params.id)
+    
+    updates.forEach((update) => user[update] = req.body[update])
+
+    await user.save()
+
+    if (!user){
+      return res.status(404).send()
+    }
+  }catch (e){
+    res.status(400).send(e)
+  }
+
+})
+
+// Delete account
 
 module.exports = router;
