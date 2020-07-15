@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
+const verifyToken = require('./verifyToken');
 const { signUpValidation, signInValidation } = require('./validation');
 
 // Sign up
@@ -90,7 +91,7 @@ router.get('/:id', async (req, res => {
 }))
 
 // Update profile
-router.patch('/:id', async(req, res) => {
+router.patch('/:id', verifyToken, async(req, res) => {
   const updates = Object.keys(req.body)
   
   const allowedUpdates = ['firstName', 'lastName', 'title', 'sex', 'weight', 'phoneNumber', 'address', 'password']
@@ -118,5 +119,18 @@ router.patch('/:id', async(req, res) => {
 })
 
 // Delete account
+router.delete('/:id', verifyToken, async (req, res) => {
+  try{
+    const user = await User.findByIdAndDelete(req.params.id)
+
+    if (!user){
+      return res.status(404).send()
+    }
+
+    res.send(user)
+  }catch(e){
+    res.status(500).send()
+  }
+})
 
 module.exports = router;
