@@ -51,8 +51,9 @@ router.post('/signin', async (req, res) => {
   }
 
   // Check if password is correct
-  const validPass = await bcrypt.compare(req.body.password, user.password);
-  if (!validPass) return res.status(400).send('email or password is incorrect');
+  const isMatchedPass = await bcrypt.compare(req.body.password, user.password);
+  if (!isMatchedPass)
+    return res.status(400).send('email or password is incorrect');
 
   // Create and assign a token
   const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
@@ -61,7 +62,7 @@ router.post('/signin', async (req, res) => {
 
 // Sign out
 
-// Users listing
+// Users (All)
 router.get('/', (req, res) => {
   User.find({}, (err, users) => {
     const userMap = {};
@@ -73,5 +74,22 @@ router.get('/', (req, res) => {
     res.send(userMap);
   });
 });
+
+// User (One)
+router.get('/:id', async (req, res => {
+  const _id = req.params.id;
+  try {
+    const user = await User.findById(_id)
+
+    if (!user){
+      return res.status(404).send()
+    }
+
+    res.send(user)
+  }catch (err) {
+    res.status(500).send
+  }
+  
+}))
 
 module.exports = router;
