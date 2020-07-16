@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
 const Session = require('./Session');
+
+// Access dotenv
+dotenv.config({ path: '../../config/config.env' });
 
 // Add validation for each of these fields with Joi later
 
@@ -289,25 +294,6 @@ userSchema.methods.toJSON = function () {
   return userObject;
 };
 
-// Create and assign a token
-userSchema.methods.generateAuthToken = async function () {
-  const user = this;
-  const token = jwt.sign(
-    { _id: user._id.toString() },
-    process.env.TOKEN_SECRET
-  );
-
-  // Concat new token to tokens array
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
-
-  return token;
-
-  // Method 2 (in route) res.header('auth-token', token).send(token);
-};
-
-const User = mongoose.model('User', userSchema);
-
 userSchema.statics.findByCredentials = async (email, password) => {
   // // Obscure 400 incorrect email or password messages to prevent hacking
   // Method 1 // return res.status(400).send('email or password is incorrect');
@@ -320,6 +306,26 @@ userSchema.statics.findByCredentials = async (email, password) => {
   // Check if password is correct
   const isMatchedPass = await bcrypt.compare(password, user.password);
   if (!isMatchedPass) throw new Error('email or password is incorrect');
+
+  return user;
 };
+
+// Create and assign a token
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign(
+    { _id: user._id.toString() },
+    process.env.TOKEN_SECRET
+  );
+
+  // Concat new token to tokens array
+  user.tokens = user.tokens.concat({ token });
+  // user.tokens.push({ token });
+
+  await user.save();
+  return token;
+};
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

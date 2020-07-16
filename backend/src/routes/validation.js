@@ -33,5 +33,4 @@ const signInValidation = (data) => {
   return schema.validate(data);
 };
 
-module.exports.signUpValidation = signUpValidation;
-module.exports.signInValidation = signInValidation;
+module.exports = { signUpValidation, signInValidation };

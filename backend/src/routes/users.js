@@ -35,7 +35,7 @@ router.post('/signup', async (req, res) => {
     user.tokens = [];
 
     await user.save();
-    const token = await user.generateAuthToken;
+    const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (e) {
     res.status(400).send(e);
@@ -44,11 +44,11 @@ router.post('/signup', async (req, res) => {
 
 // Sign in
 router.post('/signin', async (req, res) => {
-  // Validation before creation
-  const { error } = signInValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
   try {
+    // Validation before creation
+    const { error } = signInValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     // Check if email & password are correct
     const user = await User.findByCredentials(
       req.body.email,
@@ -57,9 +57,10 @@ router.post('/signin', async (req, res) => {
 
     // Create and assign a token
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+
+    res.status(201).send({ user, token });
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
