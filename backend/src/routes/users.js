@@ -65,7 +65,7 @@ router.post('/signin', async (req, res) => {
 });
 
 // Sign out of current session
-router.post('/signout', verifyToken, async (req, res) => {
+router.patch('/signout', verifyToken, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
       return token.token !== req.token;
@@ -79,7 +79,7 @@ router.post('/signout', verifyToken, async (req, res) => {
 });
 
 // Sign out of all sessions
-router.post('/signoutall', verifyToken, async (req, res) => {
+router.patch('/signoutall', verifyToken, async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
