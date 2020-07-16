@@ -26,11 +26,12 @@ router.post('/signup', async (req, res) => {
   const user = new User(req.body);
 
   try {
+    // Protect from malicious account information assignment
     if (user.isDoctor) {
-      user.clientInfo = null;
+      delete user.clientInfo;
       user.doctorInfo.rating = 0;
     } else {
-      user.doctorInfo = null;
+      delete user.doctorInfo;
     }
     user.tokens = [];
 
