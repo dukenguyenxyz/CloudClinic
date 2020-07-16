@@ -9,19 +9,47 @@ const { signUpValidation, signInValidation } = require('./validation');
 
 // Sign up
 router.post('/signup', async (req, res) => {
-  // Validation before creation
-  const { error } = signUpValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // // Validation before creation
+  // const { error } = signUpValidation(req.body);/
+  // if (error) return res.status(400).send(error.details[0].message);
 
-  // Check for unique email
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send('email already exists');
+  // // Check for unique email
+  // const emailExist = await User.findOne({ email: req.body.email });
+  // if (emailExist) return res.status(400).send('email already exists');
 
   // Create new user from request body
+  // const user = new User({
+  //   firstName: req.body.firstName,
+  //   lastName: req.body.lastName,
+  //   title: req.body.title,
+  //   sex: req.body.sex,
+  //   weight: req.body.weight,
+  //   dateOfBirth: req.body.dateOfBirth,
+  //   phoneNumber: req.body.phoneNumber,
+  //   email: req.body.email,
+  //   password: req.body.password,
+  //   isDoctor: req.body.isDoctor,
+  //   address: {
+  //     number: req.body.number,
+  //     street: req.body.street,
+  //     city: req.body.city,
+  //     state: req.body.state,
+  //     country: req.body.country,
+  //     postcode: req.body.postcode,
+  //   },
+  // });
+
+  // Add forbidden fields: token & created at & dotorInfo[rating]
+
   const user = new User(req.body);
 
   // Try to save otherwise send error
   try {
+    if (user.isDoctor) {
+      user.clientInfo = null;
+    } else {
+      user.doctorInfo = null;
+    }
     await user.save();
     const token = await user.generateAuthToken;
     res.status(201).send({ user, token });

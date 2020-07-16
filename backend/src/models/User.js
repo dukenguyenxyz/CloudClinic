@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Session = require('./Session');
 
+// Add validation for each of these fields with Joi later
+
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -106,6 +108,10 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
   doctorInfo: {
     licence: {
       type: String,
@@ -237,16 +243,8 @@ const userSchema = new mongoose.Schema({
     ],
     bloodType: {
       type: String,
-      uppercase: true,
       enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    modifiedAt: {
-      type: Date,
-      default: Date.now,
+      uppercase: true,
     },
   },
 });
