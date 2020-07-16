@@ -3,7 +3,8 @@ const User = require('../models/User');
 
 module.exports = async (req, res, next) => {
   try {
-    const token = req.header('Authorization').replace('Bearer ', '');
+    const token = req.header('Authorization');
+    // .replace('Bearer ', '');
     if (!token) return res.status(401).send('access denied');
 
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);

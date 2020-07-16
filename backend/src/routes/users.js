@@ -5,12 +5,12 @@ const router = require('express').Router();
 const User = require('../models/User');
 const Session = require('../models/Session');
 const verifyToken = require('./verifyToken');
-const { signUpValidation, signInValidation } = require('./validation');
+const { schemaValidation, signInValidation } = require('./validation');
 
 // Sign up
 router.post('/signup', async (req, res) => {
   // Validation before creation
-  const { error } = signUpValidation(req.body);
+  const { error } = schemaValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   // Check for unique email
@@ -96,6 +96,37 @@ router.get('/profile', verifyToken, async (req, res) => {
   res.send(req.user);
 });
 
+// Update profile
+router.patch('/profile', verifyToken, async (req, res) => {
+  try {
+    // Unrequire confirm password
+    req.body.confirmPassword = req.body.password;
+
+    const { error } = schemaValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    Object.keys(req.body).forEach((update) => {
+      req.user[update] = req.body[update];
+    });
+
+    await req.user.save();
+
+    res.status(201).send(req.user);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+// Delete user's profile
+router.delete('/profile', verifyToken, async (req, res) => {
+  try {
+    await req.user.remove();
+    res.send(req.user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 // // GET DOCTORS ROUTE (ADD MORE VALIDATION HERE)
 // Users (All)
 router.get('/', async (req, res) => {
@@ -112,7 +143,7 @@ router.get('/', async (req, res) => {
 // User (One)
 router.get('/:id', async (req, res) => {
   try {
-    const user = await User.find({ _id: req.params._id, isDoctor: true });
+    const user = await User.find({ _id: req.params.id, isDoctor: true });
 
     if (!user) {
       return res.status(404).send();
@@ -127,6 +158,7 @@ router.get('/:id', async (req, res) => {
 
 // // GET CLIENTS ROUTE
 
+// // NEED TESTING
 // Get all
 router.get('/clients', verifyToken, async (req, res) => {
   if (!req.user.isDoctor) {
@@ -151,17 +183,18 @@ router.get('/clients', verifyToken, async (req, res) => {
   }
 });
 
+// // NEED TESTING
 // Get Single
 router.get('/clients/:id', verifyToken, async (req, res) => {
   try {
     const bookedSessions = await Session.find({
       doctor: req.user._id,
-      client: req.params._id,
+      client: req.params.id,
     });
     if (!bookedSessions) {
       res.status(404).send();
     }
-    const user = await User.find({ _id: req.params._id, isDoctor: false });
+    const user = await User.find({ _id: req.params.id, isDoctor: false });
 
     if (!user) {
       return res.status(404).send();
@@ -169,51 +202,6 @@ router.get('/clients/:id', verifyToken, async (req, res) => {
 
     // Only send appropriate data
     res.send(user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-// Update profile
-router.patch('/profile', verifyToken, async (req, res) => {
-  const updates = Object.keys(req.body);
-
-  const allowedUpdates = [
-    'firstName',
-    'lastName',
-    'title',
-    'sex',
-    'weight',
-    'phoneNumber',
-    'address',
-    'password',
-  ];
-  const identityInfo = req.params.isDoctor ? 'doctorInfo' : 'clientInfo';
-  allowedUpdates.push(identityInfo);
-
-  const isValidOperation = updates.every((update) =>
-    allowedUpdates.includes(update)
-  );
-
-  if (!isValidOperation)
-    return res.status(400).send({ error: 'invalid updates' });
-
-  try {
-    updates.forEach((update) => {
-      req.user[update] = req.body[update];
-    });
-
-    await req.user.save();
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
-
-// Delete account
-router.delete('/profile', verifyToken, async (req, res) => {
-  try {
-    await req.user.remove();
-    res.send(req.user);
   } catch (e) {
     res.status(500).send();
   }
