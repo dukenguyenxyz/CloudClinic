@@ -118,7 +118,7 @@ const userSchema = new mongoose.Schema({
       min: 6,
       max: 12,
     },
-    accreditation: [
+    accreditations: [
       {
         type: String,
         minlength: 1,
@@ -244,7 +244,6 @@ const userSchema = new mongoose.Schema({
     bloodType: {
       type: String,
       enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-      uppercase: true,
     },
   },
 });
