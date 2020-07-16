@@ -1,0 +1,34 @@
+.navbar-profile-wrapper {
+  display: flex;
+  border-top: 1px solid var(--light-grey);
+  padding: var(--component-padding);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .profile {
+    display: flex;
+    align-items: center;
+    .avatar {
+      $size: 32px;
+      width: $size;
+      max-width: $size;
+      min-width: $size;
+      max-height: $size;
+      min-height: $size;
+      height: $size;
+      border-radius: 50%;
+      background-color: grey;
+    }
+
+    .name {
+      margin: 0 var(--space-sm);
+      font-size: 0.875rem;
+    }
+  }
+
+  .logout {
+    display: flex;
+    cursor: pointer;
+  }
+}

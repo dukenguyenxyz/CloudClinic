@@ -1,0 +1,11 @@
+.navbar-wrapper {
+  background-color: var(--white);
+  border-right: 1px solid var(--light-grey);
+  height: 100vh;
+  nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+}

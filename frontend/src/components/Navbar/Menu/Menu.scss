@@ -1,0 +1,41 @@
+.menu-wrapper {
+  li {
+    .menu-item {
+      display: flex;
+      align-items: center;
+      position: relative;
+      border-bottom: 1px solid var(--light-grey);
+      padding: var(--component-padding);
+      cursor: pointer;
+    }
+
+    &:first-child {
+      border-top: 1px solid var(--light-grey);
+    }
+
+    &:hover {
+      background-color: var(--selected-color);
+      .tab {
+        opacity: 1;
+      }
+    }
+  }
+  .tab {
+    position: absolute;
+    left: 0;
+    background-color: var(--mid-blue);
+    height: 100%;
+    width: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    opacity: 0;
+  }
+
+  svg {
+    margin-right: var(--space-md);
+  }
+
+  span {
+    font-weight: 500;
+  }
+}

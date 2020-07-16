@@ -1,19 +1,18 @@
 import React from 'react';
 import './App.scss';
-import Card from './components/Card/Card';
 import ContextProvider from './globalState/state';
 import Navbar from './components/Navbar/Navbar';
-import Grid from './components/Grid/Grid';
+import Layout from './components/Layout/Layout';
+import Main from './components/Main/Main';
 
 function App() {
   return (
     <ContextProvider>
       <div className="App">
-        <Navbar />
-        <Card />
-        <Grid>
-          <Card />
-        </Grid>
+        <Layout>
+          <Navbar />
+          <Main />
+        </Layout>
       </div>
     </ContextProvider>
   );
