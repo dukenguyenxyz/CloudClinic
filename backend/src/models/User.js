@@ -273,20 +273,20 @@ userSchema.pre('remove', async function (next) {
   next();
 });
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
 
-userSchema.statics.findByCredentials = async (email, password) => {
-  // // Obscure 400 incorrect email or password messages to prevent hacking
-  // Method 1 // return res.status(400).send('email or password is incorrect');
-  // Method 2 preferred: throw new Error(...)
+  if (user.isDoctor) {
+    delete userObject.clientInfo;
+  } else {
+    delete userObject.doctorInfo;
+  }
 
-  // Check if email exists
-  const user = await User.findOne({ email });
-  if (!user) throw new Error('email or password is incorrect');
+  delete userObject.password;
+  delete userObject.tokens;
 
-  // Check if password is correct
-  const isMatchedPass = await bcrypt.compare(password, user.password);
-  if (!isMatchedPass) throw new Error('email or password is incorrect');
+  return userObject;
 };
 
 // Create and assign a token
@@ -306,14 +306,20 @@ userSchema.methods.generateAuthToken = async function () {
   // Method 2 (in route) res.header('auth-token', token).send(token);
 };
 
-userSchema.methods.toJSON = function () {
-  const user = this;
-  const userObject = user.toObject();
+const User = mongoose.model('User', userSchema);
 
-  delete userObject.password;
-  delete userObject.tokens;
+userSchema.statics.findByCredentials = async (email, password) => {
+  // // Obscure 400 incorrect email or password messages to prevent hacking
+  // Method 1 // return res.status(400).send('email or password is incorrect');
+  // Method 2 preferred: throw new Error(...)
 
-  return userObject;
+  // Check if email exists
+  const user = await User.findOne({ email });
+  if (!user) throw new Error('email or password is incorrect');
+
+  // Check if password is correct
+  const isMatchedPass = await bcrypt.compare(password, user.password);
+  if (!isMatchedPass) throw new Error('email or password is incorrect');
 };
 
 module.exports = User;
