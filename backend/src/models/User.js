@@ -228,11 +228,12 @@ const userSchema = new mongoose.Schema({
         },
       },
     ],
-    bloodType: {
-      type: String,
-      uppercase: true,
-      enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-    },
+    bloodType: [
+      {
+        type: String,
+        enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+      },
+    ],
     createdAt: {
       type: Date,
       default: Date.now,
