@@ -1,22 +1,21 @@
 import React from 'react';
 import './App.scss';
 import Card from './components/Card/Card';
-import SearchContextProvider from './context/searchContext';
+import ContextProvider from './globalState/state';
+import Navbar from './components/Navbar/Navbar';
+import Grid from './components/Grid/Grid';
 
 function App() {
   return (
-    <SearchContextProvider>
+    <ContextProvider>
       <div className="App">
-        <h1 className="bold">Maison Neue 700</h1>
-        <h1 className="medium">Maison Neue 600</h1>
-        <h1 className="demi">Maison Neue 500</h1>
-        <h1 className="book">Maison Neue 400</h1>
-        <h1 className="light">Maison Neue 300</h1>
-        <br />
-        <br />
+        <Navbar />
         <Card />
+        <Grid>
+          <Card />
+        </Grid>
       </div>
-    </SearchContextProvider>
+    </ContextProvider>
   );
 }
 
