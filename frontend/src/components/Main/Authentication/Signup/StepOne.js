@@ -15,9 +15,7 @@ const StepOne = () => {
         icon="username"
       />
       <AuthInput value="" placeholder="Last Name" type="text" icon="username" /> */}
-
       <AuthInput value="" placeholder="Email" type="email" icon="email" />
-
       <AuthInput
         value=""
         placeholder="Password"

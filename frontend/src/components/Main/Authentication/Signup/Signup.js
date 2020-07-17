@@ -16,8 +16,8 @@ const Signup = () => {
         </div>
 
         <StepOne />
-        {/* <StepTwo />
-      <StepThree /> */}
+        {/* <StepTwo /> */}
+        {/* <StepThree /> */}
         <Button action="Next" color="pink" />
       </div>
     </div>
