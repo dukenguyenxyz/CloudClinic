@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const sessionSchema = new mongoose.Schema({
-  startTime: { type: Date, required: true },
-  endTime: { type: Date, required: true },
+  startTime: { type: Date, required: false },
+  endTime: { type: Date, required: false },
   doctor: { type: mongoose.Schema.Types.ObjectId, required: true },
   client: { type: mongoose.Schema.Types.ObjectId, default: null },
   createDate: {

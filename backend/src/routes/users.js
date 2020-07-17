@@ -5,7 +5,10 @@ const router = require('express').Router();
 const User = require('../models/User');
 const Session = require('../models/Session');
 const verifyToken = require('./verifyToken');
-const { schemaValidation, signInValidation } = require('./validation');
+const {
+  schemaValidation,
+  signInValidation,
+} = require('../utils/validations/users');
 
 // Sign up
 router.post('/signup', async (req, res) => {
@@ -167,6 +170,8 @@ router.get('/clients', verifyToken, async (req, res) => {
 
   try {
     const bookedSessions = await Session.find({ doctor: req.user._id });
+    // client: not null
+
     if (!bookedSessions) {
       res.status(404).send();
     }
