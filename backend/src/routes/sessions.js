@@ -98,7 +98,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     await session.remove();
     res.send(session);
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e);
   }
 });
 

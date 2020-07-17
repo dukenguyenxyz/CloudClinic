@@ -46,7 +46,11 @@ const sessionValidation = async (isDoctor, req) => {
   sessions.forEach((session) => {
     if (
       startTime.isBetween(session.startTime, session.endTime) ||
-      endTime.isBetween(session.startTime, session.endTime)
+      endTime.isBetween(session.startTime, session.endTime) ||
+      startTime.isSame(session.startTime) ||
+      endTime.isSame(session.endTime) ||
+      startTime.isSame(session.endTime) ||
+      endTime.isSame(session.startTime)
     ) {
       throw new Error('this time is not available');
       // res.status(400).send({ error: 'this time is not available' });
