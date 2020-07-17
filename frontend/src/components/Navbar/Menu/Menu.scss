@@ -19,6 +19,13 @@
         opacity: 1;
       }
     }
+
+    // & > * a[aria-current='page'] {
+    //   color: red;
+    //   .tab {
+    //     opacity: 1 !important;
+    //   }
+    // }
   }
   .tab {
     position: absolute;
@@ -31,11 +38,25 @@
     opacity: 0;
   }
 
+  .active {
+    .tab {
+      opacity: 1;
+    }
+  }
+
   svg {
     margin-right: var(--space-md);
   }
 
-  span {
+  span,
+  a {
     font-weight: 500;
   }
+
+  // li * a[aria-current='page'] {
+  //   color: red;
+  //   .tab {
+  //     opacity: 1 !important;
+  //   }
+  // }
 }
