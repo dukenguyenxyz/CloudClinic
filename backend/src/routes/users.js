@@ -96,7 +96,11 @@ router.patch('/signoutall', verifyToken, async (req, res) => {
 
 // Get own user's profile
 router.get('/profile', verifyToken, async (req, res) => {
-  res.send(req.user);
+  try {
+    res.send(req.user);
+  } catch (e) {
+    res.status(500).send();
+  }
 });
 
 // Update profile
@@ -130,6 +134,64 @@ router.delete('/profile', verifyToken, async (req, res) => {
   }
 });
 
+// // GET CLIENTS ROUTE
+
+// // NEED TESTING
+// Get all
+router.get('/clients', verifyToken, async (req, res) => {
+  try {
+    console.log('1');
+    if (!req.user.isDoctor) {
+      res.status(404).send({ error: 'Forbidden' });
+    }
+    console.log('2');
+    const bookedSessions = await Session.find({ doctor: req.user._id });
+    // client: not null
+    console.log('3');
+    if (!bookedSessions) {
+      res.status(404).send();
+    }
+    console.log('4');
+    console.log(bookedSessions);
+    const bookedWithClients = bookedSessions.map((session) => session.client);
+    console.log('5');
+    // Assign all users to the user of bookedSessions
+    const users = await User.find({ _id: { $in: bookedWithClients } });
+    console.log('6');
+    // Only send appropriate data
+    res.send(users);
+    console.log('7');
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).send(e);
+  }
+});
+
+// // NEED TESTING
+// Get Single
+router.get('/clients/:id', verifyToken, async (req, res) => {
+  console.log('hEre 1');
+  try {
+    const bookedSessions = await Session.find({
+      doctor: req.user._id,
+      client: req.params.id,
+    });
+    if (!bookedSessions) {
+      res.status(404).send();
+    }
+    const user = await User.find({ _id: req.params.id, isDoctor: false });
+
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    // Only send appropriate data
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 // // GET DOCTORS ROUTE (ADD MORE VALIDATION HERE)
 // Users (All)
 router.get('/', async (req, res) => {
@@ -147,59 +209,6 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const user = await User.find({ _id: req.params.id, isDoctor: true });
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    // Only send appropriate data
-    res.send(user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-// // GET CLIENTS ROUTE
-
-// // NEED TESTING
-// Get all
-router.get('/clients', verifyToken, async (req, res) => {
-  if (!req.user.isDoctor) {
-    res.status(404).send({ error: 'Forbidden' });
-  }
-
-  try {
-    const bookedSessions = await Session.find({ doctor: req.user._id });
-    // client: not null
-
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-
-    const bookedWithClients = bookedSessions.map((session) => session.client);
-
-    // Assign all users to the user of bookedSessions
-    const users = await User.find({ _id: { $in: bookedWithClients } });
-
-    // Only send appropriate data
-    res.send(users);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-// // NEED TESTING
-// Get Single
-router.get('/clients/:id', verifyToken, async (req, res) => {
-  try {
-    const bookedSessions = await Session.find({
-      doctor: req.user._id,
-      client: req.params.id,
-    });
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-    const user = await User.find({ _id: req.params.id, isDoctor: false });
 
     if (!user) {
       return res.status(404).send();

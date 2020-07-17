@@ -42,7 +42,7 @@ const sessionValidation = async (isDoctor, req) => {
   }
 
   // Validation to check whether this time is available for this doctor
-  const sessions = await Session.find({ doctor: req.user });
+  const sessions = await Session.find({ doctor: req.user._id });
   sessions.forEach((session) => {
     if (
       startTime.isBetween(session.startTime, session.endTime) ||
