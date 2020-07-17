@@ -7,20 +7,72 @@ import Button from '../../../Button/Button';
 
 const Signup = () => {
   return (
-    <div className="form-wrapper">
-      <div className="trim" />
-      <div className="form-container">
-        <div className="form-header">
-          <h1>Sign up</h1>
-          <span>1/3</span>
-        </div>
+    <>
+      <div className="form-wrapper">
+        <div className="trim" />
+        <div className="form-container">
+          <div className="form-header">
+            <h1>Sign up</h1>
+            <span>1/3</span>
+          </div>
 
-        <StepOne />
-        {/* <StepTwo />
+          <StepOne />
+          {/* <StepTwo />
       <StepThree /> */}
-        <Button action="Next" color="pink" />
+          <Button action="Next" color="pink" />
+        </div>
       </div>
-    </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </>
   );
 };
 

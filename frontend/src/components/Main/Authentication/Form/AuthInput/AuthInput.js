@@ -1,6 +1,6 @@
 import React from 'react';
 import './AuthInput.scss';
-import { User, Lock, Mail } from 'react-feather';
+import { User, Lock, Mail, BookOpen } from 'react-feather';
 
 const AuthInput = ({
   placeholder,
@@ -13,11 +13,13 @@ const AuthInput = ({
   const getIcon = () => {
     switch (icon) {
       case 'username':
-        return <User color="black" size={14} />;
+        return <User color="#212429" size={14} />;
       case 'password':
-        return <Lock color="black" size={14} />;
+        return <Lock color="#212429" size={14} />;
       case 'email':
-        return <Mail color="black" size={14} />;
+        return <Mail color="#212429" size={14} />;
+      case 'education':
+        return <BookOpen color="#212429" size={14} />;
       default:
         return '';
     }

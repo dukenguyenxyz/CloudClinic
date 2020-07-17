@@ -2,6 +2,7 @@ import React from 'react';
 import { SearchContextProvider } from './context/searchContext';
 import { AuthContextProvider } from './context/authContext';
 import { SignupContextProvider } from './context/signupContext';
+import { NavbarContextProvider } from './context/navbarContext';
 
 function ProviderComposer({ contexts, children }) {
   return contexts.reduceRight(
@@ -20,6 +21,7 @@ const ContextProvider = ({ children }) => {
         <SearchContextProvider />,
         <AuthContextProvider />,
         <SignupContextProvider />,
+        <NavbarContextProvider />,
       ]}
     >
       {children}

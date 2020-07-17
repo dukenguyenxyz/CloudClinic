@@ -16,6 +16,7 @@ function App() {
       <div className="App">
         <Layout>
           <Navbar />
+          {/* <div></div> */}
           <Main>
             <Router>
               <Authentication path="/" />

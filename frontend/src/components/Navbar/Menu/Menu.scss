@@ -5,8 +5,9 @@
       align-items: center;
       position: relative;
       border-bottom: 1px solid var(--light-grey);
-      padding: var(--component-padding);
+      padding: 24px;
       cursor: pointer;
+      width: 208px;
     }
 
     &:first-child {
@@ -19,13 +20,6 @@
         opacity: 1;
       }
     }
-
-    // & > * a[aria-current='page'] {
-    //   color: red;
-    //   .tab {
-    //     opacity: 1 !important;
-    //   }
-    // }
   }
   .tab {
     position: absolute;
@@ -42,21 +36,17 @@
     .tab {
       opacity: 1;
     }
+    .menu-item {
+      background-color: var(--selected-color);
+    }
   }
 
   svg {
-    margin-right: var(--space-md);
+    margin-right: 24px;
   }
 
   span,
   a {
     font-weight: 500;
   }
-
-  // li * a[aria-current='page'] {
-  //   color: red;
-  //   .tab {
-  //     opacity: 1 !important;
-  //   }
-  // }
 }
