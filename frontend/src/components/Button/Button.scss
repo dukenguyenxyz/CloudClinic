@@ -1,0 +1,25 @@
+.button-wrapper {
+  button {
+    padding: 12px var(--component-padding);
+    border: none;
+    outline: none;
+    border-radius: 32px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .pink {
+    background-color: var(--accent);
+  }
+
+  .navy {
+    background-color: var(--navy-blue);
+  }
+  .dark {
+    background-color: var(--dark-blue);
+  }
+
+  .light {
+    background-color: var(--light-blue);
+  }
+}

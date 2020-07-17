@@ -8,6 +8,7 @@ import Main from './components/Main/Main';
 import Profile from './components/Main/Profile/Profile';
 import Messaging from './components/Main/Messaging/Messaging';
 import Appointments from './components/Main/Appointments/Appointments';
+import Authentication from './components/Main/Authentication/Authentication';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Navbar />
           <Main>
             <Router>
+              <Authentication path="/" />
               <Profile path="profile" />
               <Messaging path="messaging" />
               <Appointments path="appointments" />

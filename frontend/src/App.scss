@@ -29,3 +29,25 @@ h1 {
   font-family: 'Maison Neue';
   font-weight: 300;
 }
+
+.pink {
+  button {
+    background-color: var(--accent);
+  }
+}
+.navy {
+  button {
+    background-color: var(--navy-blue);
+  }
+}
+.dark {
+  button {
+    background-color: var(--dark-blue);
+  }
+}
+
+.light {
+  button {
+    background-color: var(--light-blue);
+  }
+}

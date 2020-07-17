@@ -20,6 +20,7 @@ export const SignupContextProvider = ({ children }) => {
     isDoctor,
     setIsDoctor,
   };
+
   return (
     <SignupContext.Provider value={signupState}>
       {children}
