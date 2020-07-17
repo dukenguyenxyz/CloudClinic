@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.27.0",
     "mongoose": "^5.9.22",
     "mongoose-seed": "^0.6.0"
   },
