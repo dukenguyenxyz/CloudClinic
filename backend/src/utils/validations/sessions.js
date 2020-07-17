@@ -60,7 +60,7 @@ const sessionValidation = async (isDoctor, req) => {
 };
 
 const sessionExists = async (req) => {
-  const session = await Session.findById(req.params._id);
+  const session = await Session.findById(req.params.id);
 
   if (!session) {
     throw new Error('resource does not exist');

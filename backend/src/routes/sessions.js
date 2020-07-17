@@ -104,9 +104,8 @@ router.delete('/:id', verifyToken, async (req, res) => {
 
 // // CLIENT
 
-// // NEED TESTING
 // Book a session
-router.patch('/book/:id', verifyToken, async (req, res) => {
+router.patch('/:id/book', verifyToken, async (req, res) => {
   try {
     // // Find session
     // const session = await Session.findById(req.params._id);
@@ -120,7 +119,7 @@ router.patch('/book/:id', verifyToken, async (req, res) => {
     //   res.status(400).send({ error: 'invalid action' });
     // }
 
-    const session = sessionExists(req);
+    const session = await sessionExists(req);
 
     // Check if session has no booking
     if (session.client) {
@@ -132,15 +131,14 @@ router.patch('/book/:id', verifyToken, async (req, res) => {
 
     res.send(session);
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e);
   }
 });
 
-// // NEED TESTING
 // Postpone a session (if less than 24hr from booking)
-router.patch('/update/:id', verifyToken, async (req, res) => {
+router.patch('/:id/update', verifyToken, async (req, res) => {
   try {
-    const session = sessionExists(req);
+    const session = await sessionExists(req);
 
     // // Find session
     // const session = await Session.findById(req.params._id);
@@ -151,11 +149,11 @@ router.patch('/update/:id', verifyToken, async (req, res) => {
 
     // Refactor this
     // Check if session has no booking
-    if (session.client !== req.user) {
+    if (String(session.client) !== String(req.user._id)) {
       res.status(400).send({ error: 'invalid action' });
     }
 
-    const { startTime, endTime } = sessionValidation(true, req);
+    const { startTime, endTime } = await sessionValidation(false, req);
 
     // // Check if the client is making the booking not the doctor
     // if (req.user.isDoctor) {
@@ -188,15 +186,15 @@ router.patch('/update/:id', verifyToken, async (req, res) => {
 
     res.send(session);
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e);
   }
 });
 
 // // NEED TESTING
 // Cancel a session (if less than 24hr from booking)
-router.patch('/cancel/:id', verifyToken, async (req, res) => {
+router.patch('/:id/cancel', verifyToken, async (req, res) => {
   try {
-    const session = sessionExists(req);
+    const session = await sessionExists(req);
     // // Find session
     // const session = await Session.findById(req.params._id);
 
@@ -210,7 +208,7 @@ router.patch('/cancel/:id', verifyToken, async (req, res) => {
     // }
 
     // Check if session has no booking
-    if (session.client !== req.user) {
+    if (String(session.client) !== String(req.user._id)) {
       res.status(400).send({ error: 'invalid action' });
     }
 
