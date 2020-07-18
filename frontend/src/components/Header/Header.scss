@@ -1,0 +1,29 @@
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 24px;
+}
+
+.headroom {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.headroom--unfixed {
+  position: relative;
+  transform: translateY(0);
+}
+.headroom--scrolled {
+  transition: transform 200ms ease-in-out;
+}
+.headroom--unpinned {
+  position: absolute;
+  transform: translateY(0%);
+}
+.headroom--pinned {
+  position: absolute;
+  transform: translateY(50%);
+}

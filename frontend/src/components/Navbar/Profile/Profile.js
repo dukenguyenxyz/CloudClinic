@@ -3,7 +3,7 @@ import './Profile.scss';
 import { LogOut } from 'react-feather';
 import { motion } from 'framer-motion';
 
-const Profile = ({ isOpen }) => {
+const Profile = ({ isOpen, user }) => {
   const name = {
     hidden: { opacity: 0, x: '50%', transition: { ease: 'easeInOut' } },
     show: {
@@ -31,7 +31,7 @@ const Profile = ({ isOpen }) => {
           animate="show"
           animate={isOpen ? 'show' : 'hidden'}
         >
-          Dr. Jones{' '}
+          {user && user.name}
         </motion.span>
       </div>
       <motion.div
@@ -42,7 +42,7 @@ const Profile = ({ isOpen }) => {
         animate="show"
         animate={isOpen ? 'show' : 'hidden'}
       >
-        <LogOut />
+        {user && <LogOut />}
       </motion.div>
     </div>
   );

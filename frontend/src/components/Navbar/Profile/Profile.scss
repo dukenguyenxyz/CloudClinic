@@ -1,7 +1,6 @@
 .navbar-profile-wrapper {
   display: flex;
   border-top: 1px solid var(--light-grey);
-  // padding: var(--component-padding);
   padding: 24px;
 
   display: flex;
@@ -25,17 +24,14 @@
     }
 
     .name {
-      margin: 0 var(--space-sm);
+      margin: 0 20px;
       font-size: 0.875rem;
       white-space: nowrap;
     }
   }
 
-  .logout {
-    cursor: pointer;
-  }
-
   svg {
     display: flex;
+    cursor: pointer;
   }
 }

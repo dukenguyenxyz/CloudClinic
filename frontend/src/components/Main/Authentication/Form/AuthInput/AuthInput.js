@@ -9,6 +9,7 @@ const AuthInput = ({
   handleKeyPress,
   type,
   icon,
+  minLength,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -37,6 +38,9 @@ const AuthInput = ({
         value={value}
         onChange={onChange}
         onKeyUp={handleKeyPress}
+        autoComplete="off"
+        required
+        minLength={minLength}
       />
     </div>
   );

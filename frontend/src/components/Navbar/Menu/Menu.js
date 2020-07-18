@@ -23,7 +23,7 @@ const NavLink = props => (
   />
 );
 
-const Menu = ({ isOpen }) => {
+const Menu = ({ isOpen, user }) => {
   const iconSize = 20;
   const container = {
     show: {
@@ -44,6 +44,11 @@ const Menu = ({ isOpen }) => {
     show: { opacity: 1, x: '0%', transition: { ease: 'easeInOut' } },
   };
 
+  const isDisabledStyle = {
+    color: user ? '#212429' : '#dde2e5',
+    cursor: user ? 'cursor' : 'not-allowed',
+  };
+
   return (
     <div className="menu-wrapper">
       <motion.ul
@@ -54,46 +59,59 @@ const Menu = ({ isOpen }) => {
       >
         <li>
           <NavLink to="profile">
-            <div className="menu-item">
+            <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
-              <User size={iconSize} />
-              <motion.span variants={item}>Profile</motion.span>
+              <User size={iconSize} color={user ? '#212429' : '#dde2e5'} />
+              <motion.span variants={item} style={isDisabledStyle}>
+                Profile
+              </motion.span>
             </div>
           </NavLink>
         </li>
         <li>
           <NavLink to="patients">
-            <div className="menu-item">
+            <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
-              <Clipboard size={iconSize} />
-              <motion.span variants={item}>Patients</motion.span>
+              <Clipboard size={iconSize} color={user ? '#212429' : '#dde2e5'} />
+              <motion.span variants={item} style={isDisabledStyle}>
+                Patients
+              </motion.span>
             </div>
           </NavLink>
         </li>
         <li>
           <NavLink to="messaging">
-            <div className="menu-item">
+            <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
-              <MessageSquare size={iconSize} />
-              <motion.span variants={item}>Messaging</motion.span>
+              <MessageSquare
+                size={iconSize}
+                color={user ? '#212429' : '#dde2e5'}
+              />
+              <motion.span variants={item} style={isDisabledStyle}>
+                Messaging
+              </motion.span>
             </div>
           </NavLink>
         </li>
         <li>
           <NavLink to="appointments">
-            <div className="menu-item">
+            <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
-              <Calendar size={iconSize} />
-              <motion.span variants={item}>Appointments</motion.span>
+              <Calendar size={iconSize} color={user ? '#212429' : '#dde2e5'} />
+              <motion.span variants={item} style={isDisabledStyle}>
+                Appointments
+              </motion.span>
             </div>
           </NavLink>
         </li>
         <li>
           <NavLink to="settings">
-            <div className="menu-item">
+            <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
-              <Settings size={iconSize} />
-              <motion.span variants={item}>Settings</motion.span>
+              <Settings size={iconSize} color={user ? '#212429' : '#dde2e5'} />
+              <motion.span variants={item} style={isDisabledStyle}>
+                Settings
+              </motion.span>
             </div>
           </NavLink>
         </li>

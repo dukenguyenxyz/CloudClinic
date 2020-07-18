@@ -7,28 +7,34 @@ const StepOne = () => {
 
   const clientSignup = (
     <>
-      <AuthInput value="" placeholder="Username" type="text" icon="username" />
-      {/* <AuthInput
+      <AuthInput
         value=""
-        placeholder="First Name"
+        placeholder="Username"
         type="text"
         icon="username"
+        minLength="3"
       />
-      <AuthInput value="" placeholder="Last Name" type="text" icon="username" /> */}
-
-      <AuthInput value="" placeholder="Email" type="email" icon="email" />
+      <AuthInput
+        value=""
+        placeholder="Email"
+        type="email"
+        icon="email"
+        minLength="3"
+      />
 
       <AuthInput
         value=""
         placeholder="Password"
         type="password"
         icon="password"
+        minLength="6"
       />
       <AuthInput
         value=""
         placeholder="Confirm"
         type="password"
         icon="password"
+        minLength="6"
       />
     </>
   );

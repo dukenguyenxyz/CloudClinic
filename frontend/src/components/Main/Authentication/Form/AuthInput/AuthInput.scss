@@ -24,7 +24,7 @@
   }
 
   .active {
-    transform: scale(0.8) translateY(-26px);
+    transform: scale(0.8) translateY(-24px);
     padding: 0 4px;
     background-color: var(--white);
   }
@@ -46,7 +46,7 @@
 
   &:focus-within {
     label {
-      transform: scale(0.8) translateY(-26px);
+      transform: scale(0.8) translateY(-24px);
       padding: 0 4px;
       background-color: var(--white);
     }

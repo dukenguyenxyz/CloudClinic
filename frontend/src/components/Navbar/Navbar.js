@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { NavbarContext } from '../../globalState/index';
+import { NavbarContext, AuthContext } from '../../globalState/index';
 import { motion, useCycle } from 'framer-motion';
 import './Navbar.scss';
 import Logo from './Logo/Logo';
@@ -9,8 +9,9 @@ import Hamburger from './Hamburger/Hamburger';
 
 const Navbar = () => {
   const { isOpen, setIsOpen } = useContext(NavbarContext);
+  const { user } = useContext(AuthContext);
   const [animateMenu, cycleMenu] = useCycle(
-    { width: '72px' },
+    { width: '70px' },
     { width: '208px' }
   );
 
@@ -29,10 +30,10 @@ const Navbar = () => {
       <div className="navbar-container">
         <nav>
           <Logo isOpen={isOpen} />
-          <Menu isOpen={isOpen} />
+          <Menu isOpen={isOpen} user={user} />
           <div>
             <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
-            <Profile isOpen={isOpen} />
+            <Profile isOpen={isOpen} user={user} />
           </div>
         </nav>
       </div>
