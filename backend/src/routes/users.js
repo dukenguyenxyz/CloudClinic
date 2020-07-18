@@ -1,224 +1,55 @@
-// Instruction: https://www.youtube.com/watch?v=2jqok-WgelI
-
 const router = require('express').Router();
 
-const User = require('../models/User');
-const Session = require('../models/Session');
 const verifyToken = require('./verifyToken');
 const {
-  schemaValidation,
-  signInValidation,
-} = require('../utils/validations/users');
+  signUp,
+  signIn,
+  signOut,
+  signOutAll,
+  viewProfile,
+  updateProfile,
+  deleteProfile,
+  viewClients,
+  viewClient,
+  viewDoctors,
+  viewDoctor,
+} = require('../controllers/usersController');
 
+// // Authentication routes
 // Sign up
-router.post('/signup', async (req, res) => {
-  // Validation before creation
-  const { error } = schemaValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.post('/signup', signUp);
 
-  // Check for unique email
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send('email already exists');
+// Sign in (Should be PATCH)
+router.post('/signin', signIn);
 
-  // Check if confirmPassword is the same as password
-  if (!req.body.confirmPassword === req.body.password) {
-    return res.status(404).send('confirmed password is incorrect');
-  }
+// Sign out of current session (Should be DELETE)
+router.patch('/signout', verifyToken, signOut);
 
-  // Try to save otherwise send error
-  const user = new User(req.body);
+// Sign out of all sessions (Should be DELETE)
+router.patch('/signoutall', verifyToken, signOutAll);
 
-  try {
-    // Protect from malicious account information assignment
-    if (user.isDoctor) {
-      delete user.clientInfo;
-      user.doctorInfo.rating = 0;
-    } else {
-      delete user.doctorInfo;
-    }
-    user.tokens = [];
-
-    await user.save();
-    const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
-
-// Sign in
-router.post('/signin', async (req, res) => {
-  try {
-    // Validation before creation
-    const { error } = signInValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    // Check if email & password are correct
-    const user = await User.findByCredentials(
-      req.body.email,
-      req.body.password
-    );
-
-    // Create and assign a token
-    const token = await user.generateAuthToken();
-
-    res.status(201).send({ user, token });
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
-
-// Sign out of current session
-router.patch('/signout', verifyToken, async (req, res) => {
-  try {
-    req.user.tokens = req.user.tokens.filter((token) => {
-      return token.token !== req.token;
-    });
-    await req.user.save();
-
-    res.send();
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-// Sign out of all sessions
-router.patch('/signoutall', verifyToken, async (req, res) => {
-  try {
-    req.user.tokens = [];
-    await req.user.save();
-
-    res.send();
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
+// // Profile Routes
 // Get own user's profile
-router.get('/profile', verifyToken, async (req, res) => {
-  try {
-    res.send(req.user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
+router.get('/profile', verifyToken, viewProfile);
 
 // Update profile
-router.patch('/profile', verifyToken, async (req, res) => {
-  try {
-    // Unrequire confirm password
-    req.body.confirmPassword = req.body.password;
-
-    const { error } = schemaValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    Object.keys(req.body).forEach((update) => {
-      req.user[update] = req.body[update];
-    });
-
-    await req.user.save();
-
-    res.status(201).send(req.user);
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
+router.patch('/profile', verifyToken, updateProfile);
 
 // Delete user's profile
-router.delete('/profile', verifyToken, async (req, res) => {
-  try {
-    await req.user.remove();
-    res.send(req.user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
+router.delete('/profile', verifyToken, deleteProfile);
 
-// // GET CLIENTS ROUTE
+// // Client Routes (GET)
+// All Clients
+router.get('/clients', verifyToken, viewClients);
 
-// // NEED TESTING
-// Get all
-router.get('/clients', verifyToken, async (req, res) => {
-  try {
-    console.log('1');
-    if (!req.user.isDoctor) {
-      res.status(404).send({ error: 'Forbidden' });
-    }
-    console.log('2');
-    const bookedSessions = await Session.find({ doctor: req.user._id });
-    // client: not null
-    console.log('3');
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-    console.log('4');
-    console.log(bookedSessions);
-    const bookedWithClients = bookedSessions.map((session) => session.client);
-    console.log('5');
-    // Assign all users to the user of bookedSessions
-    const users = await User.find({ _id: { $in: bookedWithClients } });
-    console.log('6');
-    // Only send appropriate data
-    res.send(users);
-    console.log('7');
-  } catch (e) {
-    console.log(e.message);
-    res.status(500).send(e);
-  }
-});
+// One Client
+router.get('/clients/:id', verifyToken, viewClient);
 
-// // NEED TESTING
-// Get Single
-router.get('/clients/:id', verifyToken, async (req, res) => {
-  console.log('hEre 1');
-  try {
-    const bookedSessions = await Session.find({
-      doctor: req.user._id,
-      client: req.params.id,
-    });
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-    const user = await User.find({ _id: req.params.id, isDoctor: false });
+// // Doctor Routes (GET) // More validation required (Should be /doctors)
+// All Doctors
+router.get('/', viewDoctors);
 
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    // Only send appropriate data
-    res.send(user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-// // GET DOCTORS ROUTE (ADD MORE VALIDATION HERE)
-// Users (All)
-router.get('/', async (req, res) => {
-  try {
-    const users = await User.find({ isDoctor: true });
-
-    // Only send appropriate data
-    res.send(users);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-// User (One)
-router.get('/:id', async (req, res) => {
-  try {
-    const user = await User.find({ _id: req.params.id, isDoctor: true });
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    // Only send appropriate data
-    res.send(user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
+// One Doctor
+router.get('/:id', viewDoctor);
 
 module.exports = router;
