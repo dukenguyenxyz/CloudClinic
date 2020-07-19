@@ -1,7 +1,8 @@
 .navbar-profile-wrapper {
   display: flex;
   border-top: 1px solid var(--light-grey);
-  padding: var(--component-padding);
+  padding: 24px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,6 +11,7 @@
     display: flex;
     align-items: center;
     .avatar {
+      margin-left: -4px;
       $size: 32px;
       width: $size;
       max-width: $size;
@@ -22,12 +24,13 @@
     }
 
     .name {
-      margin: 0 var(--space-sm);
+      margin: 0 20px;
       font-size: 0.875rem;
+      white-space: nowrap;
     }
   }
 
-  .logout {
+  svg {
     display: flex;
     cursor: pointer;
   }

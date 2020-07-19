@@ -1,17 +1,46 @@
 import React from 'react';
 import './Profile.scss';
 import { LogOut } from 'react-feather';
+import { motion } from 'framer-motion';
 
-const Profile = () => {
+const Profile = ({ isOpen, user }) => {
+  const name = {
+    hidden: { opacity: 0, x: '50%', transition: { ease: 'easeInOut' } },
+    show: {
+      opacity: 1,
+      x: '0%',
+      transition: { ease: 'easeInOut', delay: 0.5 },
+    },
+  };
+
+  const logout = {
+    hidden: { opacity: 0, transition: { ease: 'easeInOut' } },
+    show: {
+      opacity: 1,
+      transition: { ease: 'easeInOut', delay: 0.75 },
+    },
+  };
   return (
     <div className="navbar-profile-wrapper">
       <div className="profile">
         <div className="avatar" />
-        <span className="name">Dr. Sarah Jones</span>
+        <motion.span
+          className="name"
+          variants={name}
+          initial="hidden"
+          animate={isOpen ? 'show' : 'hidden'}
+        >
+          {user && user.firstName}
+        </motion.span>
       </div>
-      <div className="logout">
-        <LogOut />
-      </div>
+      <motion.div
+        className="name"
+        variants={logout}
+        initial="hidden"
+        animate={isOpen ? 'show' : 'hidden'}
+      >
+        {user && <LogOut />}
+      </motion.div>
     </div>
   );
 };

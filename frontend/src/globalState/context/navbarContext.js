@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 
 export const NavbarContext = React.createContext();
 export const NavbarContextProvider = ({ children }) => {
-  const [searchValue, setSearchValue] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-  const searchState = {
-    searchValue,
-    setSearchValue,
+  const navbarState = {
+    isOpen,
+    setIsOpen,
   };
   return (
-    <NavbarContext.Provider value={searchState}>
+    <NavbarContext.Provider value={navbarState}>
       {children}
     </NavbarContext.Provider>
   );

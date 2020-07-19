@@ -1,12 +1,15 @@
 import React from 'react';
+import { Link } from '@reach/router';
 import './Logo.scss';
-import CloudClinicLogo from '../../../assets/cloudclinic-logo.svg';
+import LogoFramer from './LogoFramer';
 
-const Logo = () => {
+const Logo = ({ isOpen }) => {
   return (
-    <div className="logo-wrapper">
-      <img src={CloudClinicLogo} alt="CloudClinic Logo" className="logo" />
-    </div>
+    <Link to="/">
+      <div className="logo-wrapper">
+        <LogoFramer isOpen={isOpen} />
+      </div>
+    </Link>
   );
 };
 
