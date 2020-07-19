@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const Session = require('../models/Session');
 const {
   sessionValidation,
@@ -63,6 +65,27 @@ exports.createSession = async (req, res) => {
     res.send(session);
   } catch (e) {
     res.status(500).send(e);
+  }
+};
+
+exports.createSessions = async (req, res) => {
+  try {
+    const sessions = req.body;
+    sessions.forEach(async (reqSession) => {
+      const startTime = moment.unix(reqSession.startTime);
+      const endTime = moment.unix(reqSession.endTime);
+
+      const session = new Session({
+        startTime,
+        endTime,
+        doctor: req.user._id,
+      });
+      await session.save();
+    });
+
+    res.send(sessions);
+  } catch (e) {
+    res.status(500).send();
   }
 };
 
