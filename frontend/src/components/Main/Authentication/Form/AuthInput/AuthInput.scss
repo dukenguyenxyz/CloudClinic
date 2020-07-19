@@ -26,7 +26,7 @@
   .active {
     transform: scale(0.8) translateY(-26px);
     padding: 0 4px;
-    background-color: var(--white);
+    background-color: none; // var(--white);
   }
 
   i {
@@ -48,7 +48,7 @@
     label {
       transform: scale(0.8) translateY(-26px);
       padding: 0 4px;
-      background-color: var(--white);
+      background-color: none; // var(--white);
     }
   }
 }

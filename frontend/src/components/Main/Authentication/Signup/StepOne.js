@@ -3,6 +3,7 @@ import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 
 const StepOne = () => {
+  // To be replaced with API call from backend
   const isDoctor = false;
 
   const clientSignup = (

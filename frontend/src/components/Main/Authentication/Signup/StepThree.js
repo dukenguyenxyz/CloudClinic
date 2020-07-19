@@ -1,9 +1,12 @@
 import React from 'react';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
-// import AuthInput from '../Form/AuthInput/AuthInput';
+import AuthInput from '../Form/AuthInput/AuthInput';
 
 const StepThree = () => {
+  // To be replaced with API call from backend
+  const isDoctor = true;
+
   const clientSignup = (
     <>
       <h3>Existing Conditions</h3>
@@ -31,14 +34,26 @@ const StepThree = () => {
       <Button action="+" color="pink" />
 
       {/* Change to select input type */}
-      <AuthInput value="" placeholder="Dosage" type="number" />
+      <AuthInput value="" placeholder="Blood Type" type="text" />
+    </>
+  );
+
+  const doctorSignup = (
+    <>
+      <AuthInput value="" placeholder="Licence" type="text" />
+      <AuthInput value="" placeholder="Accreditation" type="text" />
+      <AuthInput value="" placeholder="Specialty Field" type="text" />
+      <AuthInput value="" placeholder="Sub Specialty Field" type="text" />
+      <AuthInput value="" placeholder="Education" type="text" />
+      <AuthInput value="" placeholder="Years of Experience" type="number" />
+      <AuthInput value="" placeholder="Languages Spoken" type="text" />
+      <Button action="+" color="pink" />
     </>
   );
 
   return (
     <div className="form-wrapper ">
-      {/* <h1>Three</h1> */}
-      {clientSignup}
+      {isDoctor ? doctorSignup : clientSignup}
     </div>
   );
 };
