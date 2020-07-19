@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { Redirect } from '@reach/router';
 import { AuthContext } from '../../globalState/index';
 
-const PrivateRoute = props => {
+const PrivateRoute = rest => {
   const { user } = useContext(AuthContext);
-  var { as: Comp, ...props } = props;
+  const { as: Comp, ...props } = rest;
   return user ? (
     <Comp {...props} />
   ) : (

@@ -7,7 +7,7 @@ import Profile from './Profile/Profile';
 import Menu from './Menu/Menu';
 import Hamburger from './Hamburger/Hamburger';
 
-const Navbar = () => {
+const Navbar = ({ location }) => {
   const { isOpen, setIsOpen } = useContext(NavbarContext);
   const { user } = useContext(AuthContext);
   const [animateMenu, cycleMenu] = useCycle(
@@ -30,7 +30,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <nav>
           <Logo isOpen={isOpen} />
-          <Menu isOpen={isOpen} user={user} />
+          <Menu isOpen={isOpen} user={user} location={location} />
           <div>
             <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
             <Profile isOpen={isOpen} user={user} />

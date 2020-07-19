@@ -1,12 +1,8 @@
 import React from 'react';
 import './Patients.scss';
 
-const Patients = () => {
-  return (
-    <div>
-      <h1>Patients view</h1>
-    </div>
-  );
+const Patients = ({ children }) => {
+  return <div>{children}</div>;
 };
 
 export default Patients;

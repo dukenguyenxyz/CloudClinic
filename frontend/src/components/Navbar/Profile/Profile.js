@@ -28,18 +28,15 @@ const Profile = ({ isOpen, user }) => {
           className="name"
           variants={name}
           initial="hidden"
-          animate="show"
           animate={isOpen ? 'show' : 'hidden'}
         >
-          {user && user.name}
+          {user && user.firstName}
         </motion.span>
       </div>
       <motion.div
-        className="logout"
         className="name"
         variants={logout}
         initial="hidden"
-        animate="show"
         animate={isOpen ? 'show' : 'hidden'}
       >
         {user && <LogOut />}

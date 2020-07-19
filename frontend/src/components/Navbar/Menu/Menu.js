@@ -13,11 +13,13 @@ import {
 const NavLink = props => (
   <Link
     {...props}
-    getProps={({ isCurrent }) => {
+    getProps={({ location, href }) => {
+      // can also destructure isCurrent prop which returns true if the location.pathname is exactly the same as the anchor’s href.
       // the object returned here is passed to the
-      // anchor element's props
+      // anchor element's props'
+
       return {
-        className: isCurrent ? 'active' : 'inactive',
+        className: location.pathname.includes(href) ? 'active' : 'inactive',
       };
     }}
   />
@@ -46,7 +48,7 @@ const Menu = ({ isOpen, user }) => {
 
   const isDisabledStyle = {
     color: user ? '#212429' : '#dde2e5',
-    cursor: user ? 'cursor' : 'not-allowed',
+    cursor: user ? 'pointer' : 'not-allowed',
   };
 
   return (
@@ -54,7 +56,6 @@ const Menu = ({ isOpen, user }) => {
       <motion.ul
         variants={container}
         initial="hidden"
-        animate="show"
         animate={isOpen ? 'show' : 'hidden'}
       >
         <li>

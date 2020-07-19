@@ -1,0 +1,31 @@
+.patient-list-item-wrapper {
+  border-bottom: 1px solid var(--light-grey);
+  transition: all 150ms ease-in-out;
+  .patient-list-item-container {
+    padding: 24px;
+    font-size: 2rem;
+    display: flex;
+    justify-content: space-between;
+
+    .profile {
+      display: flex;
+      align-items: center;
+      .avatar {
+        margin-right: 24px;
+        $size: 64px;
+        width: $size;
+        max-width: $size;
+        min-width: $size;
+        max-height: $size;
+        min-height: $size;
+        height: $size;
+        border-radius: 50%;
+        background-color: grey;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: var(--selected-color);
+  }
+}

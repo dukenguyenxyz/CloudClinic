@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Search from '../Search/Search';
 import './Header.scss';
+import { AuthContext } from '../../globalState/index';
 
 const Header = ({ location }) => {
+  const { user } = useContext(AuthContext);
+
   function getPathName() {
-    if (location.pathname === '/') {
-      return 'Home';
+    if (location.pathname === '/' && user) {
+      return `Welcome ${user.firstName}`;
+    }
+
+    if (location.pathname === '/' && !user) {
+      return `Home`;
     }
 
     if (location.state !== null) {
-      return (
-        location.pathname.slice(1).charAt(0).toUpperCase() +
-        location.pathname.slice(2)
-      );
+      let viewLocation = location.pathname.replace(/[^a-z]/g, '');
+      return viewLocation.charAt(0).toUpperCase() + viewLocation.slice(1);
     }
   }
 

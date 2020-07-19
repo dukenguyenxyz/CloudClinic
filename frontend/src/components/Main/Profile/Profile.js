@@ -1,13 +1,8 @@
 import React from 'react';
 import './Profile.scss';
-import MedicalHistory from './MedicalHistory/MedicalHistory';
 
-const Profile = () => {
-  return (
-    <div>
-      <MedicalHistory />
-    </div>
-  );
+const Profile = ({ children }) => {
+  return <div>{children}</div>;
 };
 
 export default Profile;

@@ -18,6 +18,10 @@ const LogoFramer = ({ isOpen }) => {
     show: { x: '0%', transition: { ease: 'easeInOut' } },
   };
 
+  const rectStyle = {
+    fill: '#ffffff',
+  };
+
   return (
     <div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 188.51 26.6">
@@ -26,7 +30,6 @@ const LogoFramer = ({ isOpen }) => {
           id="CloudClini"
           variants={logotype}
           initial="hidden"
-          animate="show"
           animate={isOpen ? 'show' : 'hidden'}
         >
           <path
@@ -94,9 +97,9 @@ const LogoFramer = ({ isOpen }) => {
           id="Cloud"
           variants={cloud}
           initial="hidden"
-          animate="show"
           animate={isOpen ? 'show' : 'hidden'}
         >
+          <rect x="132.2" style={rectStyle} width="56.3" height="26.6" />
           <path
             className="cls-1"
             d="M179.52,10.74l-.93,0c-1.66-3.27-5.43-5.22-10.52-5.22-.47,0-.92,0-1.36,0C164.28,2.21,159.79.22,154,.22c-7.14,0-12.28,3-14.06,7.9h.44a10.49,10.49,0,0,1,2.73.35,7.64,7.64,0,0,1,2.08-2.61c2.08-1.68,5.12-2.57,8.81-2.57s6.74.89,8.81,2.57c.16.13.3.26.45.4a7.48,7.48,0,0,1,1.84,2.67,14.44,14.44,0,0,1,3-.31h.12a10.08,10.08,0,0,1,6.29,1.84,5.7,5.7,0,0,1,.88.89,5.37,5.37,0,0,1,1.07,2.88,10.44,10.44,0,0,1,3-.43h.05a8.16,8.16,0,0,1,5.1,1.45,4,4,0,0,1,1.5,3.32,4,4,0,0,1-1.49,3.29,8.22,8.22,0,0,1-5.11,1.45H149a8.87,8.87,0,0,1-1.91,3.06h32.42c5.87,0,9.66-3.06,9.66-7.8S185.39,10.74,179.52,10.74Z"
