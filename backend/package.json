@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "nodemon": "nodemon index",
+    "start": "node server",
+    "nodemon": "nodemon server",
     "test": "jest --watch",
     "frontend": "npm start --prefix \"../frontend\"",
     "dev": "concurrently \"npm run nodemon\" \"npm run frontend\""

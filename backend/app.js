@@ -5,9 +5,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Optional packages
-const colors = require('colors');
-
 // Access dotenv
 dotenv.config({ path: './config/config.env' });
 
@@ -46,13 +43,4 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 
-// Set port
-const PORT = process.env.PORT || 5000;
-
-// Start server
-app.listen(
-  PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
-  )
-);
+module.exports = app;
