@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "nodemon": "nodemon index",
-    "test": "jest",
+    "test": "jest --watch",
     "frontend": "npm start --prefix \"../frontend\"",
     "dev": "concurrently \"npm run nodemon\" \"npm run frontend\""
   },
@@ -46,6 +46,7 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "jest": "^26.1.0",
     "nodemon": "^2.0.4",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2"
   }
 }
