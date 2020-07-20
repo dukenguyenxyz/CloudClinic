@@ -1,14 +1,16 @@
 import React from 'react';
 import './AuthSelect.scss';
-import { Heart, Users } from 'react-feather';
+import { Heart, Users, Hash } from 'react-feather';
 
-const AuthSelect = ({ placeholder, value, onChange, icon, options }) => {
+const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
   const getIcon = () => {
     switch (icon) {
       case 'heart':
         return <Heart color="#212429" size={14} />;
       case 'users':
         return <Users color="#212429" size={14} />;
+      case 'hash':
+        return <Hash color="#212429" size={14} />;
       default:
         return '';
     }
@@ -21,8 +23,7 @@ const AuthSelect = ({ placeholder, value, onChange, icon, options }) => {
   return (
     <div className="auth-select-wrapper">
       <i>{getIcon()}</i>
-
-      <select name={placeholder} value={value} onChange={onChange}>
+      <select name={placeholder} value={value} onChange={onValueChange}>
         {options.map(makeSelectItem)}
       </select>
     </div>

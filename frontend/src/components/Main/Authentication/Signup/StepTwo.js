@@ -36,8 +36,9 @@ const StepTwo = ({ formState, onValueChange }) => {
       {/* Date of Birth input - needs formatting for Date Picker input */}
       <AuthInput
         value={formState.dob}
-        placeholder="Date of Birth"
+        // placeholder="Date of Birth"
         type="date"
+        icon="calendar"
         onValueChange={e => onValueChange(e, 'dob')}
       />
       <AuthInput

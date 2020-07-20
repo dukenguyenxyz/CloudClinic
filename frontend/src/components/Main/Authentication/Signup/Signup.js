@@ -27,6 +27,18 @@ const Signup = () => {
     conditionStartDate: '',
     conditionComment: '',
     allergy: '',
+    severity: '',
+    medication: '',
+    dosage: '',
+    bloodType: '',
+    //Doctor states
+    licence: '',
+    accreditation: '',
+    specialtyField: '',
+    subSpecialtyField: '',
+    education: '',
+    yearsExp: '',
+    language: '',
   });
 
   const onNext = () => {
@@ -92,7 +104,7 @@ const Signup = () => {
                 <span>3/3</span>
               </div>
 
-              <StepThree />
+              <StepThree formState={formState} onValueChange={onValueChange} />
               <Button action="Previous" color="pink" onClick={onPrev} />
             </div>
           </div>
