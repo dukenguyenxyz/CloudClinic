@@ -103,8 +103,19 @@ exports.viewProfile = async (req, res) => {
 // Update profile
 exports.updateProfile = async (req, res) => {
   try {
+    // Unrequire list of fields if not provided
+    const unrequiredFields = ['firstName', 'lastName', 'password', 'isDoctor'];
+    unrequiredFields.forEach((field) => {
+      if (!req.body[field]) {
+        req.body[field] = req.user[field];
+      }
+    });
+
     // Unrequire confirm password
     req.body.confirmPassword = req.body.password;
+
+    // Disable updating email
+    req.body.email = req.user.email;
 
     const { error } = schemaValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
