@@ -3,6 +3,38 @@
   justify-content: space-between;
   width: 100%;
   padding: 24px;
+  flex-wrap: wrap;
+
+  @media all and (max-width: 573px) {
+    flex-direction: column;
+    padding: 24px 24px 0;
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+    }
+
+    .search-wrapper {
+      margin-bottom: 24px;
+    }
+  }
+
+  .mobile-header {
+    .logo-wrapper {
+      padding: 36px 8px;
+
+      svg {
+        width: 156px;
+      }
+    }
+
+    input {
+      width: 100%;
+    }
+  }
+
+  h1 {
+    padding-right: 24px;
+  }
 }
 
 .headroom {

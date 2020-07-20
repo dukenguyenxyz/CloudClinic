@@ -1,10 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Search from '../Search/Search';
 import './Header.scss';
-import { AuthContext } from '../../globalState/index';
+import { AuthContext, NavbarContext } from '../../globalState/index';
+import Logo from '../Navbar/Logo/Logo';
 
 const Header = ({ location }) => {
   const { user } = useContext(AuthContext);
+  const { isOpen, setIsOpen } = useContext(NavbarContext);
+  const [isMobile, setIsMobile] = useState(false);
 
   function getPathName() {
     if (location.pathname === '/' && user) {
@@ -21,7 +24,36 @@ const Header = ({ location }) => {
     }
   }
 
-  return (
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+  });
+
+  useEffect(() => {
+    const width = window.innerWidth;
+    if (width <= 425) {
+      setIsMobile(true);
+    }
+  }, []);
+
+  const handleResize = () => {
+    const width = window.innerWidth;
+    //remove toolbar and show mobile menu
+    if (width <= 425) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  return isMobile ? (
+    <header className="header-wrapper">
+      <div className="mobile-header">
+        <Logo isOpen={isOpen} />
+        <Search />
+      </div>
+      <h1>{getPathName()}</h1>
+    </header>
+  ) : (
     <header className="header-wrapper">
       <h1>{getPathName()}</h1>
       <Search />

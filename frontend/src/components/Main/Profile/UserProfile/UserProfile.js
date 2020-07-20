@@ -142,7 +142,7 @@ const UserProfile = props => {
                   <span className="tag">fatigue</span>
                 </div>
               </div>
-              <div className="visit-panel">
+              <div className="visit-notes">
                 <p>
                   Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                   Corrupti, sequi necessitatibus! Qui deserunt, neque est porro

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavbarContext, AuthContext } from '../../globalState/index';
 import { motion, useCycle } from 'framer-motion';
 import './Navbar.scss';
@@ -8,6 +8,7 @@ import Menu from './Menu/Menu';
 import Hamburger from './Hamburger/Hamburger';
 
 const Navbar = ({ location }) => {
+  const [isMobile, setIsMobile] = useState(false);
   const { isOpen, setIsOpen } = useContext(NavbarContext);
   const { user } = useContext(AuthContext);
   const [animateMenu, cycleMenu] = useCycle(
@@ -21,7 +22,28 @@ const Navbar = ({ location }) => {
     };
   }, [isOpen]);
 
-  return (
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+  });
+
+  useEffect(() => {
+    const width = window.innerWidth;
+    if (width <= 425) {
+      setIsMobile(true);
+    }
+  }, []);
+
+  const handleResize = () => {
+    const width = window.innerWidth;
+    //remove toolbar and show mobile menu
+    if (width <= 425) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  return !isMobile ? (
     <motion.header
       className="navbar-wrapper"
       animate={animateMenu}
@@ -38,6 +60,12 @@ const Navbar = ({ location }) => {
         </nav>
       </div>
     </motion.header>
+  ) : (
+    <div className="mobile-menu-wrapper">
+      <div className="mobile-menu-container">
+        <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
+      </div>
+    </div>
   );
 };
 
