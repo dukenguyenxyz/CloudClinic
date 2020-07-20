@@ -2,10 +2,12 @@ import React from 'react';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
+import AuthSelect from '../Form/AuthSelect/AuthSelect';
 
 const StepThree = () => {
   // To be replaced with API call from backend
-  const isDoctor = true;
+  const isDoctor = false;
+  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
   const clientSignup = (
     <>
@@ -32,10 +34,8 @@ const StepThree = () => {
         type="text"
         icon="alertCircle"
       />
-      {/* Slider input */}
-      {/* <label for="severity">Severity</label>
-      <AuthInput value="" id="severity" type="range" min="1" max="5" /> */}
-      {/* Plain number input */}
+
+      {/* Could replace with selector */}
       <AuthInput
         value=""
         placeholder="Severity (1-5)"
@@ -56,17 +56,12 @@ const StepThree = () => {
       <Button action="+" color="pink" />
 
       <h3>Blood Type</h3>
-      {/* <AuthInput value="" placeholder="Blood Type" type="text" /> */}
-      <select>
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
-      </select>
+      <AuthSelect
+        value=""
+        placeholder="Blood Type"
+        icon="heart"
+        options={bloodTypes}
+      />
     </>
   );
 

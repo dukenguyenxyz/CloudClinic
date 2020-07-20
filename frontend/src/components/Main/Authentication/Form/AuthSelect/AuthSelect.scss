@@ -1,0 +1,28 @@
+.auth-select-wrapper {
+  width: 100%;
+  align-self: end;
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--black);
+  margin-bottom: var(--component-padding);
+
+  select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    padding-left: 36px;
+    background: none;
+    color: var(--black);
+
+    border: 1px solid var(--light-grey);
+  }
+
+  i {
+    position: absolute;
+    margin-left: 12px;
+    display: flex;
+  }
+}
