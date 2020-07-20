@@ -5,23 +5,27 @@ const app = require('../app');
 const request = supertest(app);
 const User = require('../src/models/User');
 const Session = require('../src/models/Session');
-const { doctor1, client1, client2, authDoctor1 } = require('./dbsetup');
+// const { doctor1, client1, client2, authDoctor1 } = require('./dbsetup');
+const { setUpDB, userSignUpGen } = require('./dbsetup');
 
 beforeEach(async () => {
-  await User.deleteMany();
-  await Session.deleteMany();
+  // await User.deleteMany();
+  // await Session.deleteMany();
+  // await new User(authDoctor1).save();
 
-  await new User(authDoctor1).save();
+  const models = setUpDB();
 });
 
 // Public - Authentication Routes
 
 // DB setup: Model/Schema
 test('Auth: should sign up a new doctor', async () => {
+  const user = doctor1;
+
   const response = await request
     .post('/api/users/signup')
     .set('Content-Type', 'application/json')
-    .send(doctor1)
+    .send(user)
     .expect(201);
 
   expect(response.body.isDoctor).toBe(true);
@@ -31,10 +35,12 @@ test('Auth: should sign up a new doctor', async () => {
 
 // DB setup: Model/Schema
 test('Auth: should sign up a new client', async () => {
+  const user = client1;
+
   const response = await request
     .post('/api/users/signup')
     .set('Content-Type', 'application/json')
-    .send(client1)
+    .send(user)
     .expect(201);
 
   expect(response.body.isDoctor).toBe(false);
@@ -44,13 +50,13 @@ test('Auth: should sign up a new client', async () => {
 
 // DB setup: Model/Schema
 test('Auth: should fail to sign up', async () => {
-  const client1fail = client1;
-  client1.isDoctor = null;
+  const userFail = client1;
+  userFail.isDoctor = null;
 
   await request
     .post('/api/users/signup')
     .set('Content-Type', 'application/json')
-    .send(client1fail)
+    .send(userFail)
     .expect(400);
 });
 
@@ -76,13 +82,13 @@ test('Auth: should sign in a user', async () => {
 
 // DB setup: 1 user
 test('Auth: should fail to sign in a user', async () => {
-  const userfail = doctor1;
-  userfail.password = 'wrongpassword';
+  const userFail = doctor1;
+  userFail.password = 'wrongpassword';
 
   await request
     .post('/api/users/signin')
     .set('Content-Type', 'application/json')
-    .send({ email: userfail.email, password: userfail.password })
+    .send({ email: userFail.email, password: userFail.password })
     .expect(400);
 });
 
@@ -92,56 +98,94 @@ test('Auth: should fail to sign in a user', async () => {
 test('Public: should get all doctors', async () => {
   const response = await request.get('/api/users/').send().expect(200);
 
-  // Change this to equal to the current doctor in the database
   expect(response.body).toBeTruthy();
 });
 
 // DB setup: many doctors
 test('Public: should get one doctor', async () => {
+  const authUser = models[doctor][0];
+  // const authUser = authDoctor1;
+
   const response = await request
-    .get(`/api/users/${authDoctor1[_id]}`)
+    .get(`/api/users/${authUser[_id]}`)
     .send()
     .expect(200);
 
-  // Change this to equal to the current doctor in the database
-  expect(response.body.firstName).toBe(authDoctor1.firstName);
+  expect(response.body.firstName).toBe(authUser.firstName);
 });
-
-// DONE
 
 // User Routes
 
 // DB setup: 1 user
 test('Users: should sign out a user', async () => {
+  const authUser = models[doctor][0];
+  // const authUser = authDoctor1;
+
   const response = await request
     .patch('/api/users/signout')
     .set('Content-Type', 'application/json')
-    .set('Authorization', authDoctor1.tokens[0].token)
-    .send({ email: authDoctor1.email, password: authDoctor1.password })
-    .expect(201);
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
+
+  expect(response.body).toBeNull();
 });
 
 // DB setup: 1 user & many signins/ jwt keys
 test('Users: should sign out of all devices for a user', async () => {
+  const authUser = models[doctor][0];
+  // const authUser = authDoctor1;
+
   const response = await request
     .patch('/api/users/signoutall')
     .set('Content-Type', 'application/json')
-    .set('Authorization', authDoctor1.tokens[0].token)
-    .send({ email: authDoctor1.email, password: authDoctor1.password })
-    .expect(201);
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
+
+  expect(response.body).toBeNull();
 });
+
+// Resign in user for the tasks below or use a different email
 
 // DB setup: 1 user
 test("Users: should update a user's account", async () => {
-  const response = await request;
+  const authUser = models[doctor][1];
+
+  const firstName = 'New First';
+  const lastName = 'New Last';
+
+  const response = await request
+    .patch('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .send({ firstName, lastName })
+    .expect(201);
+
+  expect(response.body.firstName).toBe(firstName);
+  expect(response.body.lastName).toBe(lastName);
 });
 
 // DB setup: 1 user
 test("Users: should get a user's own profile", async () => {
-  const response = await request;
+  const authUser = models[doctor][1];
+
+  const response = await request
+    .get('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(201);
+
+  expect(response.body.firstName).toBe(authUser.firstName);
 });
 
 // DB setup: 1 user
 test("Users: should delete a user's account", async () => {
-  const response = await request;
+  const authUser = models[doctor][1];
+
+  const response = await request
+    .delete('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
+
+  expect(response.body.firstName).toBe(authUser.firstName);
 });
