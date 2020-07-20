@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PatientListItem from '../PatientListItem/PatientListItem';
 import Card from '../../../Card/Card';
 import axios from 'axios';
+import './PatientList.scss';
 
 const PatientList = () => {
   const [users, setUsers] = useState([]);
@@ -20,7 +21,7 @@ const PatientList = () => {
     getUsers();
   }, []);
   return (
-    <div>
+    <div className="patient-list-wrapper">
       <Card>
         <ul>
           {users.map(user => (
