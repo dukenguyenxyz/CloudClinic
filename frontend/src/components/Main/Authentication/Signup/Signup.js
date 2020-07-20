@@ -1,6 +1,6 @@
 import React from 'react';
 import StepOne from './StepOne';
-// import StepTwo from './StepTwo';
+import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
@@ -17,10 +17,10 @@ const Signup = () => {
           </div>
 
           <StepOne />
-          {/* <StepTwo /> */}
           <Button action="Next" color="pink" />
         </div>
       </div>
+
       <div className="form-wrapper">
         <div className="trim" />
         <div className="form-container">
@@ -29,7 +29,19 @@ const Signup = () => {
             <span>2/3</span>
           </div>
 
-          {/* <StepTwo /> */}
+          <StepTwo />
+          <Button action="Next" color="pink" />
+        </div>
+      </div>
+
+      <div className="form-wrapper">
+        <div className="trim" />
+        <div className="form-container">
+          <div className="form-header">
+            <h1>Sign up</h1>
+            <span>3/3</span>
+          </div>
+
           <StepThree />
           <Button action="Next" color="pink" />
         </div>
