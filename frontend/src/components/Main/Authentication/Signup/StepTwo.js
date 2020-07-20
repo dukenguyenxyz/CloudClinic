@@ -1,14 +1,30 @@
 import React from 'react';
 import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
+import AuthSelect from '../Form/AuthSelect/AuthSelect';
 
-const StepTwo = () => {
+const StepTwo = ({ formState, onValueChange }) => {
+  const options = ['male', 'female'];
+
+  console.log(formState);
   const basicInformationSignup = (
     <>
       <h3>Basic Information</h3>
 
-      <AuthInput value="" placeholder="Title" type="text" icon="username" />
-      <AuthInput value="" placeholder="Sex" type="text" icon="username" />
+      <AuthInput
+        value={formState.title}
+        placeholder="Title"
+        type="text"
+        icon="username"
+        onValueChange={e => onValueChange(e, 'title')}
+      />
+      <AuthSelect
+        value=""
+        placeholder="Sex"
+        type="text"
+        icon="users"
+        options={options}
+      />
       {/* Relevant input for Doctor form? */}
       <AuthInput value="" placeholder="Weight" type="number" icon="clipboard" />
       {/* Date of Birth input - needs formatting for Date Picker input */}

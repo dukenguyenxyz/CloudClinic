@@ -2,7 +2,7 @@ import React from 'react';
 import './Button.scss';
 import { ArrowLeft, ArrowRight, ArrowDown, ArrowUp } from 'react-feather';
 
-const Button = ({ action, color, icon }) => {
+const Button = ({ action, color, icon, onClick }) => {
   const getIcon = () => {
     const iconSize = 20;
 
@@ -22,7 +22,7 @@ const Button = ({ action, color, icon }) => {
 
   return (
     <div className={`button-wrapper ${color}`}>
-      <button type="button">
+      <button type="button" onClick={onClick}>
         <i>{getIcon()}</i>
         {action}
       </button>

@@ -2,41 +2,44 @@ import React from 'react';
 import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 
-const StepOne = () => {
+const StepOne = ({ formState, onValueChange }) => {
   // To be replaced with API call from backend
   const isDoctor = false;
 
   const clientSignup = (
     <>
       <AuthInput
-        value=""
+        value={formState.username}
         placeholder="Username"
         type="text"
         icon="username"
         minLength="3"
+        onValueChange={e => onValueChange(e, 'username')}
       />
       <AuthInput
-        value=""
+        value={formState.email}
         placeholder="Email"
+        stateKey="email"
         type="email"
         icon="email"
         minLength="3"
+        onValueChange={e => onValueChange(e, 'email')}
       />
-      {/* <AuthInput value="" placeholder="Last Name" type="text" icon="username" />  */}
-      {/* <AuthInput value="" placeholder="Email" type="email" icon="email" /> */}
       <AuthInput
-        value=""
+        value={formState.password}
         placeholder="Password"
         type="password"
         icon="password"
         minLength="6"
+        onValueChange={e => onValueChange(e, 'password')}
       />
       <AuthInput
-        value=""
+        value={formState.confirmPassword}
         placeholder="Confirm"
         type="password"
         icon="password"
         minLength="6"
+        onValueChange={e => onValueChange(e, 'confirmPassword')}
       />
     </>
   );

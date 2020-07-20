@@ -25,4 +25,13 @@
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
   }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  input[type='date'] {
+    font-family: 'Maison Neue';
+  }
 }

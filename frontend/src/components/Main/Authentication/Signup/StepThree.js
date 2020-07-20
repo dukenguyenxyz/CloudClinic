@@ -22,7 +22,12 @@ const StepThree = () => {
         type="text"
         icon="condition"
       />
-      <AuthInput value="" placeholder="Condition Start Date" type="date" />
+      <AuthInput
+        value=""
+        placeholder="Condition Start Date"
+        type="date"
+        icon="calendar"
+      />
       <AuthInput value="" placeholder="Comments" type="text" icon="textArea" />
       {/* Need to trigger an event to render more forms if people have multiple conditions */}
       <Button action="+" color="pink" />

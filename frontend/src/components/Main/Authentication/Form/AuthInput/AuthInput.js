@@ -24,12 +24,11 @@ import {
 
 const AuthInput = ({
   placeholder,
-  value,
-  onChange,
-  handleKeyPress,
+  onValueChange,
   type,
   icon,
   minLength,
+  value,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -75,7 +74,6 @@ const AuthInput = ({
         return '';
     }
   };
-
   return (
     <div className="auth-input-wrapper">
       <label className={value ? 'active' : null} htmlFor={placeholder}>
@@ -86,11 +84,10 @@ const AuthInput = ({
         type={type}
         name={placeholder}
         value={value}
-        onChange={onChange}
-        onKeyUp={handleKeyPress}
         autoComplete="off"
         required
         minLength={minLength}
+        onChange={onValueChange}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 @import './configs/variables';
 @import './configs/reset';
+@import './configs/breakpoints';
 
 h1 {
   font-family: 'Maison Neue';
@@ -49,5 +50,11 @@ h1 {
 .light {
   button {
     background-color: var(--light-blue);
+  }
+}
+
+@include media('<=tablet') {
+  body {
+    background: red;
   }
 }
