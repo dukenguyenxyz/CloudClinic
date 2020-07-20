@@ -4,8 +4,7 @@ import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
 
-const StepThree = () => {
-  // To be replaced with API call from backend
+const StepThree = ({ formState, onValueChange }) => {
   const isDoctor = false;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
@@ -17,24 +16,32 @@ const StepThree = () => {
         date
       </p>
       <AuthInput
-        value=""
+        value={formState.condition}
         placeholder="Condition"
         type="text"
         icon="condition"
+        onValueChange={e => onValueChange(e, 'condition')}
       />
       <AuthInput
-        value=""
+        value={formState.conditionStartDate}
         placeholder="Condition Start Date"
         type="date"
         icon="calendar"
+        onValueChange={e => onValueChange(e, 'conditionStartDate')}
       />
-      <AuthInput value="" placeholder="Comments" type="text" icon="textArea" />
+      <AuthInput
+        value={formState.conditionComment}
+        placeholder="Comments"
+        type="text"
+        icon="textArea"
+        onValueChange={e => onValueChange(e, 'conditionComment')}
+      />
       {/* Need to trigger an event to render more forms if people have multiple conditions */}
       <Button action="+" color="pink" />
 
       <h3>Allergies</h3>
       <AuthInput
-        value=""
+        value={formState.conditionStartDate}
         placeholder="Allergy"
         type="text"
         icon="alertCircle"

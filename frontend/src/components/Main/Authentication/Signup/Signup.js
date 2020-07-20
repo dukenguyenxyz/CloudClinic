@@ -22,8 +22,11 @@ const Signup = () => {
     city: '',
     country: '',
     postcode: '',
+    //need to be an array?
     condition: '',
-    startDate: '',
+    conditionStartDate: '',
+    conditionComment: '',
+    allergy: '',
   });
 
   const onNext = () => {
@@ -90,7 +93,7 @@ const Signup = () => {
               </div>
 
               <StepThree />
-              <Button action="Next" color="pink" />
+              <Button action="Previous" color="pink" onClick={onPrev} />
             </div>
           </div>
         );
