@@ -6,9 +6,11 @@
 
   .user-profile-container {
     padding: 24px;
+
     .user-header-wrapper {
       display: flex;
       padding-bottom: 24px;
+      padding-top: 8px;
       .avatar {
         margin-right: 24px;
         $size: 64px;
@@ -29,13 +31,17 @@
       }
     }
     .user-details-wrapper {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+      gap: 24px 8px;
 
       .user-info {
         display: flex;
         flex-direction: column;
         padding-bottom: 24px;
+        &:last-child {
+          padding-bottom: 0px;
+        }
         span:first-child {
           text-transform: uppercase;
           font-size: 12px;
@@ -45,5 +51,75 @@
         }
       }
     }
+
+    .user-medical-history-wrapper {
+      .visit {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        border-top: 1px solid var(--light-grey);
+        padding: 24px 0;
+
+        .visit-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          span:nth-child(1),
+          span:nth-child(2) {
+            color: var(--mid-grey);
+          }
+        }
+
+        .tag {
+          padding: 8px 12px;
+          border-radius: 30px;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          align-self: end;
+          margin-bottom: 8px;
+          white-space: nowrap;
+        }
+
+        $colors: #f683ac, #9ac2d8, #3e5b7f;
+
+        // $colors: blue, red, green;
+
+        @for $i from 1 through length($colors) {
+          .tag:nth-child(#{length($colors)}n + #{$i}) {
+            background: nth($colors, $i);
+            border: 1px solid darken(nth($colors, $i), 35%);
+            color: darken(nth($colors, $i), 50%);
+          }
+        }
+
+        .tags-wrapper {
+          align-self: start;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          width: 50%;
+        }
+
+        .visit-panel {
+          display: grid;
+          gap: 24px 0px;
+          grid-template-rows: 24px auto;
+        }
+      }
+    }
+  }
+
+  .panel-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  h2 {
+    line-height: 1;
+    font-weight: 600;
+    font-size: 2rem;
   }
 }

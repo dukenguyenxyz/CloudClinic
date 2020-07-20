@@ -7,6 +7,7 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({
     firstName: 'DHH',
   });
+  // const [user, setUser] = useState(null);
 
   const authState = {
     // JWT,
