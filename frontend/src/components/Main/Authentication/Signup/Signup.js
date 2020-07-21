@@ -22,19 +22,10 @@ const Signup = () => {
     city: '',
     country: '',
     postcode: '',
-    // condition: '',
-    // conditionStartDate: '',
-    // conditionComment: '',
     existingConditions: [
       { condition: '', conditionStartDate: '', conditionComment: '' },
-      { condition: '', conditionStartDate: '', conditionComment: '' },
     ],
-    // allergy: '',
-    // severity: '',
     allergies: [{ allergy: '', severity: '' }],
-    // medication: '',
-    // dosage: '',
-    // manufacturer: '',
     medications: [{ medication: '', dosage: '', manufacturer: '' }],
     bloodType: '',
     //Doctor states
@@ -70,27 +61,26 @@ const Signup = () => {
   };
 
   //Handlers for adding/removing extra form fields
-  // const handleRemoveClick = (index) => {
-
-  // }
-
-  //key param refers to which key to reference e.g. existingConditions
-  //stateFields is the object that is needed to be put into the array
-  //e.g. stateFields = { condition: '', conditionStartDate: '', conditionComment: '' }
-  const handleAddClick = (key, formFieldsObject) => {
-    console.log(formFieldsObject);
+  const handleRemoveClick = (key, i) => {
+    //spread value at the formState key into list
+    const list = [...formState[key]];
+    //at index i, remove one item
+    list.splice(i, 1);
     setFormState({
       ...formState,
-      [key]: [formFieldsObject, ...formState[key]],
+      [key]: list,
     });
   };
 
-  // const handleAddClick = (arr, formFieldsObject, key) => {
-  //   setFormState({
-  //     ...formState,
-  //     [key]: arr.push(formFieldsObject),
-  //   });
-  // };
+  //key param refers to which key to reference e.g. existingConditions
+  //stateFields is the object that is needed to be put into the array
+  //e.g. formFieldsObject = { condition: '', conditionStartDate: '', conditionComment: '' }
+  const handleAddClick = (key, formFieldsObject) => {
+    setFormState({
+      ...formState,
+      [key]: [...formState[key], formFieldsObject],
+    });
+  };
 
   const displayFormStep = () => {
     switch (formState.step) {
@@ -138,6 +128,7 @@ const Signup = () => {
                 formState={formState}
                 onValueChange={onValueChange}
                 handleAddClick={handleAddClick}
+                handleRemoveClick={handleRemoveClick}
               />
               <Button action="Previous" color="pink" onClick={onPrev} />
             </div>

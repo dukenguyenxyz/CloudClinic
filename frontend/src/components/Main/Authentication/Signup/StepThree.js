@@ -5,7 +5,12 @@ import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
 import { v4 as uuidv4 } from 'uuid';
 
-const StepThree = ({ formState, onValueChange, handleAddClick }) => {
+const StepThree = ({
+  formState,
+  onValueChange,
+  handleAddClick,
+  handleRemoveClick,
+}) => {
   const isDoctor = false;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
@@ -17,28 +22,6 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
         Please list any current medical conditions and their approximate start
         date
       </p>
-      {/* <AuthInput
-        value={formState.condition}
-        placeholder="Condition"
-        type="text"
-        icon="condition"
-        onValueChange={e => onValueChange(e, 'condition')}
-      />
-      <AuthInput
-        value={formState.conditionStartDate}
-        // placeholder="Condition Start Date"
-        type="date"
-        icon="calendar"
-        onValueChange={e => onValueChange(e, 'conditionStartDate')}
-      />
-      <AuthInput
-        value={formState.conditionComment}
-        placeholder="Comments"
-        type="text"
-        icon="textArea"
-        onValueChange={e => onValueChange(e, 'conditionComment')}
-      /> 
-      <Button action="+" color="pink" /> */}
 
       {formState.existingConditions.map((val, i) => {
         return (
@@ -66,7 +49,11 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
             />
             <div className="btn-box">
               {formState.existingConditions.length !== 1 && (
-                <Button action="-" color="pink" />
+                <Button
+                  onClick={() => handleRemoveClick('existingConditions', i)}
+                  action="-"
+                  color="pink"
+                />
               )}
               {formState.existingConditions.length - 1 === i && (
                 <Button
@@ -87,23 +74,50 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
       })}
 
       <h3>Allergies</h3>
-      {/* <AuthInput
-        value={formState.allergy}
-        placeholder="Allergy"
-        type="text"
-        icon="alertCircle"
-        onValueChange={e => onValueChange(e, 'allergy')}
-      />
 
-      <AuthSelect
-        value={formState.severity}
-        placeholder="Severity"
-        type="text"
-        icon="hash"
-        options={severityOptions}
-        onValueChange={e => onValueChange(e, 'severity')}
-      />
-      <Button action="+" color="pink" /> */}
+      {formState.allergies.map((val, i) => {
+        return (
+          <div key={uuidv4()}>
+            <AuthInput
+              name="Allergy"
+              value={val.allergy}
+              placeholder="Allergy"
+              type="text"
+              icon="alertCircle"
+            />
+
+            <AuthSelect
+              name="Severity"
+              value={val.severity}
+              placeholder="Severity"
+              type="text"
+              icon="hash"
+              options={severityOptions}
+            />
+            <div className="btn-box">
+              {formState.allergies.length !== 1 && (
+                <Button
+                  onClick={() => handleRemoveClick('allergies', i)}
+                  action="-"
+                  color="pink"
+                />
+              )}
+              {formState.allergies.length - 1 === i && (
+                <Button
+                  onClick={() =>
+                    handleAddClick('allergies', {
+                      allergy: '',
+                      severity: '',
+                    })
+                  }
+                  action="+"
+                  color="pink"
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
 
       <h3>Medication</h3>
       {/* <AuthInput
@@ -112,9 +126,8 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
         type="text"
         icon="medication"
         onValueChange={e => onValueChange(e, 'medication')}
-      /> */}
-      {/* Replace this field with comments/notes? Dosage is often context dependent such as daily vs monthly */}
-      {/* <AuthInput
+      /> 
+      <AuthInput
         value={formState.dosage}
         placeholder="Dosage"
         type="number"
@@ -130,6 +143,53 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
       />
 
       <Button action="+" color="pink" /> */}
+
+      {formState.medications.map((val, i) => {
+        return (
+          <div key={uuidv4()}>
+            <AuthInput
+              name="Medication"
+              value={val.medication}
+              placeholder="Medication"
+              type="text"
+              icon="medication"
+            />
+            <AuthInput
+              value={val.dosage}
+              placeholder="Dosage"
+              type="number"
+              icon="hash"
+            />
+            <AuthInput
+              value={val.manufacturer}
+              placeholder="Manufacturer"
+              type="number"
+              icon="briefcase"
+            />
+            <div className="btn-box">
+              {formState.medications.length !== 1 && (
+                <Button
+                  onClick={() => handleRemoveClick('medications', i)}
+                  action="-"
+                  color="pink"
+                />
+              )}
+              {formState.medications.length - 1 === i && (
+                <Button
+                  onClick={() =>
+                    handleAddClick('medications', {
+                      allergy: '',
+                      severity: '',
+                    })
+                  }
+                  action="+"
+                  color="pink"
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
 
       <h3>Blood Type</h3>
       <AuthSelect
