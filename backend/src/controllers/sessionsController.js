@@ -166,7 +166,7 @@ exports.bookSession = async (req, res) => {
     session.client = req.user._id;
     session.save();
 
-    res.status(201).send(session);
+    res.status(200).send(session);
   } catch (e) {
     res.status(500).send(e);
   }
@@ -174,96 +174,92 @@ exports.bookSession = async (req, res) => {
 
 // Update a session (if less than 24hr from booking)
 exports.updateSession = async (req, res) => {
+  // Check if creator is doctor
+  isDoctorValidation(req, false);
+  // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
+
+  const session = await sessionExists(req);
+
+  // // Find session
+  // const session = await Session.findById(req.params._id);
+
+  // if (!session) {
+  //   res.status(404).send();
+  // }
+
+  // Refactor this
+  // Check if session has no booking
+  if (String(session.client) !== String(req.user._id)) {
+    res.status(400).send({ error: 'invalid action' });
+  }
+
+  const { startTime, endTime } = await sessionValidation(req, req.body, false);
+
+  // // Validate input
+  // const { error } = sessionValidation(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
+
+  // // Check if current time is before 24 hours
+  lessThanOneDay(session.startTime);
+
+  // const currentTime = moment(Date.now());
+  // const oneDayAhead = currentTime.add(moment.duration(24, 'h'));
+  // const lessThanOneDay = oneDayAhead.isAfter(session.startTime);
+
+  // if (!lessThanOneDay) {
+  //   res
+  //     .status(404)
+  //     .send({ error: 'cannot change schedule if booking is within 24 hrs ' });
+  // }
+
+  // session.startTime = req.body.startTime;
+  // session.endTime = req.body.endTime;
+
   try {
-    // Check if creator is doctor
-    isDoctorValidation(req, false);
-    // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
-
-    const session = await sessionExists(req);
-
-    // // Find session
-    // const session = await Session.findById(req.params._id);
-
-    // if (!session) {
-    //   res.status(404).send();
-    // }
-
-    // Refactor this
-    // Check if session has no booking
-    if (String(session.client) !== String(req.user._id)) {
-      res.status(400).send({ error: 'invalid action' });
-    }
-
-    const { startTime, endTime } = await sessionValidation(
-      req,
-      req.body,
-      false
-    );
-
-    // // Validate input
-    // const { error } = sessionValidation(req.body);
-    // if (error) return res.status(400).send(error.details[0].message);
-
-    // // Check if current time is before 24 hours
-    lessThanOneDay(session.startTime);
-
-    // const currentTime = moment(Date.now());
-    // const oneDayAhead = currentTime.add(moment.duration(24, 'h'));
-    // const lessThanOneDay = oneDayAhead.isAfter(session.startTime);
-
-    // if (!lessThanOneDay) {
-    //   res
-    //     .status(404)
-    //     .send({ error: 'cannot change schedule if booking is within 24 hrs ' });
-    // }
-
-    // session.startTime = req.body.startTime;
-    // session.endTime = req.body.endTime;
-
     session.startTime = startTime;
     session.endTime = endTime;
     session.save();
 
-    res.send(session);
+    res.status(200).send(session);
   } catch (e) {
-    res.status(500).send(e);
+    res.status(400).send(e);
   }
 };
 
 // Cancel a session (if less than 24hr from booking)
 exports.cancelSession = async (req, res) => {
+  // Check if creator is client
+  isDoctorValidation(req, false);
+  // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
+
+  const session = await sessionExists(req);
+  // // Find session
+  // const session = await Session.findById(req.params._id);
+
+  // if (!session) {
+  //   res.status(404).send();
+  // }
+
+  // Check if session has no booking
+  if (String(session.client) !== String(req.user._id)) {
+    res.status(400).send({ error: 'invalid action' });
+  }
+
+  // Check if current time is before 24 hours
+  lessThanOneDay(session.startTime);
+  // const minTime = 60 * 60 * 24 * 1000; // one day
+  // if (!(Date.now() - session.startTime > minTime)) {
+  //   res
+  //     .status(404)
+  //     .send({ error: 'cannot change schedule if booking is within 24 hrs ' });
+  // }
+
   try {
-    // Check if creator is client
-    isDoctorValidation(req, false);
-    // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
-
-    const session = await sessionExists(req);
-    // // Find session
-    // const session = await Session.findById(req.params._id);
-
-    // if (!session) {
-    //   res.status(404).send();
-    // }
-
-    // Check if session has no booking
-    if (String(session.client) !== String(req.user._id)) {
-      res.status(400).send({ error: 'invalid action' });
-    }
-
-    // Check if current time is before 24 hours
-    lessThanOneDay(session.startTime);
-    // const minTime = 60 * 60 * 24 * 1000; // one day
-    // if (!(Date.now() - session.startTime > minTime)) {
-    //   res
-    //     .status(404)
-    //     .send({ error: 'cannot change schedule if booking is within 24 hrs ' });
-    // }
-
     session.client = null;
     session.save();
 
     res.send(session);
   } catch (e) {
-    res.status(500).send();
+    res.status(400).send(e);
   }
 };

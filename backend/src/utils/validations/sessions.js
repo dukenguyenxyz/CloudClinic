@@ -31,6 +31,7 @@ const sessionValidation = async (req, session) => {
   const timeDiff = moment.duration(endTime.diff(startTime)).asMinutes();
 
   // console.log({ startTime, endTime });
+  // console.log(timeDiff);
 
   if (!(timeDiff === 30 || timeDiff === 60)) {
     throw new Error('invalid time range');
@@ -96,12 +97,16 @@ exports.sessionsValidationMethod2 = async (req, sessions) => {
 };
 
 exports.sessionExists = async (req) => {
-  const session = await Session.findById(req.params.id);
+  const session = await Session.findById(req.params.id, function (err) {
+    if (err) {
+      throw new Error('resource does not exist');
+    }
+  });
 
-  if (!session) {
-    // res.status(404).send();
-    throw new Error('resource does not exist');
-  }
+  // if (!session) {
+  //   // res.status(404).send();
+  //   throw new Error('resource does not exist');
+  // }
 
   // // Check if the client is making the booking not the doctor
   // if (req.user.isDoctor) {
@@ -119,11 +124,11 @@ exports.sessionExists = async (req) => {
 };
 
 exports.lessThanOneDay = (sessionStartTime) => {
-  const currentTime = moment(Date.now());
-  const oneDayAhead = currentTime.add(moment.duration(24, 'h'));
+  const currentTime = moment();
+  const oneDayAhead = currentTime.add(1, 'days');
   const lessThanOneDayVar = oneDayAhead.isAfter(sessionStartTime);
 
-  if (!lessThanOneDayVar) {
+  if (lessThanOneDayVar) {
     // res
     //   .status(404)
     //   .send({ error: 'cannot change schedule if booking is within 24 hrs ' });

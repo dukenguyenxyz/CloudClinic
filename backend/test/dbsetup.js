@@ -151,7 +151,8 @@ const freeSessionGen = async (count, isForm = true) => {
   let startTime = moment(randomDateNowTo2021())
     .minute(0)
     .second(0)
-    .millisecond(0);
+    .millisecond(0)
+    .add(7, 'days');
 
   const doctor = models.doctor[3];
 
@@ -183,9 +184,9 @@ const freeSessionGen = async (count, isForm = true) => {
 };
 exports.freeSessionGen = freeSessionGen;
 
-exports.bookedSessionsGen = async () => {
+exports.bookedSessionsDocGen = async () => {
   const doctor = models.doctor[3];
-  const freeSessions = freeSessionGen(10);
+  const freeSessions = await freeSessionGen(10);
   const clientArray = models.client;
   const sessionsPromise = [];
 
@@ -195,6 +196,27 @@ exports.bookedSessionsGen = async () => {
     mappedSession.doctor = doctor._id;
     mappedSession.client =
       clientArray[Math.floor(Math.random() * clientArray.length)];
+
+    sessionsPromise.push(new Session(mappedSession).save());
+  }
+
+  const bookedSessions = await Promise.all(sessionsPromise);
+
+  return bookedSessions;
+};
+
+exports.bookedSessionsClientGen = async () => {
+  const client = models.client[3];
+  const freeSessions = await freeSessionGen(10);
+  const doctorArray = models.doctor;
+  const sessionsPromise = [];
+
+  for (session of freeSessions) {
+    const mappedSession = session;
+
+    mappedSession.client = client._id;
+    mappedSession.doctor =
+      doctorArray[Math.floor(Math.random() * doctorArray.length)];
 
     sessionsPromise.push(new Session(mappedSession).save());
   }
