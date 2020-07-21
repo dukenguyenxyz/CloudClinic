@@ -1,5 +1,3 @@
-const router = require('express').Router();
-
 const User = require('../models/User');
 const Session = require('../models/Session');
 const {
@@ -9,23 +7,23 @@ const {
 
 // Sign up
 exports.signUp = async (req, res) => {
-  // Validation before creation
-  const { error } = schemaValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  // Check for unique email
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send('email already exists');
-
-  // Check if confirmPassword is the same as password
-  if (!req.body.confirmPassword === req.body.password) {
-    return res.status(404).send('confirmed password is incorrect');
-  }
-
-  // Try to save otherwise send error
-  const user = new User(req.body);
-
   try {
+    // Validation before creation
+    const { error } = schemaValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // Check for unique email
+    const emailExist = await User.findOne({ email: req.body.email });
+    if (emailExist) return res.status(400).send('email already exists');
+
+    // Check if confirmPassword is the same as password
+    if (!req.body.confirmPassword === req.body.password) {
+      return res.status(404).send('confirmed password is incorrect');
+    }
+
+    // Try to save otherwise send error
+    const user = new User(req.body);
+
     // Protect from malicious account information assignment
     if (user.isDoctor) {
       delete user.clientInfo;
@@ -39,7 +37,7 @@ exports.signUp = async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (e) {
-    res.status(400).send(e);
+    res.status(500).send();
   }
 };
 
@@ -94,6 +92,9 @@ exports.signOutAll = async (req, res) => {
 // Get own user's profile
 exports.viewProfile = async (req, res) => {
   try {
+    if (!req.user) {
+      res.status(401).send();
+    }
     res.send(req.user);
   } catch (e) {
     res.status(500).send();
@@ -103,8 +104,20 @@ exports.viewProfile = async (req, res) => {
 // Update profile
 exports.updateProfile = async (req, res) => {
   try {
+    // Unrequire list of fields if not provided
+    const unrequiredFields = ['firstName', 'lastName', 'password'];
+    unrequiredFields.forEach((field) => {
+      if (!req.body[field]) {
+        req.body[field] = req.user[field];
+      }
+    });
+
     // Unrequire confirm password
     req.body.confirmPassword = req.body.password;
+
+    // Disable updating email & isDoctor
+    req.body.email = req.user.email;
+    req.body.isDoctor = req.user.isDoctor;
 
     const { error } = schemaValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -117,7 +130,7 @@ exports.updateProfile = async (req, res) => {
 
     res.status(201).send(req.user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(500).send();
   }
 };
 
@@ -131,68 +144,78 @@ exports.deleteProfile = async (req, res) => {
   }
 };
 
-// // GET CLIENTS ROUTE
+// // GET Client(s) Routes
 // All Clients
 exports.viewClients = async (req, res) => {
   try {
-    console.log('1');
     if (!req.user.isDoctor) {
-      res.status(404).send({ error: 'Forbidden' });
+      res.status(403).send({ error: 'Forbidden' });
     }
-    console.log('2');
-    const bookedSessions = await Session.find({ doctor: req.user._id });
-    // client: not null
-    console.log('3');
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-    console.log('4');
-    console.log(bookedSessions);
+
+    // Change this to allow null
+    const bookedSessions = await Session.find(
+      { doctor: req.user._id },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
+
     const bookedWithClients = bookedSessions.map((session) => session.client);
-    console.log('5');
+
     // Assign all users to the user of bookedSessions
-    const users = await User.find({ _id: { $in: bookedWithClients } });
-    console.log('6');
+    const users = await User.find(
+      { _id: { $in: bookedWithClients } },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
+
     // Only send appropriate data
-    res.send(users);
-    console.log('7');
+    res.status(200).send(users);
   } catch (e) {
-    console.log(e.message);
-    res.status(500).send(e);
+    res.status(500).send();
   }
 };
 
 // One Client
 exports.viewClient = async (req, res) => {
-  console.log('hEre 1');
   try {
-    const bookedSessions = await Session.find({
-      doctor: req.user._id,
-      client: req.params.id,
-    });
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-    const user = await User.find({ _id: req.params.id, isDoctor: false });
+    await Session.find(
+      {
+        doctor: req.user._id,
+        client: req.params.id,
+      },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
 
-    if (!user) {
-      return res.status(404).send();
-    }
+    const user = await User.findOne(
+      { _id: req.params.id, isDoctor: false },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
 
-    // Only send appropriate data
     res.send(user);
   } catch (e) {
     res.status(500).send();
   }
 };
 
-// // GET DOCTORS ROUTE (ADD MORE VALIDATION HERE)
+// // GET Doctor(s) Routes (ADD MORE VALIDATION HERE)
 // All Doctors
 exports.viewDoctors = async (req, res) => {
   try {
     const users = await User.find({ isDoctor: true });
-
-    // Only send appropriate data
     res.send(users);
   } catch (e) {
     res.status(500).send();
@@ -202,13 +225,14 @@ exports.viewDoctors = async (req, res) => {
 // One Doctor
 exports.viewDoctor = async (req, res) => {
   try {
-    const user = await User.find({ _id: req.params.id, isDoctor: true });
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    // Only send appropriate data
+    const user = await User.findOne(
+      { _id: req.params.id, isDoctor: true },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
     res.send(user);
   } catch (e) {
     res.status(500).send();

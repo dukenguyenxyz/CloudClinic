@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "nodemon": "nodemon index",
+    "start": "node server",
+    "nodemon": "nodemon server",
+    "test": "jest --watch  --runInBand --detectOpenHandles",
     "frontend": "npm start --prefix \"../frontend\"",
     "dev": "concurrently \"npm run nodemon\" \"npm run frontend\""
   },
@@ -27,6 +28,7 @@
     "express": "^4.17.1",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "mongoose": "^5.9.22",
     "mongoose-seed": "^0.6.0"
@@ -43,7 +45,9 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "jest": "^26.1.0",
     "nodemon": "^2.0.4",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2"
   }
 }
