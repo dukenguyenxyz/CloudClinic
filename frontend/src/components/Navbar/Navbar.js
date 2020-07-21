@@ -61,8 +61,8 @@ const Navbar = ({ location }) => {
       </div>
     </motion.header>
   ) : (
-    <div className="mobile-menu-wrapper">
-      <div className="mobile-menu-container">
+    <div className="mobile-hamburger-wrapper">
+      <div className="mobile-hamburger-container">
         <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
       </div>
     </div>

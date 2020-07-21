@@ -3,6 +3,7 @@ import Search from '../Search/Search';
 import './Header.scss';
 import { AuthContext, NavbarContext } from '../../globalState/index';
 import Logo from '../Navbar/Logo/Logo';
+import MobileMenu from '../MobileMenu/MobileMenu';
 
 const Header = ({ location }) => {
   const { user } = useContext(AuthContext);
@@ -46,13 +47,16 @@ const Header = ({ location }) => {
   };
 
   return isMobile ? (
-    <header className="header-wrapper">
-      <div className="mobile-header">
-        <Logo isOpen={isOpen} />
-        <Search />
-      </div>
-      <h1>{getPathName()}</h1>
-    </header>
+    <>
+      <MobileMenu isOpen={isOpen} user={user} setIsOpen={setIsOpen} />
+      <header className="header-wrapper">
+        <div className="mobile-header">
+          <Logo isOpen={isOpen} isMobile={isMobile} />
+          <Search />
+        </div>
+        <h1>{getPathName()}</h1>
+      </header>
+    </>
   ) : (
     <header className="header-wrapper">
       <h1>{getPathName()}</h1>

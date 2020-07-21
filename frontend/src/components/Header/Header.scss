@@ -4,6 +4,7 @@
   width: 100%;
   padding: 24px;
   flex-wrap: wrap;
+  user-select: none;
 
   @media all and (max-width: 573px) {
     flex-direction: column;
@@ -15,6 +16,7 @@
 
     .search-wrapper {
       margin-bottom: 24px;
+      width: 100%;
     }
   }
 
@@ -24,6 +26,8 @@
 
       svg {
         width: 156px;
+        position: relative;
+        z-index: 200;
       }
     }
 

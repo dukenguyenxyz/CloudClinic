@@ -27,13 +27,13 @@
   }
 }
 
-.mobile-menu-wrapper {
+.mobile-hamburger-wrapper {
   position: fixed;
   z-index: 99;
   bottom: 0;
   right: 0;
   padding: 48px 24px;
-  .mobile-menu-container {
+  .mobile-hamburger-container {
     background-color: var(--white);
     display: flex;
     align-items: center;

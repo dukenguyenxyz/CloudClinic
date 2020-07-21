@@ -3,11 +3,11 @@ import { Link } from '@reach/router';
 import './Logo.scss';
 import LogoFramer from './LogoFramer';
 
-const Logo = ({ isOpen }) => {
+const Logo = ({ isOpen, isMobile }) => {
   return (
     <Link to="/">
       <div className="logo-wrapper">
-        <LogoFramer isOpen={isOpen} />
+        <LogoFramer isOpen={isOpen} isMobile={isMobile} />
       </div>
     </Link>
   );
