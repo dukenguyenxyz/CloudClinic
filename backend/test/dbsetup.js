@@ -9,71 +9,71 @@ const User = require('../src/models/User');
 const Session = require('../src/models/Session');
 
 const user = {
-  firstName: 'Hugh',
-  lastName: 'Buisman',
-  title: 'Sir',
-  sex: 'male',
-  weight: '55',
-  dateOfBirth: '05/11/1999',
-  phoneNumber: '04104820594',
-  email: 'asdfasfdasdfaSd123@gmail.com',
-  password: '123456789',
-  confirmPassword: '123456789',
-  isDoctor: 'true',
-  address: {
-    number: '4',
-    street: 'Beamish Street',
-    city: 'Sydney',
-    state: 'New South Wales',
-    country: 'Australia',
-    postcode: '2149',
+  firstName : 'Hugh',
+  lastName : 'Buisman',
+  title : 'Sir',
+  sex : 'male',
+  weight : '55',
+  dateOfBirth : '05/11/1999',
+  phoneNumber : '04104820594',
+  email : 'asdfasfdasdfaSd123@gmail.com',
+  password : '123456789',
+  confirmPassword : '123456789',
+  isDoctor : 'true',
+  address : {
+    number : '4',
+    street : 'Beamish Street',
+    city : 'Sydney',
+    state : 'New South Wales',
+    country : 'Australia',
+    postcode : '2149',
   },
-  doctorInfo: {
-    licence: 'MIT',
-    accreditations: ['USyd', 'UNSW'],
-    specialtyField: 'Dentistry',
-    subSpecialtyField: 'Prosthodontics',
-    education: ['ANU', 'Macquarie University'],
-    yearsExperience: '10',
-    tags: ['Orthodontics', 'Prosthodontics'],
-    languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+  doctorInfo : {
+    licence : 'MIT',
+    accreditations : [ 'USyd', 'UNSW' ],
+    specialtyField : 'Dentistry',
+    subSpecialtyField : 'Prosthodontics',
+    education : [ 'ANU', 'Macquarie University' ],
+    yearsExperience : '10',
+    tags : [ 'Orthodontics', 'Prosthodontics' ],
+    languagesSpoken : [ 'Cantonese', 'Mandarin', 'Japanese', 'English' ],
   },
-  clientInfo: {
-    medicalHistory: [
+  clientInfo : {
+    medicalHistory : [
       {
-        startDate: '03/05/2005',
-        condition: 'High Blood Pressure',
-        notes: 'Due to old age',
+        startDate : '03/05/2005',
+        condition : 'High Blood Pressure',
+        notes : 'Due to old age',
       },
       {
-        startDate: '11/11/2003',
-        condition: 'Pneumonia',
-        notes: 'Due to travel to Africa',
-      },
-    ],
-    allergies: [
-      {
-        name: 'Dust allergy',
-        severity: '3',
-      },
-      {
-        name: 'Pollen allergy',
-        severity: '2',
+        startDate : '11/11/2003',
+        condition : 'Pneumonia',
+        notes : 'Due to travel to Africa',
       },
     ],
-    medication: [
+    allergies : [
       {
-        name: 'Magic mushroom',
-        dosage: '200',
-        manufacturer: 'Brazil',
+        name : 'Dust allergy',
+        severity : '3',
       },
       {
-        name: 'Cannabis',
-        dosage: '100',
-        manufacturer: 'Australia',
+        name : 'Pollen allergy',
+        severity : '2',
       },
     ],
-    bloodType: 'A+',
+    medication : [
+      {
+        name : 'Magic mushroom',
+        dosage : '200',
+        manufacturer : 'Brazil',
+      },
+      {
+        name : 'Cannabis',
+        dosage : '100',
+        manufacturer : 'Australia',
+      },
+    ],
+    bloodType : 'A+',
   },
 };
 
@@ -81,13 +81,13 @@ const user = {
 const userGenerator = (uuid, isDoctorBoolean, isSignUpForm = true) => {
   const role = isDoctorBoolean ? 'doctor' : 'client';
 
-  const newUser = { ...user };
+  const newUser = {...user};
   const newID = new mongoose.Types.ObjectId();
 
   if (!isSignUpForm) {
     newUser._id = newID;
     newUser.tokens = [
-      { token: jwt.sign({ _id: newID }, process.env.TOKEN_SECRET) },
+      {token : jwt.sign({_id : newID}, process.env.TOKEN_SECRET)},
     ];
   }
 
@@ -101,7 +101,7 @@ exports.userGenerator = userGenerator;
 
 // User Gen With Auth for Sign In
 const usersSetup = () => {
-  const models = { doctor: [], client: [] };
+  const models = {doctor : [], client : []};
 
   for (i = 1; i < 10; i++) {
     const role = i < 6;
@@ -117,9 +117,8 @@ const models = usersSetup();
 exports.models = models;
 
 // User Gen Without Auth for Sign Up
-exports.userSignUpGen = (length, isDoctor) => {
-  return userGenerator(length + 1, isDoctor, true);
-};
+exports.userSignUpGen =
+    (length, isDoctor) => { return userGenerator(length + 1, isDoctor, true); };
 
 exports.setupDB = async () => {
   await User.deleteMany();
@@ -127,7 +126,7 @@ exports.setupDB = async () => {
 
   const usersPromise = [];
 
-  const newModel = [...models.doctor, ...models.client];
+  const newModel = [...models.doctor, ...models.client ];
 
   for (i = 0; i < newModel.length; i++) {
     usersPromise.push(new User(newModel[i]).save());
@@ -139,9 +138,8 @@ exports.setupDB = async () => {
 };
 
 function randomDate(start, end) {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
+  return new Date(start.getTime() +
+                  Math.random() * (end.getTime() - start.getTime()));
 }
 
 const randomDateNowTo2021 = () => randomDate(new Date(), new Date(2021, 0, 1));
@@ -149,10 +147,10 @@ const randomDateNowTo2021 = () => randomDate(new Date(), new Date(2021, 0, 1));
 const freeSessionGen = async (count, isForm = true) => {
   const sessions = [];
   let startTime = moment(randomDateNowTo2021())
-    .minute(0)
-    .second(0)
-    .millisecond(0)
-    .add(7, 'days');
+                      .minute(0)
+                      .second(0)
+                      .millisecond(0)
+                      .add(7, 'days');
 
   const doctor = models.doctor[3];
 
@@ -160,8 +158,8 @@ const freeSessionGen = async (count, isForm = true) => {
     const endTime = moment(startTime).add(30, 'minutes');
 
     const session = {
-      startTime: moment(startTime).valueOf(),
-      endTime: moment(endTime).valueOf(),
+      startTime : moment(startTime).valueOf(),
+      endTime : moment(endTime).valueOf(),
     };
 
     if (!isForm) {
@@ -195,7 +193,7 @@ exports.bookedSessionsDocGen = async () => {
 
     mappedSession.doctor = doctor._id;
     mappedSession.client =
-      clientArray[Math.floor(Math.random() * clientArray.length)];
+        clientArray[Math.floor(Math.random() * clientArray.length)];
 
     sessionsPromise.push(new Session(mappedSession).save());
   }
@@ -216,7 +214,7 @@ exports.bookedSessionsClientGen = async () => {
 
     mappedSession.client = client._id;
     mappedSession.doctor =
-      doctorArray[Math.floor(Math.random() * doctorArray.length)];
+        doctorArray[Math.floor(Math.random() * doctorArray.length)];
 
     sessionsPromise.push(new Session(mappedSession).save());
   }

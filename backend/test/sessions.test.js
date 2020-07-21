@@ -22,19 +22,18 @@ test('Doctor: should create sessions', async () => {
   const sessions = await freeSessionGen(5);
 
   const newSessions = sessions.map((session) => {
-    const { startTime, endTime } = session;
+    const {startTime, endTime} = session;
     return {
       startTime,
       endTime,
     };
   });
 
-  const response = await request
-    .post(`/api/sessions`)
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .send(sessions)
-    .expect(201);
+  const response = await request.post(`/api/sessions`)
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .send(sessions)
+                       .expect(201);
 
   expect(response.body).toMatchObject(newSessions);
 });
@@ -47,12 +46,11 @@ test('Doctor: should delete session', async () => {
   const session = sessions[3];
   const authUser = models.doctor[3];
 
-  const response = await request
-    .delete(`/api/sessions/${session._id}`)
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .send()
-    .expect(200);
+  const response = await request.delete(`/api/sessions/${session._id}`)
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .send()
+                       .expect(200);
 
   expect(response.body.startTime).toBeTruthy();
 });
@@ -65,11 +63,10 @@ test('Doctor: should get sessions', async () => {
   await bookedSessionsDocGen();
   const authUser = models.doctor[3];
 
-  const response = await request
-    .get('/api/sessions/')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .expect(200);
+  const response = await request.get('/api/sessions/')
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .expect(200);
 
   expect(response.body).toBeTruthy();
 });
@@ -82,11 +79,10 @@ test('Doctor: should get clients', async () => {
   await bookedSessionsDocGen();
   const authUser = models.doctor[3];
 
-  const response = await request
-    .get('/api/users/clients')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .expect(200);
+  const response = await request.get('/api/users/clients')
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .expect(200);
 
   expect(response.body).toBeTruthy();
 });
@@ -98,13 +94,12 @@ test('Doctor: should get clients', async () => {
 test('Doctor: should get one client', async () => {
   const sessions = await bookedSessionsDocGen();
   const authUser = models.doctor[3];
-  const { client } = sessions[3];
+  const {client} = sessions[3];
 
-  const response = await request
-    .get(`/api/users/clients/${client._id}`)
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .expect(200);
+  const response = await request.get(`/api/users/clients/${client._id}`)
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .expect(200);
 
   expect(String(response.body._id)).toBe(String(client._id));
 });
@@ -120,12 +115,11 @@ test('Client: should book session', async () => {
   const session = sessions[3];
   const doctor = models.doctor[3];
   const authUser = models.client[3];
-  const response = await request
-    .patch(`/api/sessions/${session._id}/book`)
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .send()
-    .expect(200);
+  const response = await request.patch(`/api/sessions/${session._id}/book`)
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .send()
+                       .expect(200);
   expect(String(response.body._id)).toBe(String(session._id));
 });
 // Client: should not book session (incorrect session ID)
@@ -137,12 +131,11 @@ test('Client: should get sessions', async () => {
   const authUser = models.client[3];
   const sessions = await bookedSessionsClientGen();
 
-  const response = await request
-    .get('/api/sessions')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .send()
-    .expect(200);
+  const response = await request.get('/api/sessions')
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .send()
+                       .expect(200);
 
   expect(response.body).toBeTruthy();
 });
@@ -156,25 +149,23 @@ test('Client: should update session', async () => {
   const sessions = await bookedSessionsClientGen();
   const session = sessions[3];
   const newSession = {
-    startTime: 3161048400000,
-    endTime: 3161050200000,
+    startTime : 3161048400000,
+    endTime : 3161050200000,
   };
 
-  const response = await request
-    .patch(`/api/sessions/${session.id}/update`)
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .send(newSession)
-    .expect(200);
+  const response = await request.patch(`/api/sessions/${session.id}/update`)
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .send(newSession)
+                       .expect(200);
 
-  expect(moment(response.body.startTime).valueOf()).toBe(
-    moment(newSession.startTime).valueOf()
-  );
+  expect(moment(response.body.startTime).valueOf())
+      .toBe(moment(newSession.startTime).valueOf());
 });
 // Client: should not update session (incorrect session ID)
-// Client: should not update session (incorrect startTime & endTime) (many cases)
-// Client: should not update session (empty JWT)
-// Client: should not update session (wrong JWT)
+// Client: should not update session (incorrect startTime & endTime) (many
+// cases) Client: should not update session (empty JWT) Client: should not
+// update session (wrong JWT)
 
 // DB setup: 1 client & 1 session
 test('Client: should cancel session', async () => {
@@ -182,15 +173,13 @@ test('Client: should cancel session', async () => {
   const sessions = await bookedSessionsClientGen();
   const session = sessions[3];
 
-  const response = await request
-    .patch(`/api/sessions/${session._id}/cancel`)
-    .set('Content-Type', 'application/json')
-    .set('Authorization', authUser.tokens[0].token)
-    .send()
-    .expect(200);
-  expect(moment(response.body.startTime).valueOf()).toBe(
-    moment(session.startTime).valueOf()
-  );
+  const response = await request.patch(`/api/sessions/${session._id}/cancel`)
+                       .set('Content-Type', 'application/json')
+                       .set('Authorization', authUser.tokens[0].token)
+                       .send()
+                       .expect(200);
+  expect(moment(response.body.startTime).valueOf())
+      .toBe(moment(session.startTime).valueOf());
 });
 // Client: should not cancel session (incorrect session ID)
 // Client: should not cancel session (empty JWT)

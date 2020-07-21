@@ -9,12 +9,14 @@ const {
 exports.signUp = async (req, res) => {
   try {
     // Validation before creation
-    const { error } = schemaValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    const {error} = schemaValidation(req.body);
+    if (error)
+      return res.status(400).send(error.details[0].message);
 
     // Check for unique email
-    const emailExist = await User.findOne({ email: req.body.email });
-    if (emailExist) return res.status(400).send('email already exists');
+    const emailExist = await User.findOne({email : req.body.email});
+    if (emailExist)
+      return res.status(400).send('email already exists');
 
     // Check if confirmPassword is the same as password
     if (!req.body.confirmPassword === req.body.password) {
@@ -35,7 +37,7 @@ exports.signUp = async (req, res) => {
 
     await user.save();
     const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
+    res.status(201).send({user, token});
   } catch (e) {
     res.status(500).send();
   }
@@ -45,19 +47,18 @@ exports.signUp = async (req, res) => {
 exports.signIn = async (req, res) => {
   try {
     // Validation before creation
-    const { error } = signInValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    const {error} = signInValidation(req.body);
+    if (error)
+      return res.status(400).send(error.details[0].message);
 
     // Check if email & password are correct
-    const user = await User.findByCredentials(
-      req.body.email,
-      req.body.password
-    );
+    const user =
+        await User.findByCredentials(req.body.email, req.body.password);
 
     // Create and assign a token
     const token = await user.generateAuthToken();
 
-    res.status(201).send({ user, token });
+    res.status(201).send({user, token});
   } catch (e) {
     res.status(400).send(e);
   }
@@ -66,9 +67,8 @@ exports.signIn = async (req, res) => {
 // Sign out of current session
 exports.signOut = async (req, res) => {
   try {
-    req.user.tokens = req.user.tokens.filter((token) => {
-      return token.token !== req.token;
-    });
+    req.user.tokens = req.user.tokens.filter(
+        (token) => { return token.token !== req.token; });
     await req.user.save();
 
     res.send();
@@ -105,7 +105,7 @@ exports.viewProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     // Unrequire list of fields if not provided
-    const unrequiredFields = ['firstName', 'lastName', 'password'];
+    const unrequiredFields = [ 'firstName', 'lastName', 'password' ];
     unrequiredFields.forEach((field) => {
       if (!req.body[field]) {
         req.body[field] = req.user[field];
@@ -119,12 +119,12 @@ exports.updateProfile = async (req, res) => {
     req.body.email = req.user.email;
     req.body.isDoctor = req.user.isDoctor;
 
-    const { error } = schemaValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    const {error} = schemaValidation(req.body);
+    if (error)
+      return res.status(400).send(error.details[0].message);
 
-    Object.keys(req.body).forEach((update) => {
-      req.user[update] = req.body[update];
-    });
+    Object.keys(req.body).forEach(
+        (update) => { req.user[update] = req.body[update]; });
 
     await req.user.save();
 
@@ -149,30 +149,26 @@ exports.deleteProfile = async (req, res) => {
 exports.viewClients = async (req, res) => {
   try {
     if (!req.user.isDoctor) {
-      res.status(403).send({ error: 'Forbidden' });
+      res.status(403).send({error : 'Forbidden'});
     }
 
     // Change this to allow null
-    const bookedSessions = await Session.find(
-      { doctor: req.user._id },
-      function (err) {
-        if (err) {
-          return res.status(404).send();
-        }
-      }
-    );
+    const bookedSessions =
+        await Session.find({doctor : req.user._id}, function(err) {
+          if (err) {
+            return res.status(404).send();
+          }
+        });
 
     const bookedWithClients = bookedSessions.map((session) => session.client);
 
     // Assign all users to the user of bookedSessions
-    const users = await User.find(
-      { _id: { $in: bookedWithClients } },
-      function (err) {
-        if (err) {
-          return res.status(404).send();
-        }
-      }
-    );
+    const users =
+        await User.find({_id : {$in : bookedWithClients}}, function(err) {
+          if (err) {
+            return res.status(404).send();
+          }
+        });
 
     // Only send appropriate data
     res.status(200).send(users);
@@ -184,26 +180,22 @@ exports.viewClients = async (req, res) => {
 // One Client
 exports.viewClient = async (req, res) => {
   try {
-    await Session.find(
-      {
-        doctor: req.user._id,
-        client: req.params.id,
-      },
-      function (err) {
-        if (err) {
-          return res.status(404).send();
-        }
-      }
-    );
+    await Session.find({
+      doctor : req.user._id,
+      client : req.params.id,
+    },
+                       function(err) {
+                         if (err) {
+                           return res.status(404).send();
+                         }
+                       });
 
-    const user = await User.findOne(
-      { _id: req.params.id, isDoctor: false },
-      function (err) {
-        if (err) {
-          return res.status(404).send();
-        }
-      }
-    );
+    const user = await User.findOne({_id : req.params.id, isDoctor : false},
+                                    function(err) {
+                                      if (err) {
+                                        return res.status(404).send();
+                                      }
+                                    });
 
     res.send(user);
   } catch (e) {
@@ -215,7 +207,7 @@ exports.viewClient = async (req, res) => {
 // All Doctors
 exports.viewDoctors = async (req, res) => {
   try {
-    const users = await User.find({ isDoctor: true });
+    const users = await User.find({isDoctor : true});
     res.send(users);
   } catch (e) {
     res.status(500).send();
@@ -225,14 +217,12 @@ exports.viewDoctors = async (req, res) => {
 // One Doctor
 exports.viewDoctor = async (req, res) => {
   try {
-    const user = await User.findOne(
-      { _id: req.params.id, isDoctor: true },
-      function (err) {
-        if (err) {
-          return res.status(404).send();
-        }
-      }
-    );
+    const user = await User.findOne({_id : req.params.id, isDoctor : true},
+                                    function(err) {
+                                      if (err) {
+                                        return res.status(404).send();
+                                      }
+                                    });
     res.send(user);
   } catch (e) {
     res.status(500).send();

@@ -3,7 +3,8 @@
 /*  eslint-disable-next-line no-restricted-syntax */
 
 // IMPORTANT: Replace all res.send with throw new Error due to the following:
-// // Cannot set headers after they are sent to the clientError [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+// // Cannot set headers after they are sent to the clientError
+// [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
 
 const Joi = require('@hapi/joi'); // Validation
 const moment = require('moment');
@@ -12,17 +13,16 @@ const Session = require('../../models/Session');
 
 // Ensure date is always in the future
 const schema = Joi.object({
-  startTime: Joi.date().timestamp('unix').min('now').required(),
-  endTime: Joi.date().timestamp('unix').required(),
+  startTime : Joi.date().timestamp('unix').min('now').required(),
+  endTime : Joi.date().timestamp('unix').required(),
 });
 
 const sessionValidation = async (req, session) => {
-  const joiValidation = (sessionParam) => {
-    return schema.validate(sessionParam);
-  };
+  const joiValidation =
+      (sessionParam) => { return schema.validate(sessionParam); };
 
   // Validate input
-  const { error } = joiValidation(session);
+  const {error} = joiValidation(session);
   if (error) {
     throw new Error(error.details[0].message);
   }
@@ -40,30 +40,28 @@ const sessionValidation = async (req, session) => {
   }
 
   // Validation to check whether this time is available for this doctor
-  const sessions = await Session.find({ doctor: req.user._id });
+  const sessions = await Session.find({doctor : req.user._id});
   sessions.forEach((sessionEach) => {
-    if (
-      startTime.isBetween(sessionEach.startTime, sessionEach.endTime) ||
-      endTime.isBetween(sessionEach.startTime, sessionEach.endTime) ||
-      startTime.isSame(sessionEach.startTime) ||
-      endTime.isSame(sessionEach.endTime) ||
-      startTime.isSame(sessionEach.endTime) ||
-      endTime.isSame(sessionEach.startTime)
-    ) {
+    if (startTime.isBetween(sessionEach.startTime, sessionEach.endTime) ||
+        endTime.isBetween(sessionEach.startTime, sessionEach.endTime) ||
+        startTime.isSame(sessionEach.startTime) ||
+        endTime.isSame(sessionEach.endTime) ||
+        startTime.isSame(sessionEach.endTime) ||
+        endTime.isSame(sessionEach.startTime)) {
       throw new Error('this time is not available');
     }
   });
 
-  // Validate inside array to make sure each date is unique and not in between others in the params
-  return { startTime, endTime };
+  // Validate inside array to make sure each date is unique and not in between
+  // others in the params
+  return {startTime, endTime};
 };
 
 exports.sessionsValidationMethod1 = (req, sessions) => {
   const sessionsArray = [];
 
-  sessions.forEach((session) => {
-    sessionsArray.push(sessionValidation(req, session));
-  });
+  sessions.forEach(
+      (session) => { sessionsArray.push(sessionValidation(req, session)); });
 
   return sessionsArray;
 };
@@ -72,26 +70,26 @@ exports.sessionsValidationMethod2 = async (req, sessions) => {
   const sessionsArray = [];
 
   for (const session of sessions) {
-    const { startTime, endTime } = await sessionValidation(req, session);
+    const {startTime, endTime} = await sessionValidation(req, session);
 
     const newSession = new Session({
       startTime,
       endTime,
-      doctor: req.user._id,
+      doctor : req.user._id,
     });
 
     await newSession.save();
 
     sessionsArray.push({
-      startTime: moment(startTime).valueOf(),
-      endTime: moment(endTime).valueOf(),
+      startTime : moment(startTime).valueOf(),
+      endTime : moment(endTime).valueOf(),
     });
   }
   return sessionsArray;
 };
 
 exports.sessionExists = async (req) => {
-  const session = await Session.findById(req.params.id, function (err) {
+  const session = await Session.findById(req.params.id, function(err) {
     if (err) {
       throw new Error('resource does not exist');
     }
@@ -114,10 +112,10 @@ exports.lessThanOneDay = (sessionStartTime) => {
 exports.isDoctorValidation = (req, isDoctor) => {
   if (isDoctor && !req.user.isDoctor) {
     // Doctor-only action
-    throw new Error({ error: 'invalid action' });
+    throw new Error({error : 'invalid action'});
   } else if (!isDoctor && req.user.isDoctor) {
     // Client-only action
-    throw new Error({ error: 'invalid action' });
+    throw new Error({error : 'invalid action'});
   }
 };
 

@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 // Access dotenv
-dotenv.config({ path: './config/config.env' });
+dotenv.config({path : './config/config.env'});
 
 // Import Routes
 const usersRoute = require('./src/routes/users');
@@ -36,11 +36,8 @@ app.get('/api', (req, res) => res.send('Hello world!'));
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('../frontend/build'));
 
-  app.get('*', (req, res) =>
-    res.sendFile(
-      path.resolve(__dirname, '../', 'frontend', 'build', 'index.html')
-    )
-  );
+  app.get('*', (req, res) => res.sendFile(path.resolve(
+                   __dirname, '../', 'frontend', 'build', 'index.html')));
 }
 
 module.exports = app;
