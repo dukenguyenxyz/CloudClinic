@@ -4,7 +4,7 @@ import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
 
-const StepThree = ({ formState, onValueChange }) => {
+const StepThree = ({ formState, onValueChange, handleAddClick }) => {
   const isDoctor = false;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
@@ -16,7 +16,7 @@ const StepThree = ({ formState, onValueChange }) => {
         Please list any current medical conditions and their approximate start
         date
       </p>
-      <AuthInput
+      {/* <AuthInput
         value={formState.condition}
         placeholder="Condition"
         type="text"
@@ -36,12 +36,56 @@ const StepThree = ({ formState, onValueChange }) => {
         type="text"
         icon="textArea"
         onValueChange={e => onValueChange(e, 'conditionComment')}
-      />
-      {/* Need to trigger an event to render more forms if people have multiple conditions */}
-      <Button action="+" color="pink" />
+      /> 
+      <Button action="+" color="pink" /> */}
+
+      {formState.existingConditions.map((val, i) => {
+        return (
+          <>
+            <AuthInput
+              name="Condition"
+              value={val.condition}
+              placeholder="Condition"
+              type="text"
+              icon="condition"
+            />
+            <AuthInput
+              name="conditionStartDate"
+              value={val.conditionStartDate}
+              // placeholder="Condition Start Date"
+              type="date"
+              icon="calendar"
+            />
+            <AuthInput
+              name="conditionComment"
+              value={val.conditionComment}
+              placeholder="Comments"
+              type="text"
+              icon="textArea"
+            />
+            <div className="btn-box">
+              {formState.existingConditions.length !== 1 && (
+                <Button action="-" color="pink" />
+              )}
+              {formState.existingConditions.length - 1 === i && (
+                <Button
+                  onClick={handleAddClick('existingConditions', {
+                    condition: '',
+                    conditionStartDate: '',
+                    conditionComment: '',
+                  })}
+                  // onClick={handleAddClick}
+                  action="+"
+                  color="pink"
+                />
+              )}
+            </div>
+          </>
+        );
+      })}
 
       <h3>Allergies</h3>
-      <AuthInput
+      {/* <AuthInput
         value={formState.allergy}
         placeholder="Allergy"
         type="text"
@@ -57,25 +101,33 @@ const StepThree = ({ formState, onValueChange }) => {
         options={severityOptions}
         onValueChange={e => onValueChange(e, 'severity')}
       />
-      <Button action="+" color="pink" />
+      <Button action="+" color="pink" /> */}
 
       <h3>Medication</h3>
-      <AuthInput
+      {/* <AuthInput
         value={formState.medication}
         placeholder="Medication"
         type="text"
         icon="medication"
         onValueChange={e => onValueChange(e, 'medication')}
-      />
+      /> */}
       {/* Replace this field with comments/notes? Dosage is often context dependent such as daily vs monthly */}
-      <AuthInput
+      {/* <AuthInput
         value={formState.dosage}
         placeholder="Dosage"
         type="number"
         icon="hash"
         onValueChange={e => onValueChange(e, 'dosage')}
       />
-      <Button action="+" color="pink" />
+      <AuthInput
+        value={formState.manufacturer}
+        placeholder="Manufacturer"
+        type="number"
+        icon="briefcase"
+        onValueChange={e => onValueChange(e, 'manufacturer')}
+      />
+
+      <Button action="+" color="pink" /> */}
 
       <h3>Blood Type</h3>
       <AuthSelect
@@ -132,14 +184,14 @@ const StepThree = ({ formState, onValueChange }) => {
         icon="hash"
         onValueChange={e => onValueChange(e, 'yearsExp')}
       />
-      <AuthInput
+      {/* <AuthInput
         value={formState.language}
         placeholder="Languages Spoken"
         type="text"
         icon="language"
         onValueChange={e => onValueChange(e, 'language')}
       />
-      <Button action="+" color="pink" />
+      <Button action="+" color="pink" /> */}
     </>
   );
 

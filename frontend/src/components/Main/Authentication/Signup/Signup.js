@@ -22,14 +22,20 @@ const Signup = () => {
     city: '',
     country: '',
     postcode: '',
-    //need to be an array?
-    condition: '',
-    conditionStartDate: '',
-    conditionComment: '',
-    allergy: '',
-    severity: '',
-    medication: '',
-    dosage: '',
+    // condition: '',
+    // conditionStartDate: '',
+    // conditionComment: '',
+    existingConditions: [
+      { condition: '', conditionStartDate: '', conditionComment: '' },
+      { condition: '', conditionStartDate: '', conditionComment: '' },
+    ],
+    // allergy: '',
+    // severity: '',
+    allergies: [{ allergy: '', severity: '' }],
+    // medication: '',
+    // dosage: '',
+    // manufacturer: '',
+    medications: [{ medication: '', dosage: '', manufacturer: '' }],
     bloodType: '',
     //Doctor states
     licence: '',
@@ -38,7 +44,8 @@ const Signup = () => {
     subSpecialtyField: '',
     education: '',
     yearsExp: '',
-    language: '',
+    // language: '',
+    languages: [{ language: '' }],
   });
 
   const onNext = () => {
@@ -61,6 +68,29 @@ const Signup = () => {
       [key]: e.target.value,
     });
   };
+
+  //Handlers for adding/removing extra form fields
+  // const handleRemoveClick = (index) => {
+
+  // }
+
+  //key param refers to which key to reference e.g. existingConditions
+  //stateFields is the object that is needed to be put into the array
+  //e.g. stateFields = { condition: '', conditionStartDate: '', conditionComment: '' }
+  const handleAddClick = (key, formFieldsObject) => {
+    setFormState({
+      ...formState,
+      [key]: [...formFieldsObject],
+      // [key]: formState.key.push(formFieldsObject),
+    });
+  };
+
+  // const handleAddClick = (arr, formFieldsObject, key) => {
+  //   setFormState({
+  //     ...formState,
+  //     [key]: arr.push(formFieldsObject),
+  //   });
+  // };
 
   const displayFormStep = () => {
     switch (formState.step) {
@@ -104,7 +134,11 @@ const Signup = () => {
                 <span>3/3</span>
               </div>
 
-              <StepThree formState={formState} onValueChange={onValueChange} />
+              <StepThree
+                formState={formState}
+                onValueChange={onValueChange}
+                handleAddClick={handleAddClick}
+              />
               <Button action="Previous" color="pink" onClick={onPrev} />
             </div>
           </div>
