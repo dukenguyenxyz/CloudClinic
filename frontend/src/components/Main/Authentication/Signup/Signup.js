@@ -78,10 +78,10 @@ const Signup = () => {
   //stateFields is the object that is needed to be put into the array
   //e.g. stateFields = { condition: '', conditionStartDate: '', conditionComment: '' }
   const handleAddClick = (key, formFieldsObject) => {
+    console.log(formFieldsObject);
     setFormState({
       ...formState,
-      [key]: [...formFieldsObject],
-      // [key]: formState.key.push(formFieldsObject),
+      [key]: [formFieldsObject, ...formState[key]],
     });
   };
 

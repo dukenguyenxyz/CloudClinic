@@ -3,6 +3,7 @@ import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
+import { v4 as uuidv4 } from 'uuid';
 
 const StepThree = ({ formState, onValueChange, handleAddClick }) => {
   const isDoctor = false;
@@ -41,7 +42,7 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
 
       {formState.existingConditions.map((val, i) => {
         return (
-          <>
+          <div key={uuidv4()}>
             <AuthInput
               name="Condition"
               value={val.condition}
@@ -69,18 +70,19 @@ const StepThree = ({ formState, onValueChange, handleAddClick }) => {
               )}
               {formState.existingConditions.length - 1 === i && (
                 <Button
-                  onClick={handleAddClick('existingConditions', {
-                    condition: '',
-                    conditionStartDate: '',
-                    conditionComment: '',
-                  })}
-                  // onClick={handleAddClick}
+                  onClick={() =>
+                    handleAddClick('existingConditions', {
+                      condition: '',
+                      conditionStartDate: '',
+                      conditionComment: '',
+                    })
+                  }
                   action="+"
                   color="pink"
                 />
               )}
             </div>
-          </>
+          </div>
         );
       })}
 

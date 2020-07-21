@@ -1,6 +1,7 @@
 import React from 'react';
 import './AuthSelect.scss';
 import { Heart, Users, Hash } from 'react-feather';
+import { v4 as uuidv4 } from 'uuid';
 
 const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
   const getIcon = () => {
@@ -17,7 +18,11 @@ const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
   };
 
   const makeSelectItem = item => {
-    return <option value={item}>{item}</option>;
+    return (
+      <option value={item} key={uuidv4()}>
+        {item}
+      </option>
+    );
   };
 
   return (

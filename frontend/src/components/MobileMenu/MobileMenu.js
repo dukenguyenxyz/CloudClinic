@@ -43,6 +43,7 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
 
   const menuUl = {
     hidden: {
+      opacity: '0%',
       transition: {
         staggerChildren: 0.2,
         ease: 'easeInOut',
@@ -50,6 +51,7 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
       },
     },
     show: {
+      opacity: '100%',
       transition: {
         staggerChildren: 0.2,
         ease: 'easeInOut',
@@ -65,7 +67,7 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
   const menuLi = {
     hidden: {
       opacity: '0%',
-      y: 100,
+      y: 150,
       overflow: 'hidden',
       transition: { ease: 'easeInOut', duration: 0.3 },
     },
