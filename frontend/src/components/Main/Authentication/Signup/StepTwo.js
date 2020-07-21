@@ -24,6 +24,7 @@ const StepTwo = ({ formState, onValueChange }) => {
         type="text"
         icon="users"
         options={options}
+        onValueChange={e => onValueChange(e, 'sex')}
       />
       {/* Relevant input for Doctor form? */}
       <AuthInput

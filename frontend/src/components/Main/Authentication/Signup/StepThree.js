@@ -10,6 +10,7 @@ const StepThree = ({
   onValueChange,
   handleAddClick,
   handleRemoveClick,
+  onArrValueChange,
 }) => {
   const isDoctor = true;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -27,11 +28,15 @@ const StepThree = ({
         return (
           <div key={uuidv4()}>
             <AuthInput
-              name="Condition"
+              name="condition"
               value={val.condition}
               placeholder="Condition"
               type="text"
               icon="condition"
+              // onValueChange={e => onValueChange(e, 'existingConditions')}
+              onValueChange={e =>
+                onArrValueChange(e, 'existingConditions', i, 'condition')
+              }
             />
             <AuthInput
               name="conditionStartDate"
@@ -39,6 +44,14 @@ const StepThree = ({
               // placeholder="Condition Start Date"
               type="date"
               icon="calendar"
+              onValueChange={e =>
+                onArrValueChange(
+                  e,
+                  'existingConditions',
+                  i,
+                  'conditionStartDate'
+                )
+              }
             />
             <AuthInput
               name="conditionComment"
@@ -46,6 +59,9 @@ const StepThree = ({
               placeholder="Comments"
               type="text"
               icon="textArea"
+              onValueChange={e =>
+                onArrValueChange(e, 'existingConditions', i, 'conditionComment')
+              }
             />
             <div className="btn-box">
               {formState.existingConditions.length !== 1 && (
@@ -79,20 +95,26 @@ const StepThree = ({
         return (
           <div key={uuidv4()}>
             <AuthInput
-              name="Allergy"
+              name="allergy"
               value={val.allergy}
               placeholder="Allergy"
               type="text"
               icon="alertCircle"
+              onValueChange={e =>
+                onArrValueChange(e, 'allergies', i, 'allergy')
+              }
             />
 
             <AuthSelect
-              name="Severity"
+              name="severity"
               value={val.severity}
               placeholder="Severity"
               type="text"
               icon="hash"
               options={severityOptions}
+              onValueChange={e =>
+                onArrValueChange(e, 'allergies', i, 'severity')
+              }
             />
             <div className="btn-box">
               {formState.allergies.length !== 1 && (
@@ -125,25 +147,34 @@ const StepThree = ({
         return (
           <div key={uuidv4()}>
             <AuthInput
-              name="Medication"
+              name="medication"
               value={val.medication}
               placeholder="Medication"
               type="text"
               icon="medication"
+              onValueChange={e =>
+                onArrValueChange(e, 'medications', i, 'medication')
+              }
             />
             <AuthInput
-              name="Dosage"
+              name="dosage"
               value={val.dosage}
               placeholder="Dosage"
               type="number"
               icon="hash"
+              onValueChange={e =>
+                onArrValueChange(e, 'medications', i, 'dosage')
+              }
             />
             <AuthInput
-              name="Manufacturer"
+              name="manufacturer"
               value={val.manufacturer}
               placeholder="Manufacturer"
-              type="number"
+              type="text"
               icon="briefcase"
+              onValueChange={e =>
+                onArrValueChange(e, 'medications', i, 'manufacturer')
+              }
             />
             <div className="btn-box">
               {formState.medications.length !== 1 && (
@@ -230,11 +261,14 @@ const StepThree = ({
         return (
           <div key={uuidv4()}>
             <AuthInput
-              name="Language"
+              name="language"
               value={val.language}
               placeholder="Language Spoken"
               type="text"
               icon="language"
+              onValueChange={e =>
+                onArrValueChange(e, 'languages', i, 'language')
+              }
             />
             <div className="btn-box">
               {formState.languages.length !== 1 && (

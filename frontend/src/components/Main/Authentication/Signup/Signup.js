@@ -35,7 +35,6 @@ const Signup = () => {
     subSpecialtyField: '',
     education: '',
     yearsExp: '',
-    // language: '',
     languages: [{ language: '' }],
   });
 
@@ -57,6 +56,17 @@ const Signup = () => {
     setFormState({
       ...formState,
       [key]: e.target.value,
+    });
+  };
+
+  const onArrValueChange = (e, key, i, subKey) => {
+    const list = [...formState[key]];
+    list[i][subKey] = e.target.value;
+
+    // console.log(list);
+    setFormState({
+      ...formState,
+      [key]: list,
     });
   };
 
@@ -129,6 +139,7 @@ const Signup = () => {
                 onValueChange={onValueChange}
                 handleAddClick={handleAddClick}
                 handleRemoveClick={handleRemoveClick}
+                onArrValueChange={onArrValueChange}
               />
               <Button action="Previous" color="pink" onClick={onPrev} />
             </div>
