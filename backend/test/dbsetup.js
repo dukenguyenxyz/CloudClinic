@@ -76,32 +76,6 @@ const user = {
   },
 };
 
-// // Doctor 1
-// const doctor1 = user;
-// doctor1.isDoctor = true;
-// doctor1.firstName = 'Doctor No. 1';
-// doctor1.email = 'number1@doctor.com';
-
-// // Client 1
-// const client1 = user;
-// client1.isDoctor = false;
-// client1.firstName = 'Client No. 1';
-// client1.email = 'number1@client.com';
-
-// // Client 2
-// const client2 = user;
-// client2.isDoctor = false;
-// client2.firstName = 'Client No. 2';
-// client2.email = 'number2@client.com';
-
-// // AuthDoctor 1
-// const authDoctor1 = user;
-// const authDoctor1ID = new mongoose.Types.ObjectId();
-// authDoctor1[_id] = authDoctor1ID;
-// authDoctor1[tokens] = [
-//   { token: jwt.sign({ _id: authDoctor1ID }, process.env.TOKEN_SECRET) },
-// ];
-
 // Model Generator
 const userGenerator = (uuid, isDoctorBoolean, isSignUpForm = true) => {
   const role = isDoctorBoolean ? 'doctor' : 'client';
@@ -154,15 +128,9 @@ exports.setupDB = async () => {
 
   const newModel = [...models.doctor, ...models.client];
 
-  // console.log(newModel);
-
   for (i = 0; i < newModel.length; i++) {
     usersPromise.push(new User(newModel[i]).save());
   }
-
-  // models.forEach(async (modelInstance) => {
-  //   await new User(modelInstance).save();
-  // });
 
   const promisedModels = await Promise.all(usersPromise);
 
@@ -219,5 +187,3 @@ exports.bookedSessionGen = () => {
 
   return bookedSessions;
 };
-
-// exports.module = { doctor1, client1, client2, authDoctor1 };

@@ -300,6 +300,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   // Method 2 preferred: throw new Error(...)
 
   // Check if email exists
+  // eslint-disable-next-line no-use-before-define
   const user = await User.findOne({ email });
   if (!user) throw new Error('email or password is incorrect');
 

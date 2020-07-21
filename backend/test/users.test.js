@@ -6,29 +6,12 @@ const app = require('../app');
 
 const request = supertest(app);
 const User = require('../src/models/User');
-const Session = require('../src/models/Session');
-// const { doctor1, client1, client2, authDoctor1 } = require('./dbsetup');
-const { models, userSignUpGen, setupDB, userGenerator } = require('./dbsetup');
+const { models, setupDB, userGenerator } = require('./dbsetup');
 
-// let models = {};
-
-// beforeEach(async () => {
-//   // await User.deleteMany();
-//   // await Session.deleteMany();
-//   // await new User(authDoctor1).save();
-// });
-
-// const doctor1 = userSignUpGen(1, true);
+// Set up sample seed data
 const doctor1 = userGenerator(11, true);
 const client1 = userGenerator(2, false);
-
-beforeEach(async () => {
-  // await setupDB();
-
-  const SCHEMAS = await setupDB();
-
-  // console.log(SCHEMAS);
-});
+beforeEach(setupDB);
 
 // Public - Authentication Routes
 
@@ -63,7 +46,7 @@ test('Auth: should sign up a new client', async () => {
 });
 
 // DB setup: Model/Schema
-test('Auth: should NOT sign up', async () => {
+test('Auth: should NOT sign up: isDoctor is Null', async () => {
   const userFail = client1;
   userFail.isDoctor = null;
 
@@ -95,7 +78,7 @@ test('Auth: should sign in a user', async () => {
 });
 
 // DB setup: 1 user
-test('Auth: should NOT sign in a user', async () => {
+test('Auth: should NOT sign in a user: Wrong Password', async () => {
   const userFail = doctor1;
   userFail.password = 'wrongpassword';
 
@@ -118,7 +101,6 @@ test('Public: should get all doctors', async () => {
 // DB setup: many doctors
 test('Public: should get one doctor', async () => {
   const authUser = models.doctor[0];
-  // const authUser = authDoctor1;
 
   const response = await request
     .get(`/api/users/${authUser._id}`)
@@ -128,7 +110,7 @@ test('Public: should get one doctor', async () => {
   expect(response.body.firstName).toBe(authUser.firstName);
 });
 
-test('Public: should NOT get one doctor', async () => {
+test('Public: should NOT get one doctor: Wrong ID', async () => {
   await request.get(`/api/users/invaliduser123`).send().expect(404);
 });
 
@@ -137,7 +119,6 @@ test('Public: should NOT get one doctor', async () => {
 // DB setup: 1 user
 test('Users: should sign out a user', async () => {
   const authUser = models.doctor[0];
-  // const authUser = authDoctor1;
 
   const response = await request
     .patch('/api/users/signout')
@@ -145,12 +126,11 @@ test('Users: should sign out a user', async () => {
     .set('Authorization', authUser.tokens[0].token)
     .expect(200);
 
-  console.log(response.body);
-
   expect(response.body).toMatchObject({});
 });
 
-test('Users: should NOT sign out a user', async () => {
+// test('Users: should NOT sign out a user: No JWT, async() => {})
+test('Users: should NOT sign out a user: Wrong JWT', async () => {
   const response = await request
     .patch('/api/users/signout')
     .set('Content-Type', 'application/json')
@@ -163,7 +143,6 @@ test('Users: should NOT sign out a user', async () => {
 // DB setup: 1 user & many signins/ jwt keys
 test('Users: should sign out of all devices for a user', async () => {
   const authUser = models.doctor[0];
-  // const authUser = authDoctor1;
 
   const response = await request
     .patch('/api/users/signoutall')
@@ -174,7 +153,8 @@ test('Users: should sign out of all devices for a user', async () => {
   expect(response.body).toMatchObject({});
 });
 
-test('Users: should NOT sign out of all devices for a user', async () => {
+// test('Users: should NOT sign out of all devices for a user: No JWT, async() => {})
+test('Users: should NOT sign out of all devices for a user: Wrong JWT', async () => {
   const response = await request
     .patch('/api/users/signoutall')
     .set('Content-Type', 'application/json')
@@ -204,7 +184,9 @@ test("Users: should update a user's account", async () => {
   expect(response.body.lastName).toBe(lastName);
 });
 
-test("Users: should NOT update a user's account", async () => {
+// test('Users: should NOT update a user's account: Disallowed attributes, async() => {})
+// test('Users: should NOT update a user's account: No JWT, async() => {})
+test("Users: should NOT update a user's account: Wrong JWT", async () => {
   const firstName = 'New First';
   const lastName = 'New Last';
 
@@ -231,6 +213,7 @@ test("Users: should get a user's own profile", async () => {
   expect(response.body.firstName).toBe(authUser.firstName);
 });
 
+// test('Users: should NOT get a user's account: No JWT, async() => {})
 test("Users: should NOT get a user's own profile", async () => {
   const response = await request
     .get('/api/users/profile')
@@ -254,6 +237,7 @@ test("Users: should delete a user's account", async () => {
   expect(response.body.firstName).toBe(authUser.firstName);
 });
 
+// test('Users: should NOT update a user's account: No JWT, async() => {})
 test("Users: should NOT delete a user's account", async () => {
   const response = await request
     .delete('/api/users/profile')
@@ -262,6 +246,4 @@ test("Users: should NOT delete a user's account", async () => {
     .expect(400);
 
   expect(response.error.text).toBe('invalid token');
-
-  // Additional test: no token => expect(response.body).toBe('access denied')
 });
