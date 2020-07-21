@@ -1,0 +1,40 @@
+.mobile-menu-wrapper {
+  // height: 90vh;
+  width: 100%;
+  background-color: var(--navy-blue);
+  color: white;
+  position: fixed;
+  z-index: 50;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.75rem;
+
+  ul {
+    overflow: hidden;
+  }
+
+  li {
+    margin-bottom: 1rem;
+    display: flex;
+    overflow: hidden;
+
+    a {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    svg {
+      margin-right: 24px;
+      display: flex;
+    }
+
+    span {
+      line-height: 1;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+  }
+}

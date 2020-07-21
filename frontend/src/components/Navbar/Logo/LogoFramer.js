@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const LogoFramer = ({ isOpen }) => {
+const LogoFramer = ({ isOpen, isMobile }) => {
   const logotype = {
     hidden: {
       opacity: 0,
@@ -19,7 +19,7 @@ const LogoFramer = ({ isOpen }) => {
   };
 
   const rectStyle = {
-    fill: '#ffffff',
+    fill: isMobile ? '#f9fafc' : '#ffffff',
   };
 
   return (

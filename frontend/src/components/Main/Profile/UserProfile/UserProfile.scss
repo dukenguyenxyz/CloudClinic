@@ -59,6 +59,7 @@
         gap: 24px;
         border-top: 1px solid var(--light-grey);
         padding: 24px 0;
+        grid-auto-flow: dense;
 
         .visit-details {
           display: grid;
@@ -66,6 +67,10 @@
           span:nth-child(1),
           span:nth-child(2) {
             color: var(--mid-grey);
+          }
+
+          @media all and (max-width: 1024px) {
+            grid-template-columns: 1fr;
           }
         }
 
@@ -82,11 +87,10 @@
           margin-bottom: 8px;
           white-space: nowrap;
           line-height: 1;
+          width: fit-content;
         }
 
         $colors: #f683ac, #9ac2d8, #3e5b7f;
-
-        // $colors: blue, red, green;
 
         @for $i from 1 through length($colors) {
           .tag:nth-child(#{length($colors)}n + #{$i}) {
@@ -99,15 +103,29 @@
         .tags-wrapper {
           align-self: start;
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+          justify-items: center;
+
           gap: 8px;
-          width: 50%;
+          @media all and (max-width: 1024px) {
+            width: 100%;
+            margin-top: 24px;
+          }
         }
 
         .visit-panel {
           display: grid;
           gap: 24px 0px;
           grid-template-rows: 24px auto;
+        }
+
+        @media all and (max-width: 1024px) {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr auto;
+
+          .visit-notes {
+            grid-row: 1;
+          }
         }
       }
     }
@@ -122,5 +140,9 @@
     line-height: 1;
     font-weight: 600;
     font-size: 2rem;
+  }
+
+  @media all and (max-width: 768px) {
+    grid-template-columns: 1fr;
   }
 }

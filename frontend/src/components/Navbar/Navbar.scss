@@ -2,7 +2,6 @@
   background-color: var(--white);
   border-right: 1px solid var(--light-grey);
   height: 100vh;
-  // position: fixed;
   width: 72px;
   overflow: hidden;
 
@@ -21,5 +20,26 @@
     height: 100%;
     position: absolute;
     overflow: hidden;
+  }
+
+  @media all and (max-width: 425px) {
+    display: none;
+  }
+}
+
+.mobile-hamburger-wrapper {
+  position: fixed;
+  z-index: 99;
+  bottom: 0;
+  right: 0;
+  padding: 48px 24px;
+  .mobile-hamburger-container {
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--mid-grey);
+    background-color: var(--selected-color);
+    border-radius: 50%;
   }
 }

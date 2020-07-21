@@ -52,9 +52,3 @@ h1 {
     background-color: var(--light-blue);
   }
 }
-
-@include media('<=tablet') {
-  body {
-    background: red;
-  }
-}
