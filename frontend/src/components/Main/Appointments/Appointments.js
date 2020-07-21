@@ -1,9 +1,10 @@
 import React from 'react';
-import MainCalendar from './Sample/index';
+import MainCalendar from './MainCalendar/MainCalendar';
+import './Appointments.scss';
 
 const Appointments = () => {
   return (
-    <div>
+    <div className="appointments-wrapper">
       <MainCalendar />
     </div>
   );

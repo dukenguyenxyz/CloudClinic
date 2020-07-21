@@ -11,19 +11,13 @@
   align-items: center;
   font-size: 1.75rem;
 
-  ul {
-    overflow: hidden;
-  }
-
   li {
     margin-bottom: 1rem;
     display: flex;
-    overflow: hidden;
 
     a {
       display: flex;
       align-items: center;
-      overflow: hidden;
     }
 
     svg {
@@ -34,7 +28,6 @@
     span {
       line-height: 1;
       margin-top: 4px;
-      overflow: hidden;
     }
   }
 }

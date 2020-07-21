@@ -68,13 +68,11 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
     hidden: {
       opacity: '0%',
       y: 150,
-      overflow: 'hidden',
       transition: { ease: 'easeInOut', duration: 0.3 },
     },
     show: {
       opacity: '100%',
       y: 0,
-      overflow: 'hidden',
       transition: { ease: 'easeInOut', duration: 0.3 },
     },
   };
