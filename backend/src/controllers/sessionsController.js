@@ -30,12 +30,12 @@ exports.viewSessions = async (req, res) => {
 exports.createSession = async (req, res) => {
   try {
     // Check if creator is doctor
-    isDoctorValidation(req, res, true);
+    isDoctorValidation(req, true);
     // if (!req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
 
     const { startTime, endTime } = await sessionValidation(
       req,
-      res,
+      // res,
       req.body,
       true
     );
@@ -72,14 +72,14 @@ exports.createSession = async (req, res) => {
     await session.save();
     res.send(session);
   } catch (e) {
-    res.status(500).send(e);
+    res.status(400).send(e);
   }
 };
 
-exports.createSessions = (req, res) => {
+exports.createSessions = async (req, res) => {
   try {
     // Check if creator is doctor
-    isDoctorValidation(req, res, true);
+    isDoctorValidation(req, true);
     // if (!req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
 
     //  METHOD 1
@@ -99,9 +99,11 @@ exports.createSessions = (req, res) => {
     // });
 
     // METHOD 2
-    const sessions = sessionsValidationMethod2(req, res, req.body);
+    const sessions = await sessionsValidationMethod2(req, req.body);
 
-    res.send(sessions);
+    // console.log(sessions);
+
+    res.status(201).send(sessions);
   } catch (e) {
     res.status(500).send();
   }
@@ -111,7 +113,7 @@ exports.createSessions = (req, res) => {
 exports.deleteSession = async (req, res) => {
   try {
     // Check if creator is doctor
-    isDoctorValidation(req, res, true);
+    isDoctorValidation(req, true);
     // if (!req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
 
     // Find session
@@ -128,7 +130,7 @@ exports.deleteSession = async (req, res) => {
 
     // Check if the session already has a booking
     if (session.client) {
-      console.log('Sessions is booked by a client');
+      console.log('Session is booked by a client');
     }
 
     // Delete sesssions
@@ -144,7 +146,7 @@ exports.deleteSession = async (req, res) => {
 exports.bookSession = async (req, res) => {
   try {
     // Check if creator is client
-    isDoctorValidation(req, res, true);
+    isDoctorValidation(req, false);
     // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
 
     // // Find session
@@ -154,7 +156,7 @@ exports.bookSession = async (req, res) => {
     //   res.status(404).send();
     // }
 
-    const session = await sessionExists(req, res);
+    const session = await sessionExists(req);
 
     // Check if session has no booking
     if (session.client) {
@@ -164,7 +166,7 @@ exports.bookSession = async (req, res) => {
     session.client = req.user._id;
     session.save();
 
-    res.send(session);
+    res.status(201).send(session);
   } catch (e) {
     res.status(500).send(e);
   }
@@ -174,10 +176,10 @@ exports.bookSession = async (req, res) => {
 exports.updateSession = async (req, res) => {
   try {
     // Check if creator is doctor
-    isDoctorValidation(req, res, true);
+    isDoctorValidation(req, false);
     // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
 
-    const session = await sessionExists(req, res);
+    const session = await sessionExists(req);
 
     // // Find session
     // const session = await Session.findById(req.params._id);
@@ -194,7 +196,6 @@ exports.updateSession = async (req, res) => {
 
     const { startTime, endTime } = await sessionValidation(
       req,
-      res,
       req.body,
       false
     );
@@ -204,7 +205,7 @@ exports.updateSession = async (req, res) => {
     // if (error) return res.status(400).send(error.details[0].message);
 
     // // Check if current time is before 24 hours
-    lessThanOneDay(res, session.startTime);
+    lessThanOneDay(session.startTime);
 
     // const currentTime = moment(Date.now());
     // const oneDayAhead = currentTime.add(moment.duration(24, 'h'));
@@ -232,11 +233,11 @@ exports.updateSession = async (req, res) => {
 // Cancel a session (if less than 24hr from booking)
 exports.cancelSession = async (req, res) => {
   try {
-    // Check if creator is doctor
-    isDoctorValidation(req, res, true);
+    // Check if creator is client
+    isDoctorValidation(req, false);
     // if (req.user.isDoctor) res.status(400).send({ error: 'invalid action' });
 
-    const session = await sessionExists(req, res);
+    const session = await sessionExists(req);
     // // Find session
     // const session = await Session.findById(req.params._id);
 
@@ -250,7 +251,7 @@ exports.cancelSession = async (req, res) => {
     }
 
     // Check if current time is before 24 hours
-    lessThanOneDay(res, session.startTime);
+    lessThanOneDay(session.startTime);
     // const minTime = 60 * 60 * 24 * 1000; // one day
     // if (!(Date.now() - session.startTime > minTime)) {
     //   res

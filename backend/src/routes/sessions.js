@@ -4,6 +4,7 @@ const verifyToken = require('./verifyToken');
 const {
   viewSessions,
   createSession,
+  createSessions,
   deleteSession,
   bookSession,
   updateSession,
@@ -15,7 +16,10 @@ const {
 router.get('/', verifyToken, viewSessions);
 
 // Create available session
-router.post('/', verifyToken, createSession);
+router.post('/new', verifyToken, createSession);
+
+// Create available sessions
+router.post('/', verifyToken, createSessions);
 
 // Delete session
 router.delete('/:id', verifyToken, deleteSession);

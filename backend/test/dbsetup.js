@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -145,45 +146,60 @@ function randomDate(start, end) {
 
 const randomDateNowTo2021 = () => randomDate(new Date(), new Date(2021, 0, 1));
 
-const freeSessionGen = (count) => {
+const freeSessionGen = async (count, isForm = true) => {
   const sessions = [];
   let startTime = moment(randomDateNowTo2021())
     .minute(0)
     .second(0)
     .millisecond(0);
 
+  const doctor = models.doctor[3];
+
   for (i = 0; i < count; i++) {
-    const endTime = startTime.add(30, 'minutes');
-    sessions.push({
-      startTime: moment(startTime),
-      endTime: moment(endTime),
-    });
+    const endTime = moment(startTime).add(30, 'minutes');
+
+    const session = {
+      startTime: moment(startTime).valueOf(),
+      endTime: moment(endTime).valueOf(),
+    };
+
+    if (!isForm) {
+      session._id = new mongoose.Types.ObjectId();
+      session.doctor = doctor._id;
+      sessions.push(new Session(session).save());
+    } else {
+      sessions.push(session);
+    }
 
     // Free time bewteen sessions: 5 mins
     startTime = endTime.add(5, 'minutes');
+  }
+
+  if (!isForm) {
+    return Promise.all(sessions);
   }
 
   return sessions;
 };
 exports.freeSessionGen = freeSessionGen;
 
-exports.bookedSessionGen = () => {
+exports.bookedSessionsGen = async () => {
   const doctor = models.doctor[3];
-
   const freeSessions = freeSessionGen(10);
-  const bookedSessions = [];
-
   const clientArray = models.client;
+  const sessionsPromise = [];
 
-  freeSessions.forEach((session) => {
+  for (session of freeSessions) {
     const mappedSession = session;
 
     mappedSession.doctor = doctor._id;
     mappedSession.client =
       clientArray[Math.floor(Math.random() * clientArray.length)];
 
-    bookedSessions.push(mappedSession);
-  });
+    sessionsPromise.push(new Session(mappedSession).save());
+  }
+
+  const bookedSessions = await Promise.all(sessionsPromise);
 
   return bookedSessions;
 };

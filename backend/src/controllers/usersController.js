@@ -165,7 +165,14 @@ exports.viewClients = async (req, res) => {
     const bookedWithClients = bookedSessions.map((session) => session.client);
 
     // Assign all users to the user of bookedSessions
-    const users = await User.find({ _id: { $in: bookedWithClients } });
+    const users = await User.find(
+      { _id: { $in: bookedWithClients } },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
 
     // Only send appropriate data
     res.status(200).send(users);
@@ -189,7 +196,7 @@ exports.viewClient = async (req, res) => {
       }
     );
 
-    const user = await User.find(
+    const user = await User.findOne(
       { _id: req.params.id, isDoctor: false },
       function (err) {
         if (err) {
