@@ -1,5 +1,3 @@
-const router = require('express').Router();
-
 const User = require('../models/User');
 const Session = require('../models/Session');
 const {
@@ -75,7 +73,8 @@ exports.signOut = async (req, res) => {
 
     res.send();
   } catch (e) {
-    res.status(500).send();
+    // res.status(500).send();
+    res.status(401).send(e); // Unauthorized request
   }
 };
 
@@ -87,7 +86,8 @@ exports.signOutAll = async (req, res) => {
 
     res.send();
   } catch (e) {
-    res.status(500).send();
+    // res.status(500).send();
+    res.status(401).send(e); // Unauthorized request
   }
 };
 
@@ -96,7 +96,8 @@ exports.viewProfile = async (req, res) => {
   try {
     res.send(req.user);
   } catch (e) {
-    res.status(500).send();
+    // res.status(500).send();
+    res.status(401).send(e); // Unauthorized request
   }
 };
 
@@ -129,7 +130,9 @@ exports.updateProfile = async (req, res) => {
 
     res.status(201).send(req.user);
   } catch (e) {
-    res.status(400).send(e);
+    // res.status(400).send(e);
+    // res.status(500).send();
+    res.status(401).send(e); // Unauthorized request
   }
 };
 
@@ -139,7 +142,8 @@ exports.deleteProfile = async (req, res) => {
     await req.user.remove();
     res.send(req.user);
   } catch (e) {
-    res.status(500).send();
+    // res.status(500).send();
+    res.status(401).send(e); // Unauthorized request
   }
 };
 
@@ -169,8 +173,9 @@ exports.viewClients = async (req, res) => {
     res.send(users);
     console.log('7');
   } catch (e) {
-    console.log(e.message);
-    res.status(500).send(e);
+    // console.log(e.message);
+    // res.status(500).send(e);
+    res.status(403).send(e); // Forbidden
   }
 };
 
@@ -223,6 +228,7 @@ exports.viewDoctor = async (req, res) => {
     // Only send appropriate data
     res.send(user);
   } catch (e) {
-    res.status(500).send();
+    // res.status(500).send(); // For some reason not working
+    res.status(404).send(); // Remedied te 404 not working above
   }
 };
