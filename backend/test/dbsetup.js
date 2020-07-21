@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const moment = require('moment');
 
 const User = require('../src/models/User');
 const Session = require('../src/models/Session');
@@ -108,15 +109,15 @@ const userGenerator = (uuid, isDoctor, isSignUpForm = false) => {
   const newID = new mongoose.Types.ObjectId();
 
   if (!isSignUpForm) {
-    newUser[_id] = newID;
-    newUser[tokens] = [
+    newUser._id = newID;
+    newUser.tokens = [
       { token: jwt.sign({ _id: newID }, process.env.TOKEN_SECRET) },
     ];
   }
 
-  newUser[isDoctor] = false;
-  newUser[firstName] = `${_.upperFirst(role)} No. ${uuid}`;
-  newUser[email] = `no${uuid}.${role}.com`;
+  newUser.isDoctor = false;
+  newUser.firstName = `${_.upperFirst(role)} No. ${uuid}`;
+  newUser.email = `no${uuid}.${role}.com`;
 };
 
 // User Gen With Auth for Sign In
@@ -125,13 +126,15 @@ const usersSetup = () => {
 
   for (i = 1; i < 10; i++) {
     const role = i < 6;
-    const roleName = role ? 'doctor' : 'client';
+    const roleName = role ? 'doctors' : 'clients';
 
     models[roleName].push(userGenerator(i, role));
   }
 
   return models;
 };
+
+const models = usersSetup();
 
 // User Gen Without Auth for Sign Up
 const userSignUpGen = (length, isDoctor) => {
@@ -142,14 +145,68 @@ const setUpDB = async () => {
   await User.deleteMany();
   await Session.deleteMany();
 
-  const models = usersSetup();
-
   models.forEach(async (model) => {
     await new User(model).save();
   });
 
-  return models;
+  // return models;
+};
+
+function randomDate(start, end) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
+
+const randomDateNowTo2021 = () => randomDate(new Date(), new Date(2021, 0, 1));
+
+const freeSessionGen = (count) => {
+  const sessions = [];
+  let startTime = moment(randomDateNowTo2021())
+    .minute(0)
+    .second(0)
+    .millisecond(0);
+
+  for (i = 0; i < count; i++) {
+    const endTime = startTime.add(30, 'minutes');
+    sessions.push({
+      startTime: moment(startTime),
+      endTime: moment(endTime),
+    });
+
+    // Free time bewteen sessions: 5 mins
+    startTime = endTime.add(5, 'minutes');
+  }
+
+  return sessions;
+};
+
+const bookedSessionGen = () => {
+  const doctor = models.doctor[3];
+
+  const freeSessions = freeSessionGen(10);
+  const bookedSessions = [];
+
+  const clientArray = models.client;
+
+  freeSessions.forEach((session) => {
+    const mappedSession = session;
+
+    mappedSession.doctor = doctor._id;
+    mappedSession.client =
+      clientArray[Math.floor(Math.random() * clientArray.length)];
+
+    bookedSessions.push(mappedSession);
+  });
+
+  return bookedSessions;
 };
 
 // exports.module = { doctor1, client1, client2, authDoctor1 };
-exports.module = { setUpDB, userSignUpGen };
+exports.module = {
+  models,
+  setUpDB,
+  userSignUpGen,
+  freeSessionGen,
+  bookedSessionGen,
+};
