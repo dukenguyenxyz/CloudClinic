@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const _ = require('lodash');
@@ -102,10 +103,10 @@ const user = {
 // ];
 
 // Model Generator
-const userGenerator = (uuid, isDoctor, isSignUpForm = false) => {
-  const role = isDoctor ? 'doctor' : 'client';
+const userGenerator = (uuid, isDoctorBoolean, isSignUpForm = true) => {
+  const role = isDoctorBoolean ? 'doctor' : 'client';
 
-  const newUser = user;
+  const newUser = { ...user };
   const newID = new mongoose.Types.ObjectId();
 
   if (!isSignUpForm) {
@@ -115,41 +116,57 @@ const userGenerator = (uuid, isDoctor, isSignUpForm = false) => {
     ];
   }
 
-  newUser.isDoctor = false;
+  newUser.isDoctor = isDoctorBoolean;
   newUser.firstName = `${_.upperFirst(role)} No. ${uuid}`;
-  newUser.email = `no${uuid}.${role}.com`;
+  newUser.email = `no${uuid}@${role}.com`;
+
+  return newUser;
 };
+exports.userGenerator = userGenerator;
 
 // User Gen With Auth for Sign In
 const usersSetup = () => {
-  const models = { doctors: [], clients: [] };
+  const models = { doctor: [], client: [] };
 
   for (i = 1; i < 10; i++) {
     const role = i < 6;
-    const roleName = role ? 'doctors' : 'clients';
+    const roleName = role ? 'doctor' : 'client';
 
-    models[roleName].push(userGenerator(i, role));
+    models[roleName].push(userGenerator(i, role, false));
   }
 
   return models;
 };
 
 const models = usersSetup();
+exports.models = models;
 
 // User Gen Without Auth for Sign Up
-const userSignUpGen = (length, isDoctor) => {
+exports.userSignUpGen = (length, isDoctor) => {
   return userGenerator(length + 1, isDoctor, true);
 };
 
-const setUpDB = async () => {
+exports.setupDB = async () => {
   await User.deleteMany();
   await Session.deleteMany();
 
-  models.forEach(async (model) => {
-    await new User(model).save();
-  });
+  const usersPromise = [];
 
-  // return models;
+  const newModel = [...models.doctor, ...models.client];
+
+  // console.log(newModel);
+
+  for (i = 0; i < newModel.length; i++) {
+    usersPromise.push(new User(newModel[i]).save());
+  }
+
+  // models.forEach(async (modelInstance) => {
+  //   await new User(modelInstance).save();
+  // });
+
+  const promisedModels = await Promise.all(usersPromise);
+
+  return promisedModels;
 };
 
 function randomDate(start, end) {
@@ -180,8 +197,9 @@ const freeSessionGen = (count) => {
 
   return sessions;
 };
+exports.freeSessionGen = freeSessionGen;
 
-const bookedSessionGen = () => {
+exports.bookedSessionGen = () => {
   const doctor = models.doctor[3];
 
   const freeSessions = freeSessionGen(10);
@@ -203,10 +221,3 @@ const bookedSessionGen = () => {
 };
 
 // exports.module = { doctor1, client1, client2, authDoctor1 };
-exports.module = {
-  models,
-  setUpDB,
-  userSignUpGen,
-  freeSessionGen,
-  bookedSessionGen,
-};

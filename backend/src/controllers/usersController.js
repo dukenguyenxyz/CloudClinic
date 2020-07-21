@@ -94,10 +94,13 @@ exports.signOutAll = async (req, res) => {
 // Get own user's profile
 exports.viewProfile = async (req, res) => {
   try {
+    if (!req.user) {
+      res.status(401).send();
+    }
     res.send(req.user);
   } catch (e) {
-    // res.status(500).send();
-    res.status(401).send(e); // Unauthorized request
+    res.status(500).send();
+    // res.status(401).send(e); // Unauthorized request
   }
 };
 
@@ -151,31 +154,25 @@ exports.deleteProfile = async (req, res) => {
 // All Clients
 exports.viewClients = async (req, res) => {
   try {
-    console.log('1');
     if (!req.user.isDoctor) {
-      res.status(404).send({ error: 'Forbidden' });
+      res.status(403).send({ error: 'Forbidden' });
     }
-    console.log('2');
+
+    // Change this to allow null
     const bookedSessions = await Session.find({ doctor: req.user._id });
     // client: not null
-    console.log('3');
     if (!bookedSessions) {
       res.status(404).send();
     }
-    console.log('4');
-    console.log(bookedSessions);
     const bookedWithClients = bookedSessions.map((session) => session.client);
-    console.log('5');
     // Assign all users to the user of bookedSessions
     const users = await User.find({ _id: { $in: bookedWithClients } });
-    console.log('6');
     // Only send appropriate data
-    res.send(users);
-    console.log('7');
+    res.status(200).send(users);
   } catch (e) {
     // console.log(e.message);
-    // res.status(500).send(e);
-    res.status(403).send(e); // Forbidden
+    res.status(500).send(e);
+    // res.status(403).send(e); // Forbidden
   }
 };
 
@@ -183,18 +180,35 @@ exports.viewClients = async (req, res) => {
 exports.viewClient = async (req, res) => {
   console.log('hEre 1');
   try {
-    const bookedSessions = await Session.find({
-      doctor: req.user._id,
-      client: req.params.id,
-    });
-    if (!bookedSessions) {
-      res.status(404).send();
-    }
-    const user = await User.find({ _id: req.params.id, isDoctor: false });
+    const bookedSessions = await Session.find(
+      {
+        doctor: req.user._id,
+        client: req.params.id,
+      },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
 
-    if (!user) {
-      return res.status(404).send();
-    }
+    // if (!bookedSessions) {
+    //   res.status(404).send();
+    // }
+
+    const user = await User.find(
+      { _id: req.params.id, isDoctor: false },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
+
+    // User method above
+    // if (!user) {
+    //   return res.status(404).send();
+    // }
 
     // Only send appropriate data
     res.send(user);
@@ -219,16 +233,24 @@ exports.viewDoctors = async (req, res) => {
 // One Doctor
 exports.viewDoctor = async (req, res) => {
   try {
-    const user = await User.find({ _id: req.params.id, isDoctor: true });
+    const user = await User.findOne(
+      { _id: req.params.id, isDoctor: true },
+      function (err) {
+        if (err) {
+          return res.status(404).send();
+        }
+      }
+    );
 
-    if (!user) {
-      return res.status(404).send();
-    }
+    // Does not work
+    // if (!user) {
+    //   return res.status(404).send();
+    // }
 
     // Only send appropriate data
     res.send(user);
   } catch (e) {
-    // res.status(500).send(); // For some reason not working
-    res.status(404).send(); // Remedied te 404 not working above
+    res.status(500).send(); // For some reason not working
+    // res.status(404).send(); // Remedied te 404 not working above
   }
 };
