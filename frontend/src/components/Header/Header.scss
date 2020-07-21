@@ -6,11 +6,26 @@
   flex-wrap: wrap;
   user-select: none;
 
+  h1 {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    &::after {
+      margin-left: 24px;
+      content: '';
+      width: 100px;
+      height: 2px;
+      background-color: var(--accent);
+      // position: absolute;
+    }
+  }
+
   @media all and (max-width: 573px) {
     flex-direction: column;
     padding: 24px 24px 0;
     h1 {
       font-size: 1.5rem;
+
       margin-bottom: 24px;
     }
 
