@@ -26,7 +26,7 @@ app.use(express.json());
 
 // Route Middlewares
 app.use('/api/users', usersRoute);
-app.use('/api/calendar', sessionsRoute);
+app.use('/api/sessions', sessionsRoute);
 app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route
