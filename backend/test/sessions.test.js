@@ -1,12 +1,8 @@
 const supertest = require('supertest');
-const jwt = require('jsonwebtoken');
 const moment = require('moment');
-
 const app = require('../app');
 
 const request = supertest(app);
-const User = require('../src/models/User');
-const Session = require('../src/models/Session');
 const {
   models,
   setupDB,
@@ -42,6 +38,8 @@ test('Doctor: should create sessions', async () => {
 
   expect(response.body).toMatchObject(newSessions);
 });
+// Client: should not create sessions (empty JWT)
+// Client: should not create sessions (wrong JWT)
 
 // DB setup: 1 doctor & 1 session
 test('Doctor: should delete session', async () => {
@@ -53,11 +51,14 @@ test('Doctor: should delete session', async () => {
     .delete(`/api/sessions/${session._id}`)
     .set('Content-Type', 'application/json')
     .set('Authorization', authUser.tokens[0].token)
-    .send(session)
+    .send()
     .expect(200);
 
   expect(response.body.startTime).toBeTruthy();
 });
+// Client: should not delete session (incorrect session ID)
+// Client: should not delete session (empty JWT)
+// Client: should not delete session (wrong JWT)
 
 // DB setup: 1 doctor & many sessions booked by different clients
 test('Doctor: should get sessions', async () => {
@@ -72,6 +73,9 @@ test('Doctor: should get sessions', async () => {
 
   expect(response.body).toBeTruthy();
 });
+// Client: should not get sessions (empty sessions)
+// Client: should not get sessions (empty JWT)
+// Client: should not get sessions (wrong JWT)
 
 // DB setup: 1 doctor & many sessions booked by different clients
 test('Doctor: should get clients', async () => {
@@ -86,6 +90,9 @@ test('Doctor: should get clients', async () => {
 
   expect(response.body).toBeTruthy();
 });
+// Client: should not get clients (empty clients)
+// Client: should not get clients (empty JWT)
+// Client: should not get clients (wrong JWT)
 
 // DB setup: 1 doctor & many sessions booked by different clients
 test('Doctor: should get one client', async () => {
@@ -101,6 +108,9 @@ test('Doctor: should get one client', async () => {
 
   expect(String(response.body._id)).toBe(String(client._id));
 });
+// Client: should not get clients (incorrect client ID)
+// Client: should not get clients (empty JWT)
+// Client: should not get clients (wrong JWT)
 
 // Client Routes
 
@@ -118,6 +128,9 @@ test('Client: should book session', async () => {
     .expect(200);
   expect(String(response.body._id)).toBe(String(session._id));
 });
+// Client: should not book session (incorrect session ID)
+// Client: should not book session (empty JWT)
+// Client: should not book session (wrong JWT)
 
 // DB setup: 1 client & many sessions booked with different doctors
 test('Client: should get sessions', async () => {
@@ -133,6 +146,9 @@ test('Client: should get sessions', async () => {
 
   expect(response.body).toBeTruthy();
 });
+// Client: should not get sessions (empty sessions)
+// Client: should not get sessions (empty JWT)
+// Client: should not get sessions (wrong JWT)
 
 // DB setup: 1 client & 1 session
 test('Client: should update session', async () => {
@@ -155,6 +171,10 @@ test('Client: should update session', async () => {
     moment(newSession.startTime).valueOf()
   );
 });
+// Client: should not update session (incorrect session ID)
+// Client: should not update session (incorrect startTime & endTime) (many cases)
+// Client: should not update session (empty JWT)
+// Client: should not update session (wrong JWT)
 
 // DB setup: 1 client & 1 session
 test('Client: should cancel session', async () => {
@@ -172,3 +192,6 @@ test('Client: should cancel session', async () => {
     moment(session.startTime).valueOf()
   );
 });
+// Client: should not cancel session (incorrect session ID)
+// Client: should not cancel session (empty JWT)
+// Client: should not cancel session (wrong JWT)
