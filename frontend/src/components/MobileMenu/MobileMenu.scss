@@ -30,4 +30,7 @@
       margin-top: 4px;
     }
   }
+  @media all and (max-width: 425px) {
+    font-size: 1.5rem;
+  }
 }
