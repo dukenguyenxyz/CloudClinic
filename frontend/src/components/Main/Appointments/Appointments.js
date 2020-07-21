@@ -1,11 +1,10 @@
 import React from 'react';
-import './Appointments.scss';
-import Calendar from './Calendar/Calendar';
+import MainCalendar from './Sample/index';
 
 const Appointments = () => {
   return (
     <div>
-      <Calendar />
+      <MainCalendar />
     </div>
   );
 };

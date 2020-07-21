@@ -4,10 +4,10 @@ export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
   // const [JWT, setJWT] = useState('');
   // const [isDoctor, setIsDoctor] = useState(false);
-  // const [user, setUser] = useState({
-  //   firstName: 'DHH',
-  // });
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    firstName: 'DHH',
+  });
+  // const [user, setUser] = useState(null);
 
   const authState = {
     // JWT,
@@ -18,6 +18,6 @@ export const AuthContextProvider = ({ children }) => {
     setUser,
   };
   return (
-    <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authState}> {children} </AuthContext.Provider>
   );
 };
