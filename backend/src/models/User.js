@@ -6,254 +6,254 @@ const dotenv = require('dotenv');
 const Session = require('./Session');
 
 // Access dotenv
-dotenv.config({path : '../../config/config.env'});
+dotenv.config({ path: '../../config/config.env' });
 
 // Add validation for each of these fields with Joi later
 
 const userSchema = new mongoose.Schema({
-  firstName : {
-    type : String,
-    required : [ true, 'first name can not be blank' ],
-    minlength : 2,
-    maxlength : 255,
-    trim : true,
+  firstName: {
+    type: String,
+    required: [true, 'first name can not be blank'],
+    minlength: 2,
+    maxlength: 255,
+    trim: true,
   },
-  lastName : {
-    type : String,
-    required : [ true, 'last name can not be blank' ],
-    minlength : 2,
-    maxlength : 255,
-    trim : true,
+  lastName: {
+    type: String,
+    required: [true, 'last name can not be blank'],
+    minlength: 2,
+    maxlength: 255,
+    trim: true,
   },
-  title : {
-    type : String,
-    minlength : 2,
-    maxlength : 255,
-    trim : true,
+  title: {
+    type: String,
+    minlength: 2,
+    maxlength: 255,
+    trim: true,
   },
-  sex : {
-    type : String,
-    lowercase : true,
-    enum : [ 'male', 'female' ],
+  sex: {
+    type: String,
+    lowercase: true,
+    enum: ['male', 'female'],
   },
-  weight : {
-    type : Number,
-    min : 1,
-    max : 442,
+  weight: {
+    type: Number,
+    min: 1,
+    max: 442,
   },
-  dateOfBirth : {
-    type : Date,
+  dateOfBirth: {
+    type: Date,
   },
-  phoneNumber : {
-    type : String,
-    minlength : 10,
-    maxlength : 24,
-    trim : true,
+  phoneNumber: {
+    type: String,
+    minlength: 10,
+    maxlength: 24,
+    trim: true,
   },
-  address : {
-    number : {
-      type : Number,
-      min : 1,
-      max : 5000,
+  address: {
+    number: {
+      type: Number,
+      min: 1,
+      max: 5000,
     },
-    street : {
-      type : String,
-      minlength : 1,
-      maxlength : 255,
-      trim : true,
+    street: {
+      type: String,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
     },
-    city : {
-      type : String,
-      minlength : 1,
-      maxlength : 255,
-      trim : true,
+    city: {
+      type: String,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
     },
-    state : {
-      type : String,
-      minlength : 1,
-      maxlength : 255,
-      trim : true,
+    state: {
+      type: String,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
     },
-    country : {
-      type : String,
-      minlength : 1,
-      maxlength : 255,
-      trim : true,
+    country: {
+      type: String,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
     },
-    postcode : {
-      type : Number,
-      min : 1,
-      max : 1000000,
+    postcode: {
+      type: Number,
+      min: 1,
+      max: 1000000,
     },
   },
-  email : {
-    type : String,
-    required : [ true, 'email name can not be blank' ],
-    minlength : 6,
-    maxlength : 255,
-    trim : true,
-    unique : true,
+  email: {
+    type: String,
+    required: [true, 'email name can not be blank'],
+    minlength: 6,
+    maxlength: 255,
+    trim: true,
+    unique: true,
   },
-  password : {
-    type : String,
-    required : [ true, 'password can not be blank' ],
-    minlength : 6,
-    maxlength : 1024,
-    trim : true,
+  password: {
+    type: String,
+    required: [true, 'password can not be blank'],
+    minlength: 6,
+    maxlength: 1024,
+    trim: true,
   },
-  isDoctor : {
-    type : Boolean,
-    required : true,
+  isDoctor: {
+    type: Boolean,
+    required: true,
   },
-  tokens : [
+  tokens: [
     {
-      token : {
-        type : String,
-        required : true,
+      token: {
+        type: String,
+        required: true,
       },
     },
   ],
-  createdAt : {
-    type : Date,
-    default : Date.now,
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
-  doctorInfo : {
-    licence : {
-      type : String,
-      min : 6,
-      max : 12,
+  doctorInfo: {
+    licence: {
+      type: String,
+      min: 6,
+      max: 12,
     },
-    accreditations : [
+    accreditations: [
       {
-        type : String,
-        minlength : 1,
-        maxlength : 255,
+        type: String,
+        minlength: 1,
+        maxlength: 255,
       },
     ],
-    specialtyField : {
-      type : String,
-      minlength : 1,
-      maxlength : 255,
-      trim : true,
+    specialtyField: {
+      type: String,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
     },
-    subSpecialtyField : {
-      type : String,
-      minlength : 1,
-      maxlength : 255,
-      trim : true,
+    subSpecialtyField: {
+      type: String,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
     },
-    education : [
+    education: [
       {
-        type : String,
-        minlength : 1,
-        maxlength : 255,
+        type: String,
+        minlength: 1,
+        maxlength: 255,
       },
     ],
-    yearsExperience : {
-      type : Number,
-      min : 0,
-      max : 100,
+    yearsExperience: {
+      type: Number,
+      min: 0,
+      max: 100,
     },
-    tags : [
+    tags: [
       {
-        type : String,
-        minlength : 1,
-        maxlength : 255,
+        type: String,
+        minlength: 1,
+        maxlength: 255,
       },
     ],
-    languagesSpoken : [
+    languagesSpoken: [
       {
-        type : String,
-        minlength : 1,
-        maxlength : 255,
+        type: String,
+        minlength: 1,
+        maxlength: 255,
       },
     ],
-    rating : {
-      type : Number,
-      min : 0,
-      max : 5,
+    rating: {
+      type: Number,
+      min: 0,
+      max: 5,
     },
   },
-  clientInfo : {
-    medicalHistory : [
+  clientInfo: {
+    medicalHistory: [
       {
-        _id : {
-          type : mongoose.Schema.Types.ObjectId,
-          index : true,
-          auto : true,
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
         },
-        startDate : {
-          type : Date,
+        startDate: {
+          type: Date,
         },
-        condition : {
-          type : String,
-          minlength : 1,
-          maxlength : 255,
-          trim : true,
+        condition: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
         },
-        notes : {
-          type : String,
-          minlength : 1,
-          maxlength : 1000,
-          trim : true,
+        notes: {
+          type: String,
+          minlength: 1,
+          maxlength: 1000,
+          trim: true,
         },
       },
     ],
-    allergies : [
+    allergies: [
       {
-        _id : {
-          type : mongoose.Schema.Types.ObjectId,
-          index : true,
-          auto : true,
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
         },
-        name : {
-          type : String,
-          minlength : 1,
-          maxlength : 255,
-          trim : true,
+        name: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
         },
-        severity : {
-          type : Number,
-          min : 1,
-          max : 5,
-          default : 1,
+        severity: {
+          type: Number,
+          min: 1,
+          max: 5,
+          default: 1,
         },
       },
     ],
-    medication : [
+    medication: [
       {
-        _id : {
-          type : mongoose.Schema.Types.ObjectId,
-          index : true,
-          auto : true,
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          index: true,
+          auto: true,
         },
-        name : {
-          type : String,
-          minlength : 1,
-          maxlength : 255,
-          trim : true,
+        name: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
         },
-        dosage : {
-          type : Number,
-          min : 1,
-          max : 10000,
+        dosage: {
+          type: Number,
+          min: 1,
+          max: 10000,
         },
-        manufacturer : {
-          type : String,
-          minlength : 1,
-          maxlength : 255,
-          trim : true,
+        manufacturer: {
+          type: String,
+          minlength: 1,
+          maxlength: 255,
+          trim: true,
         },
       },
     ],
-    bloodType : {
-      type : String,
-      enum : [ 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-' ],
+    bloodType: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
     },
   },
 });
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   const user = this;
 
   if (user.isModified('password')) {
@@ -264,19 +264,21 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-userSchema.pre('remove', async function(next) {
+userSchema.pre('remove', async function (next) {
   const user = this;
   if (user.isDoctor) {
-    await Session.deleteMany({doctor : user._id});
+    await Session.deleteMany({ doctor: user._id });
   } else {
     await Session.updateMany(
-        {client : user._id, startDate : {$gt : Date.now()}}, {client : null});
+      { client: user._id, startDate: { $gt: Date.now() } },
+      { client: null }
+    );
   }
 
   next();
 });
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
 
@@ -299,25 +301,26 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
   // Check if email exists
   // eslint-disable-next-line no-use-before-define
-  const user = await User.findOne({email});
-  if (!user)
-    throw new Error('email or password is incorrect');
+  const user = await User.findOne({ email });
+  if (!user) throw new Error('email or password is incorrect');
 
   // Check if password is correct
   const isMatchedPass = await bcrypt.compare(password, user.password);
-  if (!isMatchedPass)
-    throw new Error('email or password is incorrect');
+  if (!isMatchedPass) throw new Error('email or password is incorrect');
 
   return user;
 };
 
 // Create and assign a token
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({_id : user._id.toString()}, process.env.TOKEN_SECRET);
+  const token = jwt.sign(
+    { _id: user._id.toString() },
+    process.env.TOKEN_SECRET
+  );
 
   // Concat new token to tokens array
-  user.tokens = user.tokens.concat({token});
+  user.tokens = user.tokens.concat({ token });
   // user.tokens.push({ token });
 
   await user.save();

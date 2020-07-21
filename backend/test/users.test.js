@@ -6,7 +6,7 @@ const app = require('../app');
 
 const request = supertest(app);
 const User = require('../src/models/User');
-const {models, setupDB, userGenerator} = require('./dbsetup');
+const { models, setupDB, userGenerator } = require('./dbsetup');
 
 // Set up sample seed data
 const doctor1 = userGenerator(11, true);
@@ -19,10 +19,11 @@ beforeEach(setupDB);
 test('Auth: should sign up a new doctor', async () => {
   const user = doctor1;
 
-  const response = await request.post('/api/users/signup')
-                       .set('Content-Type', 'application/json')
-                       .send(user)
-                       .expect(201);
+  const response = await request
+    .post('/api/users/signup')
+    .set('Content-Type', 'application/json')
+    .send(user)
+    .expect(201);
 
   expect(response.body.user.isDoctor).toBe(true);
   expect(response.body.user.doctorInfo).toBeTruthy();
@@ -33,10 +34,11 @@ test('Auth: should sign up a new doctor', async () => {
 test('Auth: should sign up a new client', async () => {
   const user = client1;
 
-  const response = await request.post('/api/users/signup')
-                       .set('Content-Type', 'application/json')
-                       .send(user)
-                       .expect(201);
+  const response = await request
+    .post('/api/users/signup')
+    .set('Content-Type', 'application/json')
+    .send(user)
+    .expect(201);
 
   expect(response.body.user.isDoctor).toBe(false);
   expect(response.body.user.doctorInfo).toBeUndefined();
@@ -48,26 +50,28 @@ test('Auth: should NOT sign up: isDoctor is Null', async () => {
   const userFail = client1;
   userFail.isDoctor = null;
 
-  await request.post('/api/users/signup')
-      .set('Content-Type', 'application/json')
-      .send(userFail)
-      .expect(400);
+  await request
+    .post('/api/users/signup')
+    .set('Content-Type', 'application/json')
+    .send(userFail)
+    .expect(400);
 });
 
 // DB setup: 1 user
 test('Auth: should sign in a user', async () => {
   const user = models.doctor[0];
 
-  const response = await request.post('/api/users/signin')
-                       .set('Content-Type', 'application/json')
-                       .send({email : user.email, password : user.password})
-                       .expect(201);
+  const response = await request
+    .post('/api/users/signin')
+    .set('Content-Type', 'application/json')
+    .send({ email: user.email, password: user.password })
+    .expect(201);
 
   const verified = jwt.verify(response.body.token, process.env.TOKEN_SECRET);
 
   const userDB = await User.findOne({
-    _id : verified._id,
-    'tokens.token' : response.body.token,
+    _id: verified._id,
+    'tokens.token': response.body.token,
   });
 
   expect(userDB).toBeTruthy();
@@ -78,10 +82,11 @@ test('Auth: should NOT sign in a user: Wrong Password', async () => {
   const userFail = doctor1;
   userFail.password = 'wrongpassword';
 
-  await request.post('/api/users/signin')
-      .set('Content-Type', 'application/json')
-      .send({email : userFail.email, password : userFail.password})
-      .expect(400);
+  await request
+    .post('/api/users/signin')
+    .set('Content-Type', 'application/json')
+    .send({ email: userFail.email, password: userFail.password })
+    .expect(400);
 });
 
 // Public Routes - Doctor Search Routes
@@ -97,8 +102,10 @@ test('Public: should get all doctors', async () => {
 test('Public: should get one doctor', async () => {
   const authUser = models.doctor[0];
 
-  const response =
-      await request.get(`/api/users/${authUser._id}`).send().expect(200);
+  const response = await request
+    .get(`/api/users/${authUser._id}`)
+    .send()
+    .expect(200);
 
   expect(response.body.firstName).toBe(authUser.firstName);
 });
@@ -113,20 +120,22 @@ test('Public: should NOT get one doctor: Wrong ID', async () => {
 test('Users: should sign out a user', async () => {
   const authUser = models.doctor[0];
 
-  const response = await request.patch('/api/users/signout')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', authUser.tokens[0].token)
-                       .expect(200);
+  const response = await request
+    .patch('/api/users/signout')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
 
   expect(response.body).toMatchObject({});
 });
 
 // test('Users: should NOT sign out a user: No JWT, async() => {})
 test('Users: should NOT sign out a user: Wrong JWT', async () => {
-  const response = await request.patch('/api/users/signout')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', 'fakeToken')
-                       .expect(400);
+  const response = await request
+    .patch('/api/users/signout')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'fakeToken')
+    .expect(400);
 
   expect(response.error.text).toBe('invalid token');
 });
@@ -135,25 +144,26 @@ test('Users: should NOT sign out a user: Wrong JWT', async () => {
 test('Users: should sign out of all devices for a user', async () => {
   const authUser = models.doctor[0];
 
-  const response = await request.patch('/api/users/signoutall')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', authUser.tokens[0].token)
-                       .expect(200);
+  const response = await request
+    .patch('/api/users/signoutall')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
 
   expect(response.body).toMatchObject({});
 });
 
 // test('Users: should NOT sign out of all devices for a user: No JWT, async()
 // => {})
-test('Users: should NOT sign out of all devices for a user: Wrong JWT',
-     async () => {
-       const response = await request.patch('/api/users/signoutall')
-                            .set('Content-Type', 'application/json')
-                            .set('Authorization', 'fakeToken')
-                            .expect(400);
+test('Users: should NOT sign out of all devices for a user: Wrong JWT', async () => {
+  const response = await request
+    .patch('/api/users/signoutall')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'fakeToken')
+    .expect(400);
 
-       expect(response.error.text).toBe('invalid token');
-     });
+  expect(response.error.text).toBe('invalid token');
+});
 
 // Resign in user for the tasks below or use a different email
 
@@ -164,11 +174,12 @@ test("Users: should update a user's account", async () => {
   const firstName = 'New First';
   const lastName = 'New Last';
 
-  const response = await request.patch('/api/users/profile')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', authUser.tokens[0].token)
-                       .send({firstName, lastName})
-                       .expect(201);
+  const response = await request
+    .patch('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .send({ firstName, lastName })
+    .expect(201);
 
   expect(response.body.firstName).toBe(firstName);
   expect(response.body.lastName).toBe(lastName);
@@ -181,11 +192,12 @@ test("Users: should NOT update a user's account: Wrong JWT", async () => {
   const firstName = 'New First';
   const lastName = 'New Last';
 
-  const response = await request.patch('/api/users/profile')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', 'fakeToken')
-                       .send({firstName, lastName})
-                       .expect(400);
+  const response = await request
+    .patch('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'fakeToken')
+    .send({ firstName, lastName })
+    .expect(400);
 
   expect(response.error.text).toBe('invalid token');
 });
@@ -194,20 +206,22 @@ test("Users: should NOT update a user's account: Wrong JWT", async () => {
 test("Users: should get a user's own profile", async () => {
   const authUser = models.doctor[1];
 
-  const response = await request.get('/api/users/profile')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', authUser.tokens[0].token)
-                       .expect(200);
+  const response = await request
+    .get('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
 
   expect(response.body.firstName).toBe(authUser.firstName);
 });
 
 // test('Users: should NOT get a user's account: No JWT, async() => {})
 test("Users: should NOT get a user's own profile", async () => {
-  const response = await request.get('/api/users/profile')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', 'fakeToken')
-                       .expect(400);
+  const response = await request
+    .get('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'fakeToken')
+    .expect(400);
 
   expect(response.error.text).toBe('invalid token');
 });
@@ -216,20 +230,22 @@ test("Users: should NOT get a user's own profile", async () => {
 test("Users: should delete a user's account", async () => {
   const authUser = models.doctor[1];
 
-  const response = await request.delete('/api/users/profile')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', authUser.tokens[0].token)
-                       .expect(200);
+  const response = await request
+    .delete('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', authUser.tokens[0].token)
+    .expect(200);
 
   expect(response.body.firstName).toBe(authUser.firstName);
 });
 
 // test('Users: should NOT update a user's account: No JWT, async() => {})
 test("Users: should NOT delete a user's account", async () => {
-  const response = await request.delete('/api/users/profile')
-                       .set('Content-Type', 'application/json')
-                       .set('Authorization', 'fakeToken')
-                       .expect(400);
+  const response = await request
+    .delete('/api/users/profile')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'fakeToken')
+    .expect(400);
 
   expect(response.error.text).toBe('invalid token');
 });
