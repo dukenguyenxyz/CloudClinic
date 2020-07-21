@@ -11,7 +11,7 @@ const StepThree = ({
   handleAddClick,
   handleRemoveClick,
 }) => {
-  const isDoctor = false;
+  const isDoctor = true;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
 
@@ -120,29 +120,6 @@ const StepThree = ({
       })}
 
       <h3>Medication</h3>
-      {/* <AuthInput
-        value={formState.medication}
-        placeholder="Medication"
-        type="text"
-        icon="medication"
-        onValueChange={e => onValueChange(e, 'medication')}
-      /> 
-      <AuthInput
-        value={formState.dosage}
-        placeholder="Dosage"
-        type="number"
-        icon="hash"
-        onValueChange={e => onValueChange(e, 'dosage')}
-      />
-      <AuthInput
-        value={formState.manufacturer}
-        placeholder="Manufacturer"
-        type="number"
-        icon="briefcase"
-        onValueChange={e => onValueChange(e, 'manufacturer')}
-      />
-
-      <Button action="+" color="pink" /> */}
 
       {formState.medications.map((val, i) => {
         return (
@@ -155,12 +132,14 @@ const StepThree = ({
               icon="medication"
             />
             <AuthInput
+              name="Dosage"
               value={val.dosage}
               placeholder="Dosage"
               type="number"
               icon="hash"
             />
             <AuthInput
+              name="Manufacturer"
               value={val.manufacturer}
               placeholder="Manufacturer"
               type="number"
@@ -178,8 +157,9 @@ const StepThree = ({
                 <Button
                   onClick={() =>
                     handleAddClick('medications', {
-                      allergy: '',
-                      severity: '',
+                      medication: '',
+                      dosage: '',
+                      manufacturer: '',
                     })
                   }
                   action="+"
@@ -246,14 +226,39 @@ const StepThree = ({
         icon="hash"
         onValueChange={e => onValueChange(e, 'yearsExp')}
       />
-      {/* <AuthInput
-        value={formState.language}
-        placeholder="Languages Spoken"
-        type="text"
-        icon="language"
-        onValueChange={e => onValueChange(e, 'language')}
-      />
-      <Button action="+" color="pink" /> */}
+      {formState.languages.map((val, i) => {
+        return (
+          <div key={uuidv4()}>
+            <AuthInput
+              name="Language"
+              value={val.language}
+              placeholder="Language Spoken"
+              type="text"
+              icon="language"
+            />
+            <div className="btn-box">
+              {formState.languages.length !== 1 && (
+                <Button
+                  onClick={() => handleRemoveClick('languages', i)}
+                  action="-"
+                  color="pink"
+                />
+              )}
+              {formState.languages.length - 1 === i && (
+                <Button
+                  onClick={() =>
+                    handleAddClick('languages', {
+                      language: '',
+                    })
+                  }
+                  action="+"
+                  color="pink"
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 
