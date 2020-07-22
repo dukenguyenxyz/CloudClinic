@@ -11,15 +11,17 @@ const {
   cancelSession,
 } = require('../controllers/sessionsController');
 
-// // Doctor Routes
 // Get all sessions
 router.get('/', verifyToken, viewSessions);
 
+// // Doctor Routes
 // Create available session
 router.post('/new', verifyToken, createSession);
 
 // Create available sessions
 router.post('/', verifyToken, createSessions);
+
+// Update session (will be blank otherwise)
 
 // Delete session
 router.delete('/:id', verifyToken, deleteSession);
