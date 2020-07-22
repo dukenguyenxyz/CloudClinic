@@ -10,8 +10,8 @@ const maxAddrNum = 250;
 // // Data array containing seed data - documents organized by Model
 const data = [
   {
-    model : 'User',
-    documents : [
+    model: 'User',
+    documents: [
       // {
       //   firstName: faker.name.firstName(),
       //   lastName: faker.name.lastName(),
@@ -124,56 +124,56 @@ const seedClients = () => {
     'shellfish',
     'sesame',
   ];
-  const bloodTypeArr = [ 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-' ];
+  const bloodTypeArr = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
   for (let i = 0; i < numClients; i++) {
     data[0].documents.push({
-      firstName : faker.name.firstName(),
-      lastName : faker.name.lastName(),
-      title : 'Mr',
-      sex : 'male',
-      weight :
-          Math.floor(Math.random() * (maxWeight - minWeight + 1)) + minWeight,
-      dateOfBirth : faker.date.past(),
-      phoneNumber : faker.phone.phoneNumber(),
-      address : {
-        number : Math.floor(Math.random() * (maxAddrNum - minAddrNum + 1)) +
-                     minAddrNum,
-        street : faker.address.streetName(),
-        city : faker.address.city(),
-        state : faker.address.state(),
-        country : faker.address.country(),
-        postcode : parseInt(faker.address.zipCode()),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      title: 'Mr',
+      sex: 'male',
+      weight:
+        Math.floor(Math.random() * (maxWeight - minWeight + 1)) + minWeight,
+      dateOfBirth: faker.date.past(),
+      phoneNumber: faker.phone.phoneNumber(),
+      address: {
+        number:
+          Math.floor(Math.random() * (maxAddrNum - minAddrNum + 1)) +
+          minAddrNum,
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.state(),
+        country: faker.address.country(),
+        postcode: parseInt(faker.address.zipCode()),
       },
-      email : faker.internet.email(),
-      password : 'password',
-      isDoctor : false,
-      clientInfo : {
-        medicalHistory : [
+      email: faker.internet.email(),
+      password: 'password',
+      isDoctor: false,
+      clientInfo: {
+        medicalHistory: [
           {
-            startDate : faker.date.recent(),
-            condition :
-                conditionsArr[Math.floor(Math.random() * conditionsArr.length)],
-            notes : 'Lorem Ipsum',
+            startDate: faker.date.recent(),
+            condition:
+              conditionsArr[Math.floor(Math.random() * conditionsArr.length)],
+            notes: 'Lorem Ipsum',
           },
         ],
-        allergies : [
+        allergies: [
           {
-            name :
-                allergiesArr[Math.floor(Math.random() * allergiesArr.length)],
-            severity : Math.floor(Math.random() * 5) + 1,
+            name: allergiesArr[Math.floor(Math.random() * allergiesArr.length)],
+            severity: Math.floor(Math.random() * 5) + 1,
           },
         ],
-        medication : [
+        medication: [
           {
-            name : medicationsArr[Math.floor(Math.random() *
-                                             medicationsArr.length)],
-            dosage : Math.floor(Math.random() * 5) + 1,
-            manufacturer : faker.company.companyName(),
+            name:
+              medicationsArr[Math.floor(Math.random() * medicationsArr.length)],
+            dosage: Math.floor(Math.random() * 5) + 1,
+            manufacturer: faker.company.companyName(),
           },
         ],
-        bloodType :
-            bloodTypeArr[Math.floor(Math.random() * bloodTypeArr.length)],
+        bloodType:
+          bloodTypeArr[Math.floor(Math.random() * bloodTypeArr.length)],
       },
     });
   }
@@ -222,44 +222,51 @@ const seedDoctors = () => {
 
   for (let i = 0; i < numDoctors; i++) {
     data[0].documents.push({
-      firstName : faker.name.firstName(),
-      lastName : faker.name.lastName(),
-      title : 'Dr',
-      sex : 'female',
-      weight :
-          Math.floor(Math.random() * (maxWeight - minWeight + 1)) + minWeight,
-      dateOfBirth : faker.date.past(),
-      phoneNumber : faker.phone.phoneNumber(),
-      address : {
-        number : Math.floor(Math.random() * (maxAddrNum - minAddrNum + 1)) +
-                     minAddrNum,
-        street : faker.address.streetName(),
-        city : faker.address.city(),
-        state : faker.address.state(),
-        country : faker.address.country(),
-        postcode : parseInt(faker.address.zipCode()),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      title: 'Dr',
+      sex: 'female',
+      weight:
+        Math.floor(Math.random() * (maxWeight - minWeight + 1)) + minWeight,
+      dateOfBirth: faker.date.past(),
+      phoneNumber: faker.phone.phoneNumber(),
+      address: {
+        number:
+          Math.floor(Math.random() * (maxAddrNum - minAddrNum + 1)) +
+          minAddrNum,
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.state(),
+        country: faker.address.country(),
+        postcode: parseInt(faker.address.zipCode()),
       },
-      email : faker.internet.email(),
-      password : 'password',
-      isDoctor : true,
-      doctorInfo : {
-        licence :
-            'AustDocL'.concat(Math.floor(Math.random() * 50) + 1).toString(),
-        accreditation : 'Doctor of Medicine',
-        specialtyField : specialtyFieldArr[Math.floor(
-            Math.random() * specialtyFieldArr.length)],
-        subSpecialtyField : specialtyFieldArr[Math.floor(
-            Math.random() * specialtyFieldArr.length)],
-        education : [
-          specialtyFieldArr[Math.floor(Math.random() *
-                                       specialtyFieldArr.length)],
+      email: faker.internet.email(),
+      password: 'password',
+      isDoctor: true,
+      doctorInfo: {
+        licence: 'AustDocL'
+          .concat(Math.floor(Math.random() * 50) + 1)
+          .toString(),
+        accreditation: 'Doctor of Medicine',
+        specialtyField:
+          specialtyFieldArr[
+            Math.floor(Math.random() * specialtyFieldArr.length)
+          ],
+        subSpecialtyField:
+          specialtyFieldArr[
+            Math.floor(Math.random() * specialtyFieldArr.length)
+          ],
+        education: [
+          specialtyFieldArr[
+            Math.floor(Math.random() * specialtyFieldArr.length)
+          ],
         ],
-        yearsExperience : Math.floor(Math.random() * 50) + 1,
-        languagesSpoken : [
+        yearsExperience: Math.floor(Math.random() * 50) + 1,
+        languagesSpoken: [
           'English',
           languagesArr[Math.floor(Math.random() * languagesArr.length)],
         ],
-        rating : Math.floor(Math.random() * 5) + 1,
+        rating: Math.floor(Math.random() * 5) + 1,
       },
     });
   }
@@ -269,13 +276,15 @@ seedClients();
 seedDoctors();
 
 // Connect to MongoDB via Mongoose
-seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function() {
+seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function () {
   // Load Mongoose models
-  seeder.loadModels([ '../models/User.js' ]);
+  seeder.loadModels(['../models/User.js']);
 
   // Clear specified collections
-  seeder.clearModels([ 'User' ], function() {
+  seeder.clearModels(['User'], function () {
     // Callback to populate DB once collections have been cleared
-    seeder.populateModels(data, function() { seeder.disconnect(); });
+    seeder.populateModels(data, function () {
+      seeder.disconnect();
+    });
   });
 });

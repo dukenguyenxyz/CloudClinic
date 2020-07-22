@@ -12,14 +12,14 @@ module.exports = async (req, res, next) => {
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
 
     const user = await User.findOne(
-        {
-          _id : verified._id,
-          'tokens.token' : token,
-        } // function (err) {
-          //   if (err) {
-          //     return res.status(400).send('invalid token');
-          //   }
-          // }
+      {
+        _id: verified._id,
+        'tokens.token': token,
+      } // function (err) {
+      //   if (err) {
+      //     return res.status(400).send('invalid token');
+      //   }
+      // }
     );
 
     // if (!user) throw new Error();
