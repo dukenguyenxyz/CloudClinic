@@ -1,0 +1,11 @@
+.layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  width: 100%;
+  overflow: hidden;
+  height: 100vh;
+
+  @media all and (max-width: 425px) {
+    grid-template-columns: 1fr;
+  }
+}

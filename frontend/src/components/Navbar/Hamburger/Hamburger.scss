@@ -1,0 +1,9 @@
+.hamburger-wrapper {
+  // padding: var(--component-padding);
+  padding: 24px;
+
+  display: flex;
+  svg {
+    cursor: pointer;
+  }
+}

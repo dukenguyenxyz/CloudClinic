@@ -1,0 +1,36 @@
+.mobile-menu-wrapper {
+  // height: 90vh;
+  width: 100%;
+  background-color: var(--navy-blue);
+  color: white;
+  position: fixed;
+  z-index: 50;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.75rem;
+
+  li {
+    margin-bottom: 1rem;
+    display: flex;
+
+    a {
+      display: flex;
+      align-items: center;
+    }
+
+    svg {
+      margin-right: 24px;
+      display: flex;
+    }
+
+    span {
+      line-height: 1;
+      margin-top: 4px;
+    }
+  }
+  @media all and (max-width: 425px) {
+    font-size: 1.5rem;
+  }
+}

@@ -7,7 +7,7 @@
   --dark-blue: #3e5b7f;
   --mid-blue: #9ac2d8;
   --light-blue: #ddf2fd;
-  --accent: #ec6d53;
+  --accent: #f683ac;
   --black: #212429;
   --white: #ffffff;
   --dark-grey: #495057;
@@ -15,6 +15,7 @@
   --light-grey: #dde2e5;
   --off-white: #f8f9fa;
   --bg-color: #f9fafc;
+  --selected-color: #f8f8f8;
   --box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2);
   //spacing
   --space-unit: 1em;
@@ -25,6 +26,9 @@
   --space-lg: calc(2 * var(--space-unit));
   --space-xl: calc(3.25 * var(--space-unit));
   --space-xxl: calc(5.25 * var(--space-unit));
+  --component-padding: var(--space-md);
+  --border-radius: 8px;
+  color: var(--black);
 }
 
 // typography

@@ -1,0 +1,37 @@
+.button-wrapper {
+  button {
+    padding: 12px var(--component-padding);
+    border: none;
+    outline: none;
+    border-radius: 32px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    svg {
+      // margin-right: 8px;
+      display: flex;
+    }
+  }
+
+  .pink {
+    background-color: var(--accent);
+  }
+
+  .navy {
+    background-color: var(--navy-blue);
+  }
+  .dark {
+    background-color: var(--dark-blue);
+  }
+
+  .light {
+    background-color: var(--light-blue);
+  }
+
+  span {
+    padding: 0 4px;
+  }
+}

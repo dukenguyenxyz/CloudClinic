@@ -1,0 +1,157 @@
+.appointments-wrapper {
+  margin: 24px;
+
+  .rbc-overflowing {
+    border: unset;
+  }
+
+  .rbc-current-time-indicator {
+    background-color: var(--accent);
+    height: 2px;
+    opacity: 50%;
+    // position: relative;
+
+    &::before {
+      position: absolute;
+      content: '';
+      left: -8px;
+      width: 16px;
+      height: 16px;
+      background-color: var(--accent);
+      top: -325%;
+      opacity: 100%;
+      border-radius: 50%;
+    }
+  }
+
+  .rbc-time-content > * + * > * {
+    border-left: 1px solid var(--light-grey);
+  }
+
+  .rbc-time-content {
+    border-top: 1px solid var(--light-grey);
+  }
+
+  .rbc-timeslot-group {
+    border-bottom: 1px solid var(--light-grey);
+  }
+
+  .rbc-time-slot {
+    border-top: none;
+  }
+
+  .rbc-time-view {
+    border: none;
+    border-top: 1px solid var(--light-grey);
+    box-shadow: var(--box-shadow);
+    border-radius: calc(var(--border-radius) / 2);
+  }
+
+  .rbc-header {
+    border-bottom: 1px solid var(--light-grey);
+    background-color: var(--navy-blue);
+  }
+
+  // .rbc-today {
+  //   // background-color: var(--light-blue) !important;
+  // }
+  .rbc-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr 1fr;
+    .rbc-btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 8px;
+      button {
+        padding: 12px 8px;
+        border: none;
+        outline: none;
+        border-radius: 32px;
+        color: white;
+        font-size: 12px;
+
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
+        background: var(--navy-blue);
+
+        // svg {
+        //   margin-right: 8px;
+        //   display: flex;
+        // }
+      }
+
+      .rbc-active {
+        background: var(--accent);
+      }
+    }
+
+    .rbc-toolbar-label {
+      font-weight: 600;
+    }
+
+    .rbc-btn-group:last-child {
+      justify-content: end;
+    }
+  }
+
+  .rbc-month-header {
+    background-color: var(--navy-blue);
+    padding: 12px;
+    color: white;
+  }
+
+  .rbc-header {
+    border: none;
+  }
+
+  .rbc-month-view {
+    border: none;
+    border-top: 1px solid var(--light-grey);
+    box-shadow: var(--box-shadow);
+    border-radius: calc(var(--border-radius) / 2);
+    overflow: hidden;
+  }
+
+  .rbc-event {
+    background-color: var(--dark-blue);
+    border: var(--black);
+    box-shadow: var(--box-shadow);
+  }
+
+  .rbc-allday-cell {
+    display: none;
+  }
+
+  .rbc-time-header-content {
+    background-color: var(--navy-blue);
+    color: white;
+    padding: 12px;
+    border-left: none;
+
+    .rbc-today {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &::after {
+        content: '';
+        margin-top: -2px;
+        margin-left: 8px;
+        width: 8px;
+        height: 8px;
+        background-color: var(--light-blue);
+        border-radius: 50%;
+        // position: absolute;
+        left: 20%;
+
+        @media all and (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+}
