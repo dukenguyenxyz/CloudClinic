@@ -30,12 +30,12 @@ const AuthInput = ({
   onValueChange,
   type,
   icon,
-  minLength,
   value,
   isDate,
   max,
   min,
   pattern,
+  minLength,
   maxLength,
   isMobile,
   onKeyUp,
@@ -116,11 +116,11 @@ const AuthInput = ({
         value={value}
         autoComplete="off"
         required
-        minLength={minLength}
         onChange={onValueChange}
         max={max}
         min={min}
         pattern={pattern}
+        minLength={minLength}
         maxLength={maxLength}
         onKeyUp={onKeyUp}
         checked={value && true}

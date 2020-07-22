@@ -3,7 +3,14 @@ import './AuthSelect.scss';
 import { Heart, Users, Hash, User, Navigation } from 'react-feather';
 import { v4 as uuidv4 } from 'uuid';
 
-const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
+const AuthSelect = ({
+  placeholder,
+  value,
+  onValueChange,
+  icon,
+  options,
+  directive,
+}) => {
   const getIcon = () => {
     switch (icon) {
       case 'heart':
@@ -21,6 +28,21 @@ const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
     }
   };
 
+  const getDirective = () => {
+    switch (directive) {
+      case 'blood':
+        return 'Select your blood type';
+      case 'allergy':
+        return 'Rate the severity out of 5';
+      case 'title':
+        return 'Select title';
+      case 'sex':
+        return 'Select sex';
+      default:
+        return 'Choose here';
+    }
+  };
+
   const makeSelectItem = item => {
     return (
       <option value={item} key={uuidv4()}>
@@ -34,7 +56,7 @@ const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
       <i>{getIcon()}</i>
       <select name={placeholder} value={value} onChange={onValueChange}>
         <option value="" defaultValue disabled hidden>
-          Choose here
+          {getDirective()}
         </option>
         {options.map(makeSelectItem)}
       </select>

@@ -11,6 +11,10 @@
   align-items: center;
   font-size: 1.75rem;
 
+  .mobile-menu-container {
+    pointer-events: none;
+  }
+
   li {
     margin-bottom: 1rem;
     display: flex;

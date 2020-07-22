@@ -50,5 +50,14 @@ h1 {
 .light {
   button {
     background-color: var(--light-blue);
+    color: var(--black);
+  }
+}
+
+.mid {
+  button {
+    background-color: var(--mid-blue);
+    color: var(--black);
+    padding: 8px !important;
   }
 }

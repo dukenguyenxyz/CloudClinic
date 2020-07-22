@@ -16,7 +16,10 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         value={formState.title}
         placeholder="Title"
         type="text"
+        directive="title"
         icon="username"
+        minLength="3"
+        maxLength="15"
         options={titleOptions}
         onValueChange={e => onValueChange(e, 'title')}
       />
@@ -24,6 +27,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         value={formState.firstName}
         placeholder="First Name"
         type="text"
+        minLength="2"
+        maxLength="26"
         icon="username"
         onValueChange={e => onValueChange(e, 'firstName')}
       />
@@ -31,6 +36,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         value={formState.lastName}
         placeholder="Last Name"
         type="text"
+        minLength="2"
+        maxLength="26"
         icon="username"
         onValueChange={e => onValueChange(e, 'lastName')}
       />
@@ -39,6 +46,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         placeholder="Sex"
         type="text"
         icon="users"
+        directive="sex"
         options={sexOptions}
         onValueChange={e => onValueChange(e, 'sex')}
       />
@@ -46,6 +54,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         value={formState.weight}
         placeholder="Weight (kg)"
         type="number"
+        min="1"
+        max="300"
         icon="clipboard"
         onValueChange={e => onValueChange(e, 'weight')}
       />
@@ -67,6 +77,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         icon="phone"
         isMobile
         onValueChange={e => onValueChange(e, 'phone')}
+        minLength="9"
         maxLength="12"
       />
 
@@ -74,10 +85,10 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
       <AuthInput
         value={formState.addressNumber}
         placeholder="Street No."
-        type="number"
+        type="text"
         icon="hash"
-        min="1"
-        max="100000"
+        minLength="1"
+        maxLength="28"
         onValueChange={e => onValueChange(e, 'addressNumber')}
       />
       <AuthInput
@@ -85,6 +96,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         placeholder="Street"
         type="text"
         icon="mapPin"
+        minLength="2"
+        maxLength="95"
         onValueChange={e => onValueChange(e, 'street')}
       />
       <AuthInput
@@ -92,6 +105,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         placeholder="City"
         type="text"
         icon="home"
+        minLength="2"
+        maxLength="28"
         onValueChange={e => onValueChange(e, 'city')}
       />
       <AuthSelect

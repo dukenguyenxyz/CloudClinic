@@ -3,7 +3,6 @@ import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
-import { v4 as uuidv4 } from 'uuid';
 
 const StepThree = ({
   formState,
@@ -12,11 +11,9 @@ const StepThree = ({
   handleRemoveClick,
   onArrValueChange,
 }) => {
-  // const isDoctor = false;
-  const isDoctor = formState.isDoctor;
+  const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
-  // let key = uuidv4();
   const clientSignup = (
     <>
       <h3>Existing Conditions</h3>
@@ -27,7 +24,7 @@ const StepThree = ({
 
       {formState.existingConditions.map((val, i) => {
         return (
-          <div /*key={key}*/>
+          <div key={i}>
             <AuthInput
               name="condition"
               value={val.condition}
@@ -44,6 +41,10 @@ const StepThree = ({
               // placeholder="Condition Start Date"
               type="date"
               icon="calendar"
+              placeholder="Start date"
+              isDate
+              max="2020-01-01"
+              min="1900-01-01"
               onValueChange={e =>
                 onArrValueChange(
                   e,
@@ -67,8 +68,8 @@ const StepThree = ({
               {formState.existingConditions.length !== 1 && (
                 <Button
                   onClick={() => handleRemoveClick('existingConditions', i)}
-                  action="-"
-                  color="pink"
+                  icon="minus"
+                  color="mid"
                 />
               )}
               {formState.existingConditions.length - 1 === i && (
@@ -80,8 +81,8 @@ const StepThree = ({
                       conditionComment: '',
                     })
                   }
-                  action="+"
-                  color="pink"
+                  icon="plus"
+                  color="mid"
                 />
               )}
             </div>
@@ -93,7 +94,7 @@ const StepThree = ({
 
       {formState.allergies.map((val, i) => {
         return (
-          <div>
+          <div key={i}>
             <AuthInput
               name="allergy"
               value={val.allergy}
@@ -111,6 +112,7 @@ const StepThree = ({
               placeholder="Severity"
               type="text"
               icon="hash"
+              directive="allergy"
               options={severityOptions}
               onValueChange={e =>
                 onArrValueChange(e, 'allergies', i, 'severity')
@@ -120,8 +122,8 @@ const StepThree = ({
               {formState.allergies.length !== 1 && (
                 <Button
                   onClick={() => handleRemoveClick('allergies', i)}
-                  action="-"
-                  color="pink"
+                  icon="minus"
+                  color="mid"
                 />
               )}
               {formState.allergies.length - 1 === i && (
@@ -132,8 +134,8 @@ const StepThree = ({
                       severity: '',
                     })
                   }
-                  action="+"
-                  color="pink"
+                  icon="plus"
+                  color="mid"
                 />
               )}
             </div>
@@ -145,7 +147,7 @@ const StepThree = ({
 
       {formState.medications.map((val, i) => {
         return (
-          <div>
+          <div key={i}>
             <AuthInput
               name="medication"
               value={val.medication}
@@ -159,8 +161,10 @@ const StepThree = ({
             <AuthInput
               name="dosage"
               value={val.dosage}
-              placeholder="Dosage"
+              placeholder="Dosage (mg)"
               type="number"
+              min="1"
+              max="5000"
               icon="hash"
               onValueChange={e =>
                 onArrValueChange(e, 'medications', i, 'dosage')
@@ -180,8 +184,8 @@ const StepThree = ({
               {formState.medications.length !== 1 && (
                 <Button
                   onClick={() => handleRemoveClick('medications', i)}
-                  action="-"
-                  color="pink"
+                  icon="minus"
+                  color="mid"
                 />
               )}
               {formState.medications.length - 1 === i && (
@@ -193,8 +197,8 @@ const StepThree = ({
                       manufacturer: '',
                     })
                   }
-                  action="+"
-                  color="pink"
+                  icon="plus"
+                  color="mid"
                 />
               )}
             </div>
@@ -207,6 +211,7 @@ const StepThree = ({
         value={formState.bloodType}
         placeholder="Blood Type"
         icon="heart"
+        directive="blood"
         options={bloodTypes}
         onValueChange={e => onValueChange(e, 'bloodType')}
       />
@@ -259,7 +264,7 @@ const StepThree = ({
       />
       {formState.languages.map((val, i) => {
         return (
-          <div key={uuidv4()}>
+          <div key={i}>
             <AuthInput
               name="language"
               value={val.language}
@@ -274,8 +279,8 @@ const StepThree = ({
               {formState.languages.length !== 1 && (
                 <Button
                   onClick={() => handleRemoveClick('languages', i)}
-                  action="-"
-                  color="pink"
+                  icon="minus"
+                  color="mid"
                 />
               )}
               {formState.languages.length - 1 === i && (
@@ -285,8 +290,8 @@ const StepThree = ({
                       language: '',
                     })
                   }
-                  action="+"
-                  color="pink"
+                  icon="plus"
+                  color="mid"
                 />
               )}
             </div>

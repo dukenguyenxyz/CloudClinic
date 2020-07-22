@@ -25,4 +25,12 @@
     margin-left: 12px;
     display: flex;
   }
+
+  .auth-select {
+    label {
+      transform: scale(0.8) translateY(-24px);
+      padding: 0 4px;
+      background-color: var(--white);
+    }
+  }
 }

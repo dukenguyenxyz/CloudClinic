@@ -16,7 +16,6 @@ const Authentication = ({
   const handleClick = () => {
     setAuthAction(!authAction);
   };
-  const flag = true;
   return (
     <motion.div
       initial={initialAnimation}

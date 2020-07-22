@@ -1,10 +1,19 @@
 import React from 'react';
 import './Button.scss';
-import { ArrowLeft, ArrowRight, ArrowDown, ArrowUp } from 'react-feather';
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowDown,
+  ArrowUp,
+  Check,
+  Plus,
+  Minus,
+} from 'react-feather';
 
 const Button = ({ action, color, icon, onClick }) => {
   const getIcon = () => {
     const iconSize = 20;
+    const iconSizeSmall = 16;
 
     switch (icon) {
       case 'arrowLeft':
@@ -15,17 +24,28 @@ const Button = ({ action, color, icon, onClick }) => {
         return <ArrowUp size={iconSize} />;
       case 'arrowDown':
         return <ArrowDown size={iconSize} />;
+      case 'check':
+        return <Check size={iconSize} />;
+      case 'plus':
+        return <Plus size={iconSizeSmall} />;
+      case 'minus':
+        return <Minus size={iconSizeSmall} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className={`button-wrapper ${color}`}>
+    <div
+      className={`button-wrapper ${color} ${icon === 'minus' ? 'minus' : ''}`}
+    >
       <button type="button" onClick={onClick}>
         {icon === 'arrowLeft' && <i>{getIcon()}</i>}
-        <span>{action}</span>
+        {icon === 'plus' && <i>{getIcon()}</i>}
+        {icon === 'minus' && <i>{getIcon()}</i>}
+        {action && <span>{action}</span>}
         {icon === 'arrowRight' && <i>{getIcon()}</i>}
+        {icon === 'check' && <i>{getIcon()}</i>}
       </button>
     </div>
   );

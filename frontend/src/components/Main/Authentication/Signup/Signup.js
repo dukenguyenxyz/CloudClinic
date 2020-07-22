@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Signup = () => {
   const [formState, setFormState] = useState({
-    step: 0,
+    step: 2,
     isDoctor: false,
     errors: [],
     validationIcon: '',
@@ -45,22 +45,21 @@ const Signup = () => {
     languages: [{ language: '' }],
   });
 
+  const onNextStepZero = () => {
+    setFormState({
+      ...formState,
+      step: formState.step + 1,
+    });
+  };
+
   const onNextStepOne = () => {
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
     if (
       !formState.password ||
       !formState.confirmPassword ||
       !formState.username ||
       !formState.email
-      // !formState.firstName ||
-      // !formState.lastName ||
-      // !formState.title ||
-      // !formState.weight ||
-      // !formState.dob ||
-      // !formState.phone ||
-      // !formState.addressNumber ||
-      // !formState.street ||
-      // !formState.city ||
-      // !formState.country
     ) {
       setFormState({
         ...formState,
@@ -71,7 +70,7 @@ const Signup = () => {
         ...formState,
         errors: ['Passwords do not match'],
       });
-    } else if (!formState.email.includes('@')) {
+    } else if (!emailRegex.test(formState.email)) {
       setFormState({
         ...formState,
         errors: ['Please enter a valid email'],
@@ -128,6 +127,7 @@ const Signup = () => {
     setFormState({
       ...formState,
       step: formState.step - 1,
+      errors: [''],
     });
   };
 
@@ -255,7 +255,7 @@ const Signup = () => {
                 <Button
                   action="Next"
                   color="pink"
-                  onClick={onNextStepOne}
+                  onClick={onNextStepZero}
                   icon="arrowRight"
                 />
               </div>
@@ -286,20 +286,18 @@ const Signup = () => {
                 </ul>
               </div>
               <div className="form-button-wrapper">
-                <div className="form-button-wrapper">
-                  <Button
-                    action="Previous"
-                    color="navy"
-                    onClick={onPrev}
-                    icon="arrowLeft"
-                  />
-                  <Button
-                    action="Next"
-                    color="pink"
-                    onClick={onNext}
-                    icon="arrowRight"
-                  />
-                </div>
+                <Button
+                  action="Previous"
+                  color="navy"
+                  onClick={onPrev}
+                  icon="arrowLeft"
+                />
+                <Button
+                  action="Next"
+                  color="pink"
+                  onClick={onNextStepOne}
+                  icon="arrowRight"
+                />
               </div>
             </div>
           </div>
@@ -370,8 +368,20 @@ const Signup = () => {
                   ))}
                 </ul>
               </div>
-              <Button action="Previous" color="pink" onClick={onPrev} />
-              <Button action="Submit" color="dark" onClick={handleSubmit} />
+              <div className="form-button-wrapper">
+                <Button
+                  action="Previous"
+                  color="navy"
+                  onClick={onPrev}
+                  icon="arrowLeft"
+                />
+                <Button
+                  action="Submit"
+                  color="pink"
+                  onClick={handleSubmit}
+                  icon="check"
+                />
+              </div>
             </div>
           </div>
         );

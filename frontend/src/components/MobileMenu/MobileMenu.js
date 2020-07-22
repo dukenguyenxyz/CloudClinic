@@ -44,6 +44,7 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
   const menuUl = {
     hidden: {
       opacity: '0%',
+      pointerEvents: 'none',
       transition: {
         staggerChildren: 0.2,
         ease: 'easeInOut',
@@ -52,6 +53,8 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
     },
     show: {
       opacity: '100%',
+      pointerEvents: 'auto',
+
       transition: {
         staggerChildren: 0.2,
         ease: 'easeInOut',
