@@ -12,10 +12,10 @@ const StepThree = ({
   handleRemoveClick,
   onArrValueChange,
 }) => {
-  const isDoctor = true;
+  const isDoctor = false;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
-
+  // let key = uuidv4();
   const clientSignup = (
     <>
       <h3>Existing Conditions</h3>
@@ -26,14 +26,13 @@ const StepThree = ({
 
       {formState.existingConditions.map((val, i) => {
         return (
-          <div key={uuidv4()}>
+          <div /*key={key}*/>
             <AuthInput
               name="condition"
               value={val.condition}
               placeholder="Condition"
               type="text"
               icon="condition"
-              // onValueChange={e => onValueChange(e, 'existingConditions')}
               onValueChange={e =>
                 onArrValueChange(e, 'existingConditions', i, 'condition')
               }
@@ -93,7 +92,7 @@ const StepThree = ({
 
       {formState.allergies.map((val, i) => {
         return (
-          <div key={uuidv4()}>
+          <div>
             <AuthInput
               name="allergy"
               value={val.allergy}
@@ -145,7 +144,7 @@ const StepThree = ({
 
       {formState.medications.map((val, i) => {
         return (
-          <div key={uuidv4()}>
+          <div>
             <AuthInput
               name="medication"
               value={val.medication}
