@@ -106,6 +106,22 @@ const Signup = () => {
     }
   };
 
+  //handler for submitting form
+  const handleSubmit = e => {
+    // e.preventDefault();
+    //Make axios post request to backend
+    // axios.post('/user,{
+    //   ...formState
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    // });
+    //then a redirect?
+  };
+
   const displayFormStep = () => {
     console.log(formState);
 
@@ -181,6 +197,7 @@ const Signup = () => {
                 onArrValueChange={onArrValueChange}
               />
               <Button action="Previous" color="pink" onClick={onPrev} />
+              <Button action="Submit" color="dark" onClick={handleSubmit} />
             </div>
           </div>
         );
