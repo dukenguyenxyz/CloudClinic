@@ -59,7 +59,7 @@ const Menu = ({ isOpen, user }) => {
         animate={isOpen ? 'show' : 'hidden'}
       >
         <li>
-          <NavLink to="profile">
+          <NavLink to="profile" disabled={user ? false : true}>
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <User size={iconSize} color={user ? '#212429' : '#dde2e5'} />
@@ -70,7 +70,7 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="patients">
+          <NavLink to="patients" disabled={user ? false : true}>
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <Clipboard size={iconSize} color={user ? '#212429' : '#dde2e5'} />
@@ -81,7 +81,7 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="messaging">
+          <NavLink to="messaging" disabled={user ? false : true}>
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <MessageSquare
@@ -95,7 +95,7 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="appointments">
+          <NavLink to="appointments" disabled={user ? false : true}>
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <Calendar size={iconSize} color={user ? '#212429' : '#dde2e5'} />
@@ -106,7 +106,7 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="settings">
+          <NavLink to="settings" disabled={user ? false : true}>
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <Settings size={iconSize} color={user ? '#212429' : '#dde2e5'} />

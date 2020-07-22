@@ -5,6 +5,8 @@
   padding: 24px;
   flex-wrap: wrap;
   user-select: none;
+  position: relative;
+  z-index: 500;
 
   h1 {
     font-weight: 500;
@@ -16,7 +18,6 @@
       width: 100px;
       height: 2px;
       background-color: var(--accent);
-      // position: absolute;
     }
   }
 

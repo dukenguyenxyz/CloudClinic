@@ -4,9 +4,21 @@ import Button from '../Button/Button';
 import { Link } from '@reach/router';
 import { motion } from 'framer-motion';
 
-const Home = () => {
+const Home = ({
+  inAnimation,
+  outAnimation,
+  transition,
+  initialAnimation,
+  variants,
+}) => {
   return (
-    <React.Fragment>
+    <motion.div
+      variants={variants}
+      initial={initialAnimation}
+      animate={inAnimation}
+      exit={outAnimation}
+      transition={transition}
+    >
       <div className="circle-wrapper">
         <div className="home-wrapper">
           <div>
@@ -73,7 +85,7 @@ const Home = () => {
               </Link>
             </div>
           </div>
-          <div class="socials">
+          <div className="socials">
             <div>
               <a href="/">
                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none">
@@ -135,7 +147,7 @@ const Home = () => {
           </small>
         </footer>
       </section>
-    </React.Fragment>
+    </motion.div>
   );
 };
 
