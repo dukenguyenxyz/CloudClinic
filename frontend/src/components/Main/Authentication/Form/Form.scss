@@ -9,12 +9,22 @@
 
   .form-container {
     padding: var(--component-padding);
+
+    p {
+      margin-bottom: 24px;
+    }
   }
 
   .form-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--component-padding);
+  }
+
+  .form-button-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
   }
 
   .trim {

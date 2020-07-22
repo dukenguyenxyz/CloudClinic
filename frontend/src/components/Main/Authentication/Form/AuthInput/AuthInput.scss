@@ -52,3 +52,25 @@
     }
   }
 }
+
+.auth-date {
+  label {
+    transform: scale(0.8) translateY(-24px);
+    padding: 0 4px;
+    background-color: var(--white);
+  }
+}
+
+.auth-mobile {
+  label {
+    transform: scale(0.8) translateY(-24px);
+    padding: 0 4px;
+    background-color: var(--white);
+  }
+}
+
+.auth-input-error {
+  input {
+    border: 1px solid rgb(255, 63, 63);
+  }
+}

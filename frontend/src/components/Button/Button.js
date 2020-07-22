@@ -23,8 +23,9 @@ const Button = ({ action, color, icon, onClick }) => {
   return (
     <div className={`button-wrapper ${color}`}>
       <button type="button" onClick={onClick}>
-        <i>{getIcon()}</i>
-        {action}
+        {icon === 'arrowLeft' && <i>{getIcon()}</i>}
+        <span>{action}</span>
+        {icon === 'arrowRight' && <i>{getIcon()}</i>}
       </button>
     </div>
   );

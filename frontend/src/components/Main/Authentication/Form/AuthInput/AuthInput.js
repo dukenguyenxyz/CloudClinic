@@ -20,6 +20,7 @@ import {
   FileText,
   Briefcase,
   MessageCircle,
+  Map,
 } from 'react-feather';
 
 const AuthInput = ({
@@ -29,6 +30,13 @@ const AuthInput = ({
   icon,
   minLength,
   value,
+  isDate,
+  max,
+  min,
+  pattern,
+  maxLength,
+  isMobile,
+  onKeyUp,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -70,12 +78,19 @@ const AuthInput = ({
         return <Briefcase color="#212429" size={14} />;
       case 'language':
         return <MessageCircle color="#212429" size={14} />;
+      case 'postcode':
+        return <Map color="#212429" size={14} />;
       default:
         return '';
     }
   };
+  const error = true;
   return (
-    <div className="auth-input-wrapper">
+    <div
+      className={`auth-input-wrapper ${isDate ? 'auth-date' : ''} ${
+        isMobile ? 'auth-mobile' : ''
+      } ${error ? 'auth-input-error' : ''} `}
+    >
       <label className={value ? 'active' : null} htmlFor={placeholder}>
         {placeholder}
       </label>
@@ -88,6 +103,11 @@ const AuthInput = ({
         required
         minLength={minLength}
         onChange={onValueChange}
+        max={max}
+        min={min}
+        pattern={pattern}
+        maxLength={maxLength}
+        onKeyUp={onKeyUp}
       />
     </div>
   );

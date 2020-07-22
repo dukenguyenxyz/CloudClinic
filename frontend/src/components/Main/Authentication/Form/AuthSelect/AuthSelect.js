@@ -1,6 +1,6 @@
 import React from 'react';
 import './AuthSelect.scss';
-import { Heart, Users, Hash } from 'react-feather';
+import { Heart, Users, Hash, User, Navigation } from 'react-feather';
 import { v4 as uuidv4 } from 'uuid';
 
 const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
@@ -10,8 +10,12 @@ const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
         return <Heart color="#212429" size={14} />;
       case 'users':
         return <Users color="#212429" size={14} />;
+      case 'username':
+        return <User color="#212429" size={14} />;
       case 'hash':
         return <Hash color="#212429" size={14} />;
+      case 'navArrow':
+        return <Navigation color="#212429" size={14} />;
       default:
         return '';
     }

@@ -295,11 +295,7 @@ const StepThree = ({
     </>
   );
 
-  return (
-    <div className="form-wrapper ">
-      {isDoctor ? doctorSignup : clientSignup}
-    </div>
-  );
+  return <div>{isDoctor ? doctorSignup : clientSignup}</div>;
 };
 
 export default StepThree;

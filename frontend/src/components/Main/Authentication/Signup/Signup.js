@@ -9,6 +9,8 @@ const Signup = () => {
   const [formState, setFormState] = useState({
     step: 1,
     username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -16,11 +18,11 @@ const Signup = () => {
     sex: '',
     weight: '',
     dob: '',
-    phone: '',
+    phone: '+61',
     addressNumber: '',
     street: '',
     city: '',
-    country: '',
+    country: 'Australia',
     postcode: '',
     existingConditions: [
       { condition: '', conditionStartDate: '', conditionComment: '' },
@@ -39,10 +41,16 @@ const Signup = () => {
   });
 
   const onNext = () => {
-    setFormState({
-      ...formState,
-      step: formState.step + 1,
-    });
+    if (
+      formState.password === formState.confirmPassword &&
+      formState.password !== ''
+    ) {
+      setFormState({
+        ...formState,
+        step: formState.step + 1,
+      });
+    } else {
+    }
   };
 
   const onPrev = () => {
@@ -92,7 +100,15 @@ const Signup = () => {
     });
   };
 
+  const handleEnterKey = e => {
+    if (e.keyCode === 13) {
+      onNext();
+    }
+  };
+
   const displayFormStep = () => {
+    console.log(formState);
+
     switch (formState.step) {
       case 1:
         return (
@@ -103,8 +119,19 @@ const Signup = () => {
                 <h1>Sign up</h1>
                 <span>1/3</span>
               </div>
-              <StepOne formState={formState} onValueChange={onValueChange} />
-              <Button action="Next" color="pink" onClick={onNext} />
+              <StepOne
+                formState={formState}
+                onValueChange={onValueChange}
+                onKeyUp={handleEnterKey}
+              />
+              <div className="form-button-wrapper">
+                <Button
+                  action="Next"
+                  color="pink"
+                  onClick={onNext}
+                  icon="arrowRight"
+                />
+              </div>
             </div>
           </div>
         );
@@ -119,8 +146,20 @@ const Signup = () => {
               </div>
 
               <StepTwo formState={formState} onValueChange={onValueChange} />
-              <Button action="Next" color="pink" onClick={onNext} />
-              <Button action="Previous" color="pink" onClick={onPrev} />
+              <div className="form-button-wrapper">
+                <Button
+                  action="Previous"
+                  color="navy"
+                  onClick={onPrev}
+                  icon="arrowLeft"
+                />
+                <Button
+                  action="Next"
+                  color="pink"
+                  onClick={onNext}
+                  icon="arrowRight"
+                />
+              </div>
             </div>
           </div>
         );
