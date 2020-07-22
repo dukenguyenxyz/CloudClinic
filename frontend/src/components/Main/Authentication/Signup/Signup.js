@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
+import { v4 as uuidv4 } from 'uuid';
 
 const Signup = () => {
   const [formState, setFormState] = useState({
     step: 1,
+    errors: [],
+    validationIcon: '',
     username: '',
     firstName: '',
     lastName: '',
@@ -41,16 +44,17 @@ const Signup = () => {
   });
 
   const onNext = () => {
-    if (
-      formState.password === formState.confirmPassword &&
-      formState.password !== ''
-    ) {
-      setFormState({
-        ...formState,
-        step: formState.step + 1,
-      });
-    } else {
-    }
+    // if (
+    //   formState.password === formState.confirmPassword &&
+    //   formState.password !== ''
+    // ) {
+
+    // } else {
+    // }
+    setFormState({
+      ...formState,
+      step: formState.step + 1,
+    });
   };
 
   const onPrev = () => {
@@ -59,6 +63,30 @@ const Signup = () => {
       step: formState.step - 1,
     });
   };
+
+  useEffect(() => {
+    if (
+      //password and confirm password match
+      formState.password === formState.confirmPassword &&
+      formState.password.length > 0
+    ) {
+      setFormState({
+        ...formState,
+        validationIcon: 'success',
+      });
+
+      //password and confirm password are not the same
+    } else if (
+      formState.password !== formState.confirmPassword &&
+      formState.password.length === formState.confirmPassword.length
+    ) {
+      setFormState({
+        ...formState,
+        errors: ["passwords don't match", ...formState['errors']],
+        validationIcon: 'error',
+      });
+    }
+  }, [formState.password, formState.confirmPassword]);
 
   const onValueChange = (e, key) => {
     setFormState({
@@ -100,15 +128,37 @@ const Signup = () => {
     });
   };
 
+  // Handle enter key callback to advance the form - placed on last input field of each form step
   const handleEnterKey = e => {
     if (e.keyCode === 13) {
       onNext();
     }
   };
 
-  const displayFormStep = () => {
-    console.log(formState);
+  const validatePassword = e => {
+    console.log(e);
+  };
 
+  //Global validation for inputs
+  const validateInput = e => {
+    const value = e.target.value;
+
+    if (formState.password === formState.confirmPassword) {
+    }
+
+    // const validations = [
+    //   formState.username.length >= 2,
+    //   formState.firstName.length >= 2,
+    //   formState.lastName.length >= 2,
+    //   formState.password.length >= 6,
+    //   formState.password.search(/[A-Z]/) > -1,
+    //   formState.password.search(/[0-9]/) > -1,
+    //   formState.password.search(/[$&+,:;=?@#]/) > -1,
+    //   formState.password === formState.confirmPassword,
+    // ];
+  };
+
+  const displayFormStep = () => {
     switch (formState.step) {
       case 1:
         return (
@@ -124,6 +174,15 @@ const Signup = () => {
                 onValueChange={onValueChange}
                 onKeyUp={handleEnterKey}
               />
+              <div className="auth-error-wrapper">
+                <ul>
+                  {formState.errors.map(errorMessage => (
+                    <li key={uuidv4()} className="auth-error-message">
+                      {errorMessage}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="Next"
@@ -185,6 +244,7 @@ const Signup = () => {
           </div>
         );
     }
+    console.log(formState);
   };
 
   return displayFormStep();

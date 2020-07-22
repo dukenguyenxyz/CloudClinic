@@ -51,6 +51,20 @@
       background-color: var(--white);
     }
   }
+
+  // input:valid {
+  //   color: rgb(40, 204, 40);
+  // }
+
+  // input:invalid {
+  //   color: rgb(255, 63, 63);
+  // }
+
+  .icon-validation {
+    right: 0;
+    margin-left: 0px;
+    margin-right: 12px;
+  }
 }
 
 .auth-date {
@@ -69,8 +83,16 @@
   }
 }
 
-.auth-input-error {
-  input {
-    border: 1px solid rgb(255, 63, 63);
+// .auth-input-error {
+//   input {
+//     border: 1px solid rgb(255, 63, 63);
+//   }
+// }
+
+.auth-error-wrapper {
+  margin-bottom: 24px;
+  .auth-error-message {
+    font-size: 12px;
+    color: #ff3f3f;
   }
 }

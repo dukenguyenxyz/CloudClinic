@@ -21,6 +21,8 @@ import {
   Briefcase,
   MessageCircle,
   Map,
+  CheckCircle,
+  XCircle,
 } from 'react-feather';
 
 const AuthInput = ({
@@ -37,6 +39,8 @@ const AuthInput = ({
   maxLength,
   isMobile,
   onKeyUp,
+  validationIcon,
+  // validatePassword,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -84,12 +88,23 @@ const AuthInput = ({
         return '';
     }
   };
-  const error = true;
+
+  const getValidationIcon = () => {
+    switch (validationIcon) {
+      case 'success':
+        return <CheckCircle color="#28cc28" size={14} />;
+      case 'error':
+        return <XCircle color="#ff3f3f" size={14} />;
+      default:
+        return null;
+    }
+  };
+  // console.log(validationIcon);
   return (
     <div
       className={`auth-input-wrapper ${isDate ? 'auth-date' : ''} ${
         isMobile ? 'auth-mobile' : ''
-      } ${error ? 'auth-input-error' : ''} `}
+      } `}
     >
       <label className={value ? 'active' : null} htmlFor={placeholder}>
         {placeholder}
@@ -109,6 +124,7 @@ const AuthInput = ({
         maxLength={maxLength}
         onKeyUp={onKeyUp}
       />
+      <i className="icon-validation">{getValidationIcon()}</i>
     </div>
   );
 };
