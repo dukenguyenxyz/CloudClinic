@@ -12,7 +12,8 @@ const StepThree = ({
   handleRemoveClick,
   onArrValueChange,
 }) => {
-  const isDoctor = false;
+  // const isDoctor = false;
+  const isDoctor = formState.isDoctor;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
   // let key = uuidv4();

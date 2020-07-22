@@ -123,6 +123,7 @@ const AuthInput = ({
         pattern={pattern}
         maxLength={maxLength}
         onKeyUp={onKeyUp}
+        checked={value && true}
       />
       <i className="icon-validation">{getValidationIcon()}</i>
     </div>

@@ -42,7 +42,6 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         options={sexOptions}
         onValueChange={e => onValueChange(e, 'sex')}
       />
-      {/* Relevant input for Doctor form? */}
       <AuthInput
         value={formState.weight}
         placeholder="Weight (kg)"
@@ -50,7 +49,6 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         icon="clipboard"
         onValueChange={e => onValueChange(e, 'weight')}
       />
-      {/* Date of Birth input - needs formatting for Date Picker input */}
       <AuthInput
         value={formState.dob}
         placeholder="Date of Birth"

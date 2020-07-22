@@ -4,7 +4,6 @@ import AuthInput from '../Form/AuthInput/AuthInput';
 
 const StepOne = ({ formState, onValueChange, onKeyUp }) => {
   const isDoctor = false;
-
   const clientSignup = (
     <>
       <AuthInput
@@ -46,8 +45,9 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
     </>
   );
 
-  const doctorSignup = <h1>Im a doctor</h1>;
-  return <>{isDoctor ? doctorSignup : clientSignup}</>;
+  // const doctorSignup = <h1>Im a doctor</h1>;
+  // return <>{isDoctor ? doctorSignup : clientSignup}</>;
+  return <>{clientSignup}</>;
 };
 
 export default StepOne;
