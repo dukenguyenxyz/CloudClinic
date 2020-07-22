@@ -1,17 +1,19 @@
 .form-wrapper {
   background: var(--white);
-  margin: auto;
   box-shadow: var(--box-shadow);
-  width: 50%;
-  height: 50%;
+  margin-right: 15%;
   border-radius: var(--border-radius);
   position: relative;
-
+  overflow: hidden;
   .form-container {
     padding: var(--component-padding);
 
     p {
       margin-bottom: 24px;
+    }
+
+    h3 {
+      margin-bottom: 12px;
     }
   }
 
@@ -22,6 +24,7 @@
   }
 
   .form-button-wrapper {
+    margin-top: 48px;
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -43,5 +46,9 @@
 
   input[type='date'] {
     font-family: 'Maison Neue';
+  }
+
+  @media all and (max-width: 768px) {
+    margin-right: 0;
   }
 }

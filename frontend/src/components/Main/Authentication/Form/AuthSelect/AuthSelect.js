@@ -33,6 +33,9 @@ const AuthSelect = ({ placeholder, value, onValueChange, icon, options }) => {
     <div className="auth-select-wrapper">
       <i>{getIcon()}</i>
       <select name={placeholder} value={value} onChange={onValueChange}>
+        <option value="" defaultValue disabled hidden>
+          Choose here
+        </option>
         {options.map(makeSelectItem)}
       </select>
     </div>

@@ -4,19 +4,9 @@ import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
 import countries from '../Form/countries';
 
-const StepTwo = ({ formState, onValueChange }) => {
+const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
   const sexOptions = ['male', 'female'];
-  const titleOptions = [
-    '-',
-    'Dr',
-    'Mr',
-    'Mrs',
-    'Ms',
-    'Miss',
-    'Mx',
-    'Rev',
-    'Sir',
-  ];
+  const titleOptions = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'];
 
   const basicInformationSignup = (
     <>
@@ -122,6 +112,7 @@ const StepTwo = ({ formState, onValueChange }) => {
         min="1"
         max="100000"
         onValueChange={e => onValueChange(e, 'postcode')}
+        onKeyUp={onKeyUp}
       />
     </>
   );

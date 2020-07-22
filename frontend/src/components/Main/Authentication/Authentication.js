@@ -23,19 +23,21 @@ const Authentication = ({
       animate={inAnimation}
       exit={outAnimation}
       transition={transition}
+      className="authentication-wrapper"
     >
-      {authAction ? <Signup /> : <Signin />}
-
-      {authAction ? (
-        <h1>Create your account</h1>
-      ) : (
-        <h1>Sign in to your account</h1>
-      )}
-      <Button
-        action={authAction ? 'Sign up' : 'Sign in'}
-        color="dark"
-        onClick={handleClick}
-      />
+      <div className="panel-l">
+        {authAction ? (
+          <h1>Need to create an account?</h1>
+        ) : (
+          <h1>Already have an account?</h1>
+        )}
+        <Button
+          action={authAction ? 'Sign up' : 'Sign in'}
+          color="dark"
+          onClick={handleClick}
+        />
+      </div>
+      <div className="panel-r">{authAction ? <Signin /> : <Signup />}</div>
     </motion.div>
   );
 };

@@ -43,18 +43,83 @@ const Signup = () => {
     languages: [{ language: '' }],
   });
 
-  const onNext = () => {
-    // if (
-    //   formState.password === formState.confirmPassword &&
-    //   formState.password !== ''
-    // ) {
-
-    // } else {
-    // }
-    setFormState({
-      ...formState,
-      step: formState.step + 1,
-    });
+  const onNextStepOne = () => {
+    if (
+      !formState.password ||
+      !formState.confirmPassword ||
+      !formState.username ||
+      !formState.email
+      // !formState.firstName ||
+      // !formState.lastName ||
+      // !formState.title ||
+      // !formState.weight ||
+      // !formState.dob ||
+      // !formState.phone ||
+      // !formState.addressNumber ||
+      // !formState.street ||
+      // !formState.city ||
+      // !formState.country
+    ) {
+      setFormState({
+        ...formState,
+        errors: ['Please fill in all the inputs'],
+      });
+    } else if (formState.password !== formState.confirmPassword) {
+      setFormState({
+        ...formState,
+        errors: ['Passwords do not match'],
+      });
+    } else if (!formState.email.includes('@')) {
+      setFormState({
+        ...formState,
+        errors: ['Please enter a valid email'],
+      });
+    } else if (
+      formState.password === formState.confirmPassword &&
+      formState.password !== ''
+    ) {
+      setFormState({
+        ...formState,
+        step: formState.step + 1,
+      });
+    }
+  };
+  const onNextStepTwo = () => {
+    if (
+      !formState.firstName ||
+      !formState.lastName ||
+      !formState.title ||
+      !formState.weight ||
+      !formState.dob ||
+      !formState.phone ||
+      !formState.addressNumber ||
+      !formState.street ||
+      !formState.city ||
+      !formState.country
+    ) {
+      setFormState({
+        ...formState,
+        errors: ['Please fill in all the inputs'],
+      });
+    } else if (formState.password !== formState.confirmPassword) {
+      setFormState({
+        ...formState,
+        errors: ['Passwords do not match'],
+      });
+    } else if (!formState.email.includes('@')) {
+      setFormState({
+        ...formState,
+        errors: ['Please enter a valid email'],
+      });
+    } else if (
+      formState.password === formState.confirmPassword &&
+      formState.password !== ''
+    ) {
+      setFormState({
+        ...formState,
+        step: formState.step + 1,
+      });
+    }
   };
 
   const onPrev = () => {
@@ -82,7 +147,7 @@ const Signup = () => {
     ) {
       setFormState({
         ...formState,
-        errors: ["passwords don't match", ...formState['errors']],
+        errors: ['Passwords do not match'],
         validationIcon: 'error',
       });
     }
@@ -91,6 +156,7 @@ const Signup = () => {
   const onValueChange = (e, key) => {
     setFormState({
       ...formState,
+      errors: [],
       [key]: e.target.value,
     });
   };
@@ -130,35 +196,17 @@ const Signup = () => {
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
   const handleEnterKey = e => {
-    if (e.keyCode === 13) {
-      onNext();
-    }
-  };
-
-  const validatePassword = e => {
-    console.log(e);
-  };
-
-  //Global validation for inputs
-  const validateInput = e => {
-    const value = e.target.value;
-
-    if (formState.password === formState.confirmPassword) {
+    if (e.keyCode === 13 && formState.step === 1) {
+      onNextStepOne();
     }
 
-    // const validations = [
-    //   formState.username.length >= 2,
-    //   formState.firstName.length >= 2,
-    //   formState.lastName.length >= 2,
-    //   formState.password.length >= 6,
-    //   formState.password.search(/[A-Z]/) > -1,
-    //   formState.password.search(/[0-9]/) > -1,
-    //   formState.password.search(/[$&+,:;=?@#]/) > -1,
-    //   formState.password === formState.confirmPassword,
-    // ];
+    if (e.keyCode === 13 && formState.step === 2) {
+      onNextStepTwo();
+    }
   };
 
   const displayFormStep = () => {
+    console.log(formState);
     switch (formState.step) {
       case 1:
         return (
@@ -187,7 +235,7 @@ const Signup = () => {
                 <Button
                   action="Next"
                   color="pink"
-                  onClick={onNext}
+                  onClick={onNextStepOne}
                   icon="arrowRight"
                 />
               </div>
@@ -204,7 +252,20 @@ const Signup = () => {
                 <span>2/3</span>
               </div>
 
-              <StepTwo formState={formState} onValueChange={onValueChange} />
+              <StepTwo
+                formState={formState}
+                onValueChange={onValueChange}
+                onKeyUp={handleEnterKey}
+              />
+              <div className="auth-error-wrapper">
+                <ul>
+                  {formState.errors.map(errorMessage => (
+                    <li key={uuidv4()} className="auth-error-message">
+                      {errorMessage}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="Previous"
@@ -215,7 +276,7 @@ const Signup = () => {
                 <Button
                   action="Next"
                   color="pink"
-                  onClick={onNext}
+                  onClick={onNextStepTwo}
                   icon="arrowRight"
                 />
               </div>
@@ -231,7 +292,6 @@ const Signup = () => {
                 <h1>Sign up</h1>
                 <span>3/3</span>
               </div>
-
               <StepThree
                 formState={formState}
                 onValueChange={onValueChange}
@@ -239,6 +299,15 @@ const Signup = () => {
                 handleRemoveClick={handleRemoveClick}
                 onArrValueChange={onArrValueChange}
               />
+              <div className="auth-error-wrapper">
+                <ul>
+                  {formState.errors.map(errorMessage => (
+                    <li key={uuidv4()} className="auth-error-message">
+                      {errorMessage}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <Button action="Previous" color="pink" onClick={onPrev} />
             </div>
           </div>

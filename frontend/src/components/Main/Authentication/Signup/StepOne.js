@@ -2,7 +2,7 @@ import React from 'react';
 import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 
-const StepOne = ({ formState, onValueChange }) => {
+const StepOne = ({ formState, onValueChange, onKeyUp }) => {
   const isDoctor = false;
 
   const clientSignup = (
@@ -41,6 +41,7 @@ const StepOne = ({ formState, onValueChange }) => {
         minLength="6"
         onValueChange={e => onValueChange(e, 'confirmPassword')}
         validationIcon={formState.validationIcon}
+        onKeyUp={onKeyUp}
       />
     </>
   );
