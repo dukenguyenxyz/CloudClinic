@@ -1,12 +1,26 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import MainCalendar from './MainCalendar/MainCalendar';
 import './Appointments.scss';
 
-const Appointments = () => {
+const Appointments = ({
+  inAnimation,
+  outAnimation,
+  transition,
+  initialAnimation,
+  variants,
+}) => {
   return (
-    <div className="appointments-wrapper">
+    <motion.div
+      className="appointments-wrapper"
+      variants={variants}
+      initial={initialAnimation}
+      animate={inAnimation}
+      exit={outAnimation}
+      transition={transition}
+    >
       <MainCalendar />
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,12 +1,25 @@
 import React from 'react';
 import './Messaging.scss';
 import Feed from './Feed/Feed';
+import { motion } from 'framer-motion';
 
-const Messaging = () => {
+const Messaging = ({
+  inAnimation,
+  outAnimation,
+  transition,
+  initialAnimation,
+  variants,
+}) => {
   return (
-    <div>
+    <motion.div
+      variants={variants}
+      initial={initialAnimation}
+      animate={inAnimation}
+      exit={outAnimation}
+      transition={transition}
+    >
       <Feed />
-    </div>
+    </motion.div>
   );
 };
 
