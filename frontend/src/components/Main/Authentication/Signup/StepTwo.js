@@ -18,13 +18,6 @@ const StepTwo = ({ formState, onValueChange }) => {
     'Sir',
   ];
 
-  const validatePasswords = () => {
-    if (formState.password !== formState.confirmPassword) {
-      //do something
-    }
-  };
-
-  // console.log(formState);
   const basicInformationSignup = (
     <>
       <h3>Basic Information</h3>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import './Authentication.scss';
 import Signup from './Signup/Signup';
@@ -11,6 +11,11 @@ const Authentication = ({
   transition,
   initialAnimation,
 }) => {
+  const [authAction, setAuthAction] = useState(false);
+
+  const handleClick = () => {
+    setAuthAction(!authAction);
+  };
   const flag = true;
   return (
     <motion.div
@@ -19,8 +24,18 @@ const Authentication = ({
       exit={outAnimation}
       transition={transition}
     >
-      {flag ? <Signup /> : <Signin />}
-      <Button action="Are you a doctor" color="dark" />
+      {authAction ? <Signup /> : <Signin />}
+
+      {authAction ? (
+        <h1>Create your account</h1>
+      ) : (
+        <h1>Sign in to your account</h1>
+      )}
+      <Button
+        action={authAction ? 'Sign up' : 'Sign in'}
+        color="dark"
+        onClick={handleClick}
+      />
     </motion.div>
   );
 };
