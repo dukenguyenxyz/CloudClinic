@@ -193,11 +193,7 @@ const Signup = () => {
                 <h1>Sign up</h1>
                 <span>1/4</span>
               </div>
-              <StepZero
-                formState={formState}
-                onValueChange={onValueChange}
-                handleCheckBox={handleCheckBox}
-              />
+              <StepZero formState={formState} handleCheckBox={handleCheckBox} />
               <div className="auth-error-wrapper">
                 <ul>
                   {formState.errors.map(errorMessage => (
@@ -243,6 +239,12 @@ const Signup = () => {
               </div>
               <div className="form-button-wrapper">
                 <div className="form-button-wrapper">
+                  <Button
+                    action="Previous"
+                    color="navy"
+                    onClick={onPrev}
+                    icon="arrowLeft"
+                  />
                   <Button
                     action="Next"
                     color="pink"
