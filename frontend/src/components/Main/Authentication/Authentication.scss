@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 24px;
+  gap: 24px;
 
   .panel-l {
     h1 {
@@ -13,6 +14,10 @@
     div {
       margin-bottom: 24px;
     }
+  }
+
+  @media all and (max-width: 900px) {
+    grid-template-columns: 0.5fr 1fr;
   }
 
   @media all and (max-width: 768px) {

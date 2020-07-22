@@ -17,7 +17,6 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
       <AuthInput
         value={formState.email}
         placeholder="Email"
-        stateKey="email"
         type="email"
         icon="email"
         minLength="3"
