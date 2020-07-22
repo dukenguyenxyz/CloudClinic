@@ -13,9 +13,8 @@ exports.viewSessions = async (req, res) => {
   try {
     let sessions = null;
 
-    sessions = req.user.isDoctor
-      ? await Session.find({ doctor: req.user.id })
-      : await Session.find({ client: req.user.id });
+    sessions = req.user.isDoctor ? await Session.find({doctor : req.user.id})
+                                 : await Session.find({client : req.user.id});
 
     res.send(sessions);
   } catch (e) {
@@ -29,13 +28,13 @@ exports.createSession = async (req, res) => {
     // Check if creator is doctor
     isDoctorValidation(req, true);
 
-    const { startTime, endTime } = await sessionValidation(req, req.body, true);
+    const {startTime, endTime} = await sessionValidation(req, req.body, true);
 
     // Create session
     const session = new Session({
       startTime,
       endTime,
-      doctor: req.user._id,
+      doctor : req.user._id,
     });
 
     await session.save();
@@ -73,7 +72,7 @@ exports.deleteSession = async (req, res) => {
 
     // Check if the doctor owns this session
     if (!(String(session.doctor) === String(req.user._id))) {
-      res.status(400).send({ error: 'invalid action' });
+      res.status(400).send({error : 'invalid action'});
     }
 
     // Check if the session already has a booking
@@ -100,7 +99,7 @@ exports.bookSession = async (req, res) => {
 
     // Check if session has no booking
     if (session.client) {
-      res.status(400).send({ error: 'booking is no longer available' });
+      res.status(400).send({error : 'booking is no longer available'});
     }
 
     session.client = req.user._id;
@@ -122,10 +121,10 @@ exports.updateSession = async (req, res) => {
   // Refactor this
   // Check if session has no booking
   if (String(session.client) !== String(req.user._id)) {
-    res.status(400).send({ error: 'invalid action' });
+    res.status(400).send({error : 'invalid action'});
   }
 
-  const { startTime, endTime } = await sessionValidation(req, req.body, false);
+  const {startTime, endTime} = await sessionValidation(req, req.body, false);
 
   // // Check if current time is before 24 hours
   lessThanOneDay(session.startTime);
@@ -150,7 +149,7 @@ exports.cancelSession = async (req, res) => {
 
   // Check if session has no booking
   if (String(session.client) !== String(req.user._id)) {
-    res.status(400).send({ error: 'invalid action' });
+    res.status(400).send({error : 'invalid action'});
   }
 
   // Check if current time is before 24 hours

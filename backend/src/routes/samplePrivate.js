@@ -19,10 +19,10 @@ router.get('/', verifyToken, async (req, res) => {
   const currentUser = await User.findById(req.user);
 
   res.json({
-    posts: {
-      title: 'sample post',
-      description: 'lorem ipsum',
-      currentUser: currentUser.email,
+    posts : {
+      title : 'sample post',
+      description : 'lorem ipsum',
+      currentUser : currentUser.email,
     },
   });
 });
@@ -93,7 +93,7 @@ router.post('/', verifyToken, async (req, res) => {
       const session = new Session({
         startTime,
         endTime,
-        doctor: req.user._id,
+        doctor : req.user._id,
       });
       await session.save();
     });
