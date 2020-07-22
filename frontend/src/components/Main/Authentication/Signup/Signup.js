@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import StepZero from './StepZero';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
@@ -8,7 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Signup = () => {
   const [formState, setFormState] = useState({
-    step: 1,
+    step: 0,
+    isDoctor: false,
     errors: [],
     validationIcon: '',
     username: '',
@@ -95,11 +97,17 @@ const Signup = () => {
     });
   };
 
+  const handleCheckBox = (e, key) => {
+    setFormState({
+      ...formState,
+      [key]: e.target.checked,
+    });
+  };
+
   const onArrValueChange = (e, key, i, subKey) => {
     const list = [...formState[key]];
     list[i][subKey] = e.target.value;
 
-    // console.log(list);
     setFormState({
       ...formState,
       [key]: list,
@@ -176,19 +184,19 @@ const Signup = () => {
 
   const displayFormStep = () => {
     switch (formState.step) {
-      case 1:
+      case 0:
         return (
           <div className="form-wrapper">
             <div className="trim" />
             <div className="form-container">
               <div className="form-header">
                 <h1>Sign up</h1>
-                <span>1/3</span>
+                <span>1/4</span>
               </div>
-              <StepOne
+              <StepZero
                 formState={formState}
                 onValueChange={onValueChange}
-                onKeyUp={handleEnterKey}
+                handleCheckBox={handleCheckBox}
               />
               <div className="auth-error-wrapper">
                 <ul>
@@ -210,6 +218,42 @@ const Signup = () => {
             </div>
           </div>
         );
+      case 1:
+        return (
+          <div className="form-wrapper">
+            <div className="trim" />
+            <div className="form-container">
+              <div className="form-header">
+                <h1>Sign up</h1>
+                <span>2/4</span>
+              </div>
+              <StepOne
+                formState={formState}
+                onValueChange={onValueChange}
+                onKeyUp={handleEnterKey}
+              />
+              <div className="auth-error-wrapper">
+                <ul>
+                  {formState.errors.map(errorMessage => (
+                    <li key={uuidv4()} className="auth-error-message">
+                      {errorMessage}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="form-button-wrapper">
+                <div className="form-button-wrapper">
+                  <Button
+                    action="Next"
+                    color="pink"
+                    onClick={onNext}
+                    icon="arrowRight"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case 2:
         return (
           <div className="form-wrapper">
@@ -217,7 +261,7 @@ const Signup = () => {
             <div className="form-container">
               <div className="form-header">
                 <h1>Sign up</h1>
-                <span>2/3</span>
+                <span>3/4</span>
               </div>
 
               <StepTwo formState={formState} onValueChange={onValueChange} />
@@ -245,7 +289,7 @@ const Signup = () => {
             <div className="form-container">
               <div className="form-header">
                 <h1>Sign up</h1>
-                <span>3/3</span>
+                <span>4/4</span>
               </div>
 
               <StepThree

@@ -3,7 +3,7 @@ import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 
 const StepOne = ({ formState, onValueChange }) => {
-  const isDoctor = false;
+  // const isDoctor = formState.isDoctor;
 
   const clientSignup = (
     <>
@@ -45,8 +45,9 @@ const StepOne = ({ formState, onValueChange }) => {
     </>
   );
 
-  const doctorSignup = <h1>Im a doctor</h1>;
-  return <>{isDoctor ? doctorSignup : clientSignup}</>;
+  // const doctorSignup = <h1>Im a doctor</h1>;
+  // return <>{isDoctor ? doctorSignup : clientSignup}</>;
+  return <>{clientSignup}</>;
 };
 
 export default StepOne;

@@ -40,6 +40,7 @@ const AuthInput = ({
   isMobile,
   onKeyUp,
   validationIcon,
+  defaultChecked,
   // validatePassword,
 }) => {
   const getIcon = () => {
@@ -123,6 +124,7 @@ const AuthInput = ({
         pattern={pattern}
         maxLength={maxLength}
         onKeyUp={onKeyUp}
+        defaultChecked={defaultChecked}
       />
       <i className="icon-validation">{getValidationIcon()}</i>
     </div>
