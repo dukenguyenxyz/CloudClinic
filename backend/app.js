@@ -1,40 +1,32 @@
 // Essential packages
 const express = require('express');
-const mongoose = require('mongoose');
 
 // Subimportant packages
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Optional packages
-const colors = require('colors');
-
 // Access dotenv
 dotenv.config({ path: './config/config.env' });
 
 // Import Routes
-const authRoute = require('./src/routes/auth');
+const usersRoute = require('./src/routes/users');
+const sessionsRoute = require('./src/routes/sessions');
 const samplePrivateRoute = require('./src/routes/samplePrivate');
 
 // Create instance of express
 const app = express();
 
 // Connect to MongoDB with Mongoose
-mongoose.connect(
-  'mongodb://127.0.0.1:27017/cloudclinic',
-  {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  },
-  () => console.log(`Cloudclinic database connected`.magenta.bold)
-);
+require('./config/mongodb');
 
 // Middleware
 app.use(express.json());
 
+// Add a single baseUrl Route ('/api') here for DRY
+
 // Route Middlewares
-app.use('/api/users', authRoute);
+app.use('/api/users', usersRoute);
+app.use('/api/sessions', sessionsRoute);
 app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route
@@ -51,13 +43,4 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 
-// Set port
-const PORT = process.env.PORT || 5000;
-
-// Start server
-app.listen(
-  PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
-  )
-);
+module.exports = app;
