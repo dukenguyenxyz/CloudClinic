@@ -1,5 +1,14 @@
 const mongoose = require('mongoose');
-const calendarSchema = require('./Calendar');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+const Session = require('./Session');
+
+// Access dotenv
+dotenv.config({ path: '../../config/config.env' });
+
+// Add validation for each of these fields with Joi later
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -94,7 +103,19 @@ const userSchema = new mongoose.Schema({
   },
   isDoctor: {
     type: Boolean,
-    default: false,
+    required: true,
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
   doctorInfo: {
     licence: {
@@ -102,7 +123,7 @@ const userSchema = new mongoose.Schema({
       min: 6,
       max: 12,
     },
-    accreditation: [
+    accreditations: [
       {
         type: String,
         minlength: 1,
@@ -147,9 +168,6 @@ const userSchema = new mongoose.Schema({
         maxlength: 255,
       },
     ],
-    calendar: {
-      calendarSchema,
-    },
     rating: {
       type: Number,
       min: 1,
@@ -228,21 +246,87 @@ const userSchema = new mongoose.Schema({
         },
       },
     ],
-    bloodType: [
-      {
-        type: String,
-        enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-      },
-    ],
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    modifiedAt: {
-      type: Date,
-      default: Date.now,
+    bloodType: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
     },
   },
 });
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.pre('save', async function (next) {
+  const user = this;
+
+  if (user.isModified('password')) {
+    const salt = await bcrypt.genSalt(8);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+
+  next();
+});
+
+userSchema.pre('remove', async function (next) {
+  const user = this;
+  if (user.isDoctor) {
+    await Session.deleteMany({ doctor: user._id });
+  } else {
+    await Session.updateMany(
+      { client: user._id, startDate: { $gt: Date.now() } },
+      { client: null }
+    );
+  }
+
+  next();
+});
+
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  if (user.isDoctor) {
+    delete userObject.clientInfo;
+  } else {
+    delete userObject.doctorInfo;
+  }
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
+userSchema.statics.findByCredentials = async (email, password) => {
+  // // Obscure 400 incorrect email or password messages to prevent hacking
+  // Method 1 // return res.status(400).send('email or password is incorrect');
+  // Method 2 preferred: throw new Error(...)
+
+  // Check if email exists
+  // eslint-disable-next-line no-use-before-define
+  const user = await User.findOne({ email });
+  if (!user) throw new Error('email or password is incorrect');
+
+  // Check if password is correct
+  const isMatchedPass = await bcrypt.compare(password, user.password);
+  if (!isMatchedPass) throw new Error('email or password is incorrect');
+
+  return user;
+};
+
+// Create and assign a token
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign(
+    { _id: user._id.toString() },
+    process.env.TOKEN_SECRET
+  );
+
+  // Concat new token to tokens array
+  user.tokens = user.tokens.concat({ token });
+  // user.tokens.push({ token });
+
+  await user.save();
+  return token;
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

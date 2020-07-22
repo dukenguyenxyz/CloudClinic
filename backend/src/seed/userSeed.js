@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 const seeder = require('mongoose-seed');
 const faker = require('faker');
 
