@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-export const FormWrapper = props => {
+// RawFormWrapper
+const RawFormWrapper = props => {
   return (
     <div className="form-wrapper">
       <div className="trim" />
@@ -10,20 +11,36 @@ export const FormWrapper = props => {
   );
 };
 
-export const FormHeader = ({ title, step }) => {
+function propsChildrenAreEqual(prevProps, nextProps) {
+  return prevProps.children === nextProps.children;
+}
+
+export const FormWrapper = memo(RawFormWrapper, propsChildrenAreEqual);
+
+// FormHeader
+const RawFormHeader = props => {
   return (
     <div classNakme="form-header">
-      <h1>{title}</h1>
-      <span>{step}</span>
+      <h1>{props.title}</h1>
+      <span>{props.step}</span>
     </div>
   );
 };
 
-export const ErrorWrapper = ({ formState }) => {
+function propsHeaderAreEqual(prevProps, nextProps) {
+  return (
+    prevProps.title === nextProps.title && prevProps.step === nextProps.step
+  );
+}
+
+export const FormHeader = memo(RawFormHeader, propsHeaderAreEqual);
+
+// ErrorWrapper
+const RawErrorWrapper = props => {
   return (
     <div className="auth-error-wrapper">
       <ul>
-        {formState.errors.map(errorMessage => (
+        {props.formState.errors.map(errorMessage => (
           <li key={uuidv4()} className="auth-error-message">
             {errorMessage}
           </li>
@@ -32,3 +49,9 @@ export const ErrorWrapper = ({ formState }) => {
     </div>
   );
 };
+
+function propsErrorAreEqual(prevProps, nextProps) {
+  return prevProps.formState.errors === nextProps.formState.errors;
+}
+
+export const ErrorWrapper = memo(RawErrorWrapper, propsErrorAreEqual);
