@@ -51,9 +51,7 @@ const schema = Joi.object({
 });
 
 // Add forbidden fields: token & created at & dotorInfo[rating]
-const schemaValidation = (data) => {
-  return schema.validate(data);
-};
+const schemaValidation = (data) => schema.validate(data);
 
 const signInValidation = (data) => {
   const signInSchema = Joi.object({
