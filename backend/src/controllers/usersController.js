@@ -27,7 +27,7 @@ exports.signUp = async (req, res) => {
     // Protect from malicious account information assignment
     if (user.isDoctor) {
       delete user.clientInfo;
-      user.doctorInfo.rating = 0;
+      user.doctorInfo.rating = 1;
     } else {
       delete user.doctorInfo;
     }
@@ -37,7 +37,7 @@ exports.signUp = async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (e) {
-    res.status(500).send();
+    res.status(400).send(e);
   }
 };
 
