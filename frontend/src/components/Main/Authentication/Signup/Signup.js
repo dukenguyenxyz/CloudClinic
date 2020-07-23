@@ -13,7 +13,7 @@ import faker from 'faker';
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
-    step: 3,
+    step: 2,
     isDoctor: false,
     errors: [],
     validationIcon: '',
@@ -31,6 +31,7 @@ const Signup = () => {
     addressNumber: '',
     street: '',
     city: '',
+    state: '',
     country: 'Australia',
     postcode: '',
     existingConditions: [
@@ -49,53 +50,6 @@ const Signup = () => {
     languages: [''],
   });
 
-  const mockForm = {
-    step: 3,
-    isDoctor: false,
-    errors: [],
-    validationIcon: 'success',
-    username: 'Duke',
-    firstName: 'Harry',
-    lastName: 'Greethead',
-    email: 'DHH@gmail.com',
-    password: 'password',
-    confirmPassword: 'password',
-    title: 'Mr',
-    sex: 'male',
-    weight: '150',
-    dob: '01/01/1994',
-    phone: '+61409985364',
-    addressNumber: '76',
-    street: 'Fake Street',
-    city: 'Lorem City',
-    country: 'Australia',
-    postcode: '2000',
-    existingConditions: [
-      {
-        condition: 'heart disease',
-        conditionStartDate: '01/01/1994',
-        conditionComment: 'lorem comment',
-      },
-    ],
-    allergies: [{ allergy: 'latex', severity: '5' }],
-    medications: [
-      {
-        medication: ' amoxicillin clavulanate potassium ',
-        dosage: '500',
-        manufacturer: 'Augmentin',
-      },
-    ],
-    bloodType: 'A-',
-    //Doctor states
-    licence: '',
-    accreditation: '',
-    specialtyField: '',
-    subSpecialtyField: '',
-    education: '',
-    yearsExp: '',
-    languages: [''],
-  };
-
   let mockForm2;
 
   useEffect(() => {
@@ -105,7 +59,7 @@ const Signup = () => {
     mockForm2 = {
       firstName: 'Lisa',
       lastName: 'Huang',
-      title: '',
+      title: 'Mr',
       sex: 'female',
       weight: '55',
       dateOfBirth: '05/11/1999',
@@ -345,6 +299,77 @@ const Signup = () => {
     });
   };
 
+  const sanitizedForm = () => {
+    return {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      title: formState.title,
+      sex: formState.sex,
+      weight: formState.weight,
+      dateOfBirth: formState.dob,
+      phoneNumber: formState.phone,
+      email: formState.email,
+      password: formState.password,
+      confirmPassword: formState.confirmPassword,
+      isDoctor: formState.isDoctor,
+      address: {
+        number: formState.addressNumber,
+        street: formState.street,
+        city: formState.city,
+        state: formState.state,
+        country: 'Australia',
+        postcode: '2149',
+      },
+      doctorInfo: {
+        licence: 'MIT',
+        accreditations: ['USyd', 'UNSW'],
+        specialtyField: 'Dentistry',
+        subSpecialtyField: 'Prosthodontics',
+        education: ['ANU', 'Macquarie University'],
+        yearsExperience: '10',
+        tags: ['Orthodontics', 'Prosthodontics'],
+        languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+      },
+      clientInfo: {
+        medicalHistory: [
+          {
+            startDate: '03/05/2005',
+            condition: 'High Blood Pressure',
+            notes: 'Due to old age',
+          },
+          {
+            startDate: '11/11/2003',
+            condition: 'Pneumonia',
+            notes: 'Due to travel to Africa',
+          },
+        ],
+        allergies: [
+          {
+            name: 'Dust allergy',
+            severity: '3',
+          },
+          {
+            name: 'Pollen allergy',
+            severity: '2',
+          },
+        ],
+        medication: [
+          {
+            name: 'Magic mushroom',
+            dosage: '200',
+            manufacturer: 'Brazil',
+          },
+          {
+            name: 'Cannabis',
+            dosage: '100',
+            manufacturer: 'Australia',
+          },
+        ],
+        bloodType: 'A+',
+      },
+    };
+  };
+
   //handler for submitting form
   const handleSubmit = async () => {
     if (!formState.licence && formState.isDoctor) {
@@ -405,7 +430,7 @@ const Signup = () => {
     // Make axios post request to backend
 
     axios
-      .post(endpoint, formState /*mockForm2*/, {
+      .post(endpoint, mockForm2, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },

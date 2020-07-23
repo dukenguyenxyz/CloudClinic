@@ -40,7 +40,6 @@ const AuthInput = ({
   isMobile,
   onKeyUp,
   validationIcon,
-  // validatePassword,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -99,7 +98,6 @@ const AuthInput = ({
         return null;
     }
   };
-  // console.log(validationIcon);
   return (
     <div
       className={`auth-input-wrapper ${isDate ? 'auth-date' : ''} ${

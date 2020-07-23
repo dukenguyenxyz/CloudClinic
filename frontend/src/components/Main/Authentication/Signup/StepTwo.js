@@ -117,6 +117,16 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         onValueChange={e => onValueChange(e, 'city')}
         onKeyUp={onKeyUp}
       />
+      <AuthInput
+        value={formState.state}
+        placeholder="State"
+        type="text"
+        icon="postcode"
+        minLength="2"
+        maxLength="28"
+        onValueChange={e => onValueChange(e, 'state')}
+        onKeyUp={onKeyUp}
+      />
       <AuthSelect
         value={formState.country}
         placeholder="Country"
