@@ -6,6 +6,7 @@ import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import faker from 'faker';
 
 const Signup = () => {
   const [formState, setFormState] = useState({
@@ -46,7 +47,7 @@ const Signup = () => {
     languages: [''],
   });
 
-  const mockFrom = {
+  const mockForm = {
     step: 3,
     isDoctor: false,
     errors: [],
@@ -92,6 +93,85 @@ const Signup = () => {
     yearsExp: '',
     languages: [''],
   };
+
+  let mockForm2;
+
+  useEffect(() => {
+    const email = () => faker.internet.email();
+    const newEmail = email();
+
+    mockForm2 = {
+      firstName: 'Lisa',
+      lastName: 'Huang',
+      title: 'Ms',
+      sex: 'female',
+      weight: '55',
+      dateOfBirth: '05/11/1999',
+      phoneNumber: '04104820594',
+      email: `${newEmail}`,
+      password: '123456789',
+      confirmPassword: '123456789',
+      isDoctor: 'true',
+      address: {
+        number: '4',
+        street: 'Beamish Street',
+        city: 'Sydney',
+        state: 'New South Wales',
+        country: 'Australia',
+        postcode: '2149',
+      },
+      doctorInfo: {
+        licence: 'MIT',
+        accreditations: ['USyd', 'UNSW'],
+        specialtyField: 'Dentistry',
+        subSpecialtyField: 'Prosthodontics',
+        education: ['ANU', 'Macquarie University'],
+        yearsExperience: '10',
+        tags: ['Orthodontics', 'Prosthodontics'],
+        languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+      },
+      clientInfo: {
+        medicalHistory: [
+          {
+            startDate: '03/05/2005',
+            condition: 'High Blood Pressure',
+            notes: 'Due to old age',
+          },
+          {
+            startDate: '11/11/2003',
+            condition: 'Pneumonia',
+            notes: 'Due to travel to Africa',
+          },
+        ],
+        allergies: [
+          {
+            name: 'Dust allergy',
+            severity: '3',
+          },
+          {
+            name: 'Pollen allergy',
+            severity: '2',
+          },
+        ],
+        medication: [
+          {
+            name: 'Magic mushroom',
+            dosage: '200',
+            manufacturer: 'Brazil',
+          },
+          {
+            name: 'Cannabis',
+            dosage: '100',
+            manufacturer: 'Australia',
+          },
+        ],
+        bloodType: 'A+',
+      },
+    };
+
+    console.log(newEmail);
+    console.log('mounted');
+  }, []);
 
   const handleYes = () => {
     setFormState({
@@ -261,7 +341,7 @@ const Signup = () => {
   };
 
   //handler for submitting form
-  const handleSubmit = async e => {
+  const handleSubmit = async () => {
     // if (!formState.licence && formState.isDoctor) {
     //   setFormState({
     //     ...formState,
@@ -304,20 +384,26 @@ const Signup = () => {
     //   });
     // }
 
-    const developmentUrl = 'http://localhost:5000/';
+    const developmentUrl = 'http://localhost:5000';
     const productionUrl = 'http://cloudclinic.tech';
     const endpoint = `${developmentUrl}/api/users/signup`;
 
+    // axios.defaults.headers.post['Content-Type'] = 'application/json';
+
     // Make axios post request to backend
-    const res = await axios
-      .post(endpoint, mockFrom)
+
+    axios
+      .post(endpoint, mockForm2, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+      })
       .then(response => {
-        console.log(response);
+        console.log(response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error.response);
       });
-    // then a redirect?
   };
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
