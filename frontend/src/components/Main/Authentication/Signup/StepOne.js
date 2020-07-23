@@ -13,6 +13,7 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
         icon="username"
         minLength="3"
         onValueChange={e => onValueChange(e, 'username')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.email}
@@ -21,6 +22,7 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
         icon="email"
         minLength="3"
         onValueChange={e => onValueChange(e, 'email')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.password}
@@ -30,6 +32,7 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
         minLength="6"
         onValueChange={e => onValueChange(e, 'password')}
         validationIcon={formState.validationIcon}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.confirmPassword}

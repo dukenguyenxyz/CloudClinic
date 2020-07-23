@@ -3,6 +3,7 @@ import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
+import languages from '../Form/languages';
 
 const StepThree = ({
   formState,
@@ -10,6 +11,7 @@ const StepThree = ({
   handleAddClick,
   handleRemoveClick,
   onArrValueChange,
+  on2DArrValueChange,
 }) => {
   const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -263,17 +265,28 @@ const StepThree = ({
         onValueChange={e => onValueChange(e, 'yearsExp')}
       />
       {formState.languages.map((val, i) => {
+        console.log(val);
         return (
-          <div key={i}>
-            <AuthInput
+          <div key={i} className="auth-multi">
+            {/* <AuthInput
               name="language"
-              value={val.language}
+              value={val}
               placeholder="Language Spoken"
               type="text"
               icon="language"
-              onValueChange={e =>
-                onArrValueChange(e, 'languages', i, 'language')
-              }
+              // onValueChange={e =>
+              //   onArrValueChange(e, 'languages', i, 'language')
+              // }
+              onValueChange={e => on2DArrValueChange(e, 'languages')}
+            /> */}
+            <AuthSelect
+              value={formState.languages[i]}
+              placeholder="Language"
+              type="text"
+              directive="language"
+              icon="language"
+              options={languages}
+              onValueChange={e => onValueChange(e, 'languages')}
             />
             <div className="btn-box">
               {formState.languages.length !== 1 && (

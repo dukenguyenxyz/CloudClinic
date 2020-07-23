@@ -31,6 +31,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         maxLength="26"
         icon="username"
         onValueChange={e => onValueChange(e, 'firstName')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.lastName}
@@ -40,6 +41,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         maxLength="26"
         icon="username"
         onValueChange={e => onValueChange(e, 'lastName')}
+        onKeyUp={onKeyUp}
       />
       <AuthSelect
         value={formState.sex}
@@ -58,6 +60,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         max="300"
         icon="clipboard"
         onValueChange={e => onValueChange(e, 'weight')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.dob}
@@ -68,6 +71,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         max="2020-01-01"
         min="1900-01-01"
         onValueChange={e => onValueChange(e, 'dob')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.phone}
@@ -79,6 +83,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         onValueChange={e => onValueChange(e, 'phone')}
         minLength="9"
         maxLength="12"
+        onKeyUp={onKeyUp}
       />
 
       <h3>Address</h3>
@@ -90,6 +95,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         minLength="1"
         maxLength="28"
         onValueChange={e => onValueChange(e, 'addressNumber')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.street}
@@ -99,6 +105,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         minLength="2"
         maxLength="95"
         onValueChange={e => onValueChange(e, 'street')}
+        onKeyUp={onKeyUp}
       />
       <AuthInput
         value={formState.city}
@@ -108,6 +115,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         minLength="2"
         maxLength="28"
         onValueChange={e => onValueChange(e, 'city')}
+        onKeyUp={onKeyUp}
       />
       <AuthSelect
         value={formState.country}

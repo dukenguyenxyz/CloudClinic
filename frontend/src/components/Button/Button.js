@@ -9,6 +9,7 @@ import {
   Plus,
   Minus,
   LogIn,
+  X,
 } from 'react-feather';
 
 const Button = ({ action, color, icon, onClick }) => {
@@ -27,6 +28,8 @@ const Button = ({ action, color, icon, onClick }) => {
         return <ArrowDown size={iconSize} />;
       case 'check':
         return <Check size={iconSize} />;
+      case 'cross':
+        return <X size={iconSize} />;
       case 'plus':
         return <Plus size={iconSizeSmall} />;
       case 'minus':
@@ -49,6 +52,7 @@ const Button = ({ action, color, icon, onClick }) => {
         {action && <span>{action}</span>}
         {icon === 'arrowRight' && <i>{getIcon()}</i>}
         {icon === 'check' && <i>{getIcon()}</i>}
+        {icon === 'cross' && <i>{getIcon()}</i>}
         {icon === 'logIn' && <i>{getIcon()}</i>}
       </button>
     </div>

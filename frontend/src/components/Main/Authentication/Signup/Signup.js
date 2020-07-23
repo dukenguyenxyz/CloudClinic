@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import StepZero from './StepZero';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 const Signup = () => {
   const [formState, setFormState] = useState({
-    step: 2,
-    isDoctor: false,
+    step: 3,
+    isDoctor: true,
     errors: [],
     validationIcon: '',
     username: '',
@@ -42,12 +42,69 @@ const Signup = () => {
     subSpecialtyField: '',
     education: '',
     yearsExp: '',
-    languages: [{ language: '' }],
+    // languages: [{ language: '' }],
+    languages: [''],
   });
 
-  const onNextStepZero = () => {
+  const mockFrom = {
+    step: 3,
+    isDoctor: false,
+    errors: [],
+    validationIcon: 'success',
+    username: 'Duke',
+    firstName: 'Harry',
+    lastName: 'Greethead',
+    email: 'DHH@gmail.com',
+    password: 'password',
+    confirmPassword: 'password',
+    title: 'Mr',
+    sex: 'male',
+    weight: '150',
+    dob: '01/01/1994',
+    phone: '+61409985364',
+    addressNumber: '76',
+    street: 'Fake Street',
+    city: 'Lorem City',
+    country: 'Australia',
+    postcode: '2000',
+    existingConditions: [
+      {
+        condition: 'heart disease',
+        conditionStartDate: '01/01/1994',
+        conditionComment: 'lorem comment',
+      },
+    ],
+    allergies: [{ allergy: 'latex', severity: '5' }],
+    medications: [
+      {
+        medication: ' amoxicillin clavulanate potassium ',
+        dosage: '500',
+        manufacturer: 'Augmentin',
+      },
+    ],
+    bloodType: 'A-',
+    //Doctor states
+    licence: '',
+    accreditation: '',
+    specialtyField: '',
+    subSpecialtyField: '',
+    education: '',
+    yearsExp: '',
+    languages: [''],
+  };
+
+  const handleYes = () => {
     setFormState({
       ...formState,
+      isDoctor: true,
+      step: formState.step + 1,
+    });
+  };
+
+  const handleNo = () => {
+    setFormState({
+      ...formState,
+      isDoctor: false,
       step: formState.step + 1,
     });
   };
@@ -96,7 +153,8 @@ const Signup = () => {
       !formState.addressNumber ||
       !formState.street ||
       !formState.city ||
-      !formState.country
+      !formState.country ||
+      !formState.postcode
     ) {
       setFormState({
         ...formState,
@@ -163,13 +221,6 @@ const Signup = () => {
     });
   };
 
-  const handleCheckBox = (e, key) => {
-    setFormState({
-      ...formState,
-      [key]: e.target.checked,
-    });
-  };
-
   const onArrValueChange = (e, key, i, subKey) => {
     const list = [...formState[key]];
     list[i][subKey] = e.target.value;
@@ -177,6 +228,13 @@ const Signup = () => {
     setFormState({
       ...formState,
       [key]: list,
+    });
+  };
+
+  const on2DArrValueChange = (e, key) => {
+    setFormState({
+      ...formState,
+      [key]: formState[key].concat(e.target.value),
     });
   };
 
@@ -203,19 +261,63 @@ const Signup = () => {
   };
 
   //handler for submitting form
-  const handleSubmit = e => {
-    // e.preventDefault();
-    //Make axios post request to backend
-    // axios.post('/user,{
-    //   ...formState
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
-    //then a redirect?
+  const handleSubmit = async e => {
+    // if (!formState.licence && formState.isDoctor) {
+    //   setFormState({
+    //     ...formState,
+    //     errors: ['Please include a valid licence number'],
+    //   });
+    // }
+
+    // if (!formState.accreditation) {
+    //   setFormState({
+    //     ...formState,
+    //     errors: ['Please include a valid accreditation'],
+    //   });
+    // }
+
+    // if (!formState.specialtyField) {
+    //   setFormState({
+    //     ...formState,
+    //     errors: ['Please include a specialty field'],
+    //   });
+    // }
+
+    // if (!formState.education) {
+    //   setFormState({
+    //     ...formState,
+    //     errors: ['Please include your education'],
+    //   });
+    // }
+
+    // if (!formState.yearsExp) {
+    //   setFormState({
+    //     ...formState,
+    //     errors: ['Please include your years of experience'],
+    //   });
+    // }
+
+    // if (!formState.languages) {
+    //   setFormState({
+    //     ...formState,
+    //     errors: ['Please include the languages you speak'],
+    //   });
+    // }
+
+    const developmentUrl = 'http://localhost:5000/';
+    const productionUrl = 'http://cloudclinic.tech';
+    const endpoint = `${developmentUrl}/api/users/signup`;
+
+    // Make axios post request to backend
+    const res = await axios
+      .post(endpoint, mockFrom)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    // then a redirect?
   };
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
@@ -230,7 +332,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    console.log(formState);
+    // console.log(formState);
     switch (formState.step) {
       case 0:
         return (
@@ -241,7 +343,7 @@ const Signup = () => {
                 <h1>Sign up</h1>
                 <span>1/4</span>
               </div>
-              <StepZero formState={formState} handleCheckBox={handleCheckBox} />
+              <h3>Are you a Doctor?</h3>
               <div className="auth-error-wrapper">
                 <ul>
                   {formState.errors.map(errorMessage => (
@@ -253,10 +355,16 @@ const Signup = () => {
               </div>
               <div className="form-button-wrapper">
                 <Button
-                  action="Next"
+                  action="No"
                   color="pink"
-                  onClick={onNextStepZero}
-                  icon="arrowRight"
+                  onClick={handleNo}
+                  icon="cross"
+                />
+                <Button
+                  action="Yes"
+                  color="pink"
+                  onClick={handleYes}
+                  icon="check"
                 />
               </div>
             </div>
@@ -358,6 +466,7 @@ const Signup = () => {
                 handleAddClick={handleAddClick}
                 handleRemoveClick={handleRemoveClick}
                 onArrValueChange={onArrValueChange}
+                on2DArrValueChange={on2DArrValueChange}
               />
               <div className="auth-error-wrapper">
                 <ul>

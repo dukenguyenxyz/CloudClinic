@@ -1,6 +1,13 @@
 import React from 'react';
 import './AuthSelect.scss';
-import { Heart, Users, Hash, User, Navigation } from 'react-feather';
+import {
+  Heart,
+  Users,
+  Hash,
+  User,
+  Navigation,
+  MessageCircle,
+} from 'react-feather';
 import { v4 as uuidv4 } from 'uuid';
 
 const AuthSelect = ({
@@ -23,6 +30,8 @@ const AuthSelect = ({
         return <Hash color="#212429" size={14} />;
       case 'navArrow':
         return <Navigation color="#212429" size={14} />;
+      case 'language':
+        return <MessageCircle color="#212429" size={14} />;
       default:
         return '';
     }
@@ -38,6 +47,8 @@ const AuthSelect = ({
         return 'Select title';
       case 'sex':
         return 'Select sex';
+      case 'language':
+        return 'Select languages spoken';
       default:
         return 'Choose here';
     }
