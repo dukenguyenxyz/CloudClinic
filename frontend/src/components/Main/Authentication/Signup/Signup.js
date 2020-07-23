@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { navigate } from '@reach/router';
+import { AuthContext } from '../../../../globalState/index';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
@@ -9,9 +11,10 @@ import axios from 'axios';
 import faker from 'faker';
 
 const Signup = () => {
+  const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
     step: 3,
-    isDoctor: true,
+    isDoctor: false,
     errors: [],
     validationIcon: '',
     username: '',
@@ -43,7 +46,6 @@ const Signup = () => {
     subSpecialtyField: '',
     education: '',
     yearsExp: '',
-    // languages: [{ language: '' }],
     languages: [''],
   });
 
@@ -103,7 +105,7 @@ const Signup = () => {
     mockForm2 = {
       firstName: 'Lisa',
       lastName: 'Huang',
-      title: 'Ms',
+      title: '',
       sex: 'female',
       weight: '55',
       dateOfBirth: '05/11/1999',
@@ -345,47 +347,54 @@ const Signup = () => {
 
   //handler for submitting form
   const handleSubmit = async () => {
-    // if (!formState.licence && formState.isDoctor) {
-    //   setFormState({
-    //     ...formState,
-    //     errors: ['Please include a valid licence number'],
-    //   });
-    // }
+    if (!formState.licence && formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include a valid licence number'],
+      });
+    }
 
-    // if (!formState.accreditation) {
-    //   setFormState({
-    //     ...formState,
-    //     errors: ['Please include a valid accreditation'],
-    //   });
-    // }
+    if (!formState.accreditation && formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include a valid accreditation'],
+      });
+    }
 
-    // if (!formState.specialtyField) {
-    //   setFormState({
-    //     ...formState,
-    //     errors: ['Please include a specialty field'],
-    //   });
-    // }
+    if (!formState.specialtyField && formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include a specialty field'],
+      });
+    }
 
-    // if (!formState.education) {
-    //   setFormState({
-    //     ...formState,
-    //     errors: ['Please include your education'],
-    //   });
-    // }
+    if (!formState.education && formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include your education'],
+      });
+    }
 
-    // if (!formState.yearsExp) {
-    //   setFormState({
-    //     ...formState,
-    //     errors: ['Please include your years of experience'],
-    //   });
-    // }
+    if (!formState.yearsExp && formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include your years of experience'],
+      });
+    }
 
-    // if (!formState.languages) {
-    //   setFormState({
-    //     ...formState,
-    //     errors: ['Please include the languages you speak'],
-    //   });
-    // }
+    if (!formState.languages && formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include the languages you speak'],
+      });
+    }
+
+    if (!formState.bloodType && !formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include your blood type'],
+      });
+    }
 
     const developmentUrl = 'http://localhost:5000';
     const productionUrl = 'http://cloudclinic.tech';
@@ -396,16 +405,28 @@ const Signup = () => {
     // Make axios post request to backend
 
     axios
-      .post(endpoint, mockForm2, {
+      .post(endpoint, formState /*mockForm2*/, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
       })
       .then(response => {
-        console.log(response.data);
+        console.log(response.data.user);
+
+        const jwt = response.data.token;
+        const user = response.data.user;
+        localStorage.setItem('jwt', jwt);
+
+        setUser(user);
+
+        navigate('/profile');
       })
       .catch(error => {
-        console.log(error.response);
+        // console.log(error.response);
+        setFormState({
+          ...formState,
+          errors: [`${error.response.data}`],
+        });
       });
   };
 
