@@ -6,7 +6,6 @@ import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { mockForm } from './mockdata';
 import { FormWrapper, FormHeader, ErrorWrapper } from './hocs';
@@ -53,19 +52,21 @@ const Signup = () => {
   let mockForm;
   useEffect(() => mockForm, []);
 
-  const handleYes = () => {
+  const handleIsDoctor = isDoctorP => {
     setFormState({
       ...formState,
-      isDoctor: true,
+      isDoctor: isDoctorP,
       step: formState.step + 1,
     });
   };
 
-  const handleNo = () => {
+  const handleYes = handleIsDoctor(true);
+  const handleNo = handleIsDoctor(false);
+
+  const setFormWithError = errorMessage => {
     setFormState({
       ...formState,
-      isDoctor: false,
-      step: formState.step + 1,
+      errors: [`Please ${errorMessage}`],
     });
   };
 
@@ -79,20 +80,11 @@ const Signup = () => {
       !formState.username ||
       !formState.email
     ) {
-      setFormState({
-        ...formState,
-        errors: ['Please fill in all the inputs'],
-      });
+      setFormWithError('fill in all the inputs');
     } else if (formState.password !== formState.confirmPassword) {
-      setFormState({
-        ...formState,
-        errors: ['Passwords do not match'],
-      });
+      setFormWithError('refill your confirmed password');
     } else if (!emailRegex.test(formState.email)) {
-      setFormState({
-        ...formState,
-        errors: ['Please enter a valid email'],
-      });
+      setFormWithError('enter a valid email');
     } else if (
       // Correct case
       formState.password === formState.confirmPassword &&
@@ -120,20 +112,11 @@ const Signup = () => {
       !formState.country ||
       !formState.postcode
     ) {
-      setFormState({
-        ...formState,
-        errors: ['Please fill in all the inputs'],
-      });
+      setFormWithError('fill in all the inputs');
     } else if (formState.password !== formState.confirmPassword) {
-      setFormState({
-        ...formState,
-        errors: ['Passwords do not match'],
-      });
+      setFormWithError('refill your confirmed password');
     } else if (!formState.email.includes('@')) {
-      setFormState({
-        ...formState,
-        errors: ['Please enter a valid email'],
-      });
+      setFormWithError('enter a valid email');
     } else if (
       // Correct case
       formState.password === formState.confirmPassword &&
@@ -297,12 +280,8 @@ const Signup = () => {
       ? formState.isDoctor
       : !formState.isDoctor;
 
-    if (!formState[field] && isDoctorFormState) {
-      setFormState({
-        ...formState,
-        errors: [`Please include ${errorMessage}`],
-      });
-    }
+    if (!formState[field] && isDoctorFormState)
+      setFormWithError(`Please include ${errorMessage}`);
   };
 
   const handleSubmitArray = [
@@ -334,13 +313,6 @@ const Signup = () => {
         submitErrorCheck(item[0], item[1], item[3]);
       }
     });
-
-    if (!formState.bloodType && !formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your blood type'],
-      });
-    }
 
     const developmentUrl = 'http://localhost:5000';
     // const productionUrl = 'http://cloudclinic.tech';
@@ -382,12 +354,12 @@ const Signup = () => {
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
   const handleEnterKey = e => {
-    if (e.keyCode === 13 && formState.step === 1) {
-      onNextStepOne();
-    }
-
-    if (e.keyCode === 13 && formState.step === 2) {
-      onNextStepTwo();
+    if (e.keyCode === 13) {
+      if (formState.step === 1) {
+        onNextStepOne();
+      } else if (formState.step === 2) {
+        onNextStepTwo();
+      }
     }
   };
 
@@ -399,7 +371,7 @@ const Signup = () => {
           <FormWrapper>
             <FormHeader title="Sign up" step="1/4" />
             <h3>Are you a Doctor?</h3>
-            <ErrorWrapper formState={formState} />
+            <ErrorWrapper {...{ formState }} />
             <div className="form-button-wrapper">
               <Button
                 action="No"
@@ -421,11 +393,10 @@ const Signup = () => {
           <FormWrapper>
             <FormHeader title="Sign up" step="2/4" />
             <StepOne
-              formState={formState}
-              onValueChange={onValueChange}
+              {...{ formState, onValueChange }}
               onKeyUp={handleEnterKey}
             />
-            <ErrorWrapper formState={formState} />
+            <ErrorWrapper {...{ formState }} />
             <div className="form-button-wrapper">
               <Button
                 action="Previous"
@@ -447,8 +418,7 @@ const Signup = () => {
           <FormWrapper>
             <FormHeader title="Sign up" step="3/4" />
             <StepTwo
-              formState={formState}
-              onValueChange={onValueChange}
+              {...{ formState, onValueChange }}
               onKeyUp={handleEnterKey}
             />
             <ErrorWrapper formState={formState} />
@@ -473,12 +443,14 @@ const Signup = () => {
           <FormWrapper>
             <FormHeader title="Sign up" step="4/4" />
             <StepThree
-              formState={formState}
-              onValueChange={onValueChange}
-              handleAddClick={handleAddClick}
-              handleRemoveClick={handleRemoveClick}
-              onArrValueChange={onArrValueChange}
-              handleLanguages={handleLanguages}
+              {...{
+                formState,
+                onValueChange,
+                handleAddClick,
+                handleRemoveClick,
+                onArrValueChange,
+                handleLanguages,
+              }}
             />
             <ErrorWrapper formState={formState} />
             <div className="form-button-wrapper">
