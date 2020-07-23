@@ -8,7 +8,8 @@ import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import faker from 'faker';
+import { mockForm } from './mockdata';
+import { FormWrapper, FormHeader, ErrorWrapper } from './hocs';
 
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
@@ -48,84 +49,9 @@ const Signup = () => {
     languages: [''],
   });
 
-  let mockForm2;
-
-  // useEffect(() => {
-  //   const email = () => faker.internet.email();
-  //   const newEmail = email();
-
-  // mockForm2 = {
-  //   firstName: 'Lisa',
-  //   lastName: 'Huang',
-  //   title: 'Mr',
-  //   sex: 'female',
-  //   weight: '55',
-  //   dateOfBirth: '05/11/1999',
-  //   phoneNumber: '04104820594',
-  //   email: `${newEmail}`,
-  //   password: '123456789',
-  //   confirmPassword: '123456789',
-  //   isDoctor: 'true',
-  //   address: {
-  //     number: '4',
-  //     street: 'Beamish Street',
-  //     city: 'Sydney',
-  //     state: 'New South Wales',
-  //     country: 'Australia',
-  //     postcode: '2149',
-  //   },
-  //   doctorInfo: {
-  //     licence: 'MIT',
-  //     accreditations: ['USyd', 'UNSW'],
-  //     specialtyField: 'Dentistry',
-  //     subSpecialtyField: 'Prosthodontics',
-  //     education: ['ANU', 'Macquarie University'],
-  //     yearsExperience: '10',
-  //     tags: ['Orthodontics', 'Prosthodontics'],
-  //     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-  //   },
-  //   clientInfo: {
-  //     medicalHistory: [
-  //       {
-  //         startDate: '03/05/2005',
-  //         condition: 'High Blood Pressure',
-  //         notes: 'Due to old age',
-  //       },
-  //       {
-  //         startDate: '11/11/2003',
-  //         condition: 'Pneumonia',
-  //         notes: 'Due to travel to Africa',
-  //       },
-  //     ],
-  //     allergies: [
-  //       {
-  //         name: 'Dust allergy',
-  //         severity: '3',
-  //       },
-  //       {
-  //         name: 'Pollen allergy',
-  //         severity: '2',
-  //       },
-  //     ],
-  //     medication: [
-  //       {
-  //         name: 'Magic mushroom',
-  //         dosage: '200',
-  //         manufacturer: 'Brazil',
-  //       },
-  //       {
-  //         name: 'Cannabis',
-  //         dosage: '100',
-  //         manufacturer: 'Australia',
-  //       },
-  //     ],
-  //     bloodType: 'A+',
-  //   },
-  // };
-
-  //   console.log(newEmail);
-  //   console.log('mounted');
-  // }, []);
+  // Testing sign up with pre-filled mock form
+  let mockForm;
+  useEffect(() => mockForm, []);
 
   const handleYes = () => {
     setFormState({
@@ -147,6 +73,7 @@ const Signup = () => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
     if (
+      // Incorrect fills cases
       !formState.password ||
       !formState.confirmPassword ||
       !formState.username ||
@@ -167,6 +94,7 @@ const Signup = () => {
         errors: ['Please enter a valid email'],
       });
     } else if (
+      // Correct case
       formState.password === formState.confirmPassword &&
       formState.password !== ''
     ) {
@@ -176,8 +104,10 @@ const Signup = () => {
       });
     }
   };
+
   const onNextStepTwo = () => {
     if (
+      // Incorrect fills cases
       !formState.firstName ||
       !formState.lastName ||
       !formState.title ||
@@ -205,6 +135,7 @@ const Signup = () => {
         errors: ['Please enter a valid email'],
       });
     } else if (
+      // Correct case
       formState.password === formState.confirmPassword &&
       formState.password !== ''
     ) {
@@ -298,7 +229,7 @@ const Signup = () => {
     });
   };
 
-  const sanitizedDoctorForm = () => {
+  const sanitizedCommonForm = () => {
     return {
       firstName: formState.firstName,
       lastName: formState.lastName,
@@ -318,47 +249,35 @@ const Signup = () => {
         state: formState.state,
         country: formState.country,
         postcode: formState.postcode,
-      },
-      doctorInfo: {
-        licence: formState.licence,
-        accreditations: deleteKeys('accreditations', 'accreditation'),
-        specialtyField: formState.specialtyField,
-        subSpecialtyField: formState.subSpecialtyField,
-        education: deleteKeys('educations', 'education'),
-        yearsExperience: formState.yearsExp,
-        languagesSpoken: formState.languages,
       },
     };
   };
 
-  const sanitizedClientForm = () => {
-    return {
-      firstName: formState.firstName,
-      lastName: formState.lastName,
-      title: formState.title,
-      sex: formState.sex,
-      weight: formState.weight,
-      dateOfBirth: formState.dob,
-      phoneNumber: formState.phone,
-      email: formState.email,
-      password: formState.password,
-      confirmPassword: formState.confirmPassword,
-      isDoctor: formState.isDoctor,
-      address: {
-        number: formState.addressNumber,
-        street: formState.street,
-        city: formState.city,
-        state: formState.state,
-        country: formState.country,
-        postcode: formState.postcode,
-      },
-      clientInfo: {
-        medicalHistory: formState.existingConditions,
-        allergies: formState.allergies,
-        medication: formState.medication,
-        bloodType: formState.bloodType,
-      },
+  const sanitizedDoctorForm = () => {
+    const doctorForm = sanitizedCommonForm();
+    doctorForm.doctorInfo = {
+      licence: formState.licence,
+      accreditations: deleteKeys('accreditations', 'accreditation'),
+      specialtyField: formState.specialtyField,
+      subSpecialtyField: formState.subSpecialtyField,
+      education: deleteKeys('educations', 'education'),
+      yearsExperience: formState.yearsExp,
+      languagesSpoken: formState.languages,
     };
+
+    return doctorForm;
+  };
+
+  const sanitizedClientForm = () => {
+    const clientForm = sanitizedCommonForm();
+    clientForm.clientInfo = {
+      medicalHistory: formState.existingConditions,
+      allergies: formState.allergies,
+      medication: formState.medication,
+      bloodType: formState.bloodType,
+    };
+
+    return clientForm;
   };
 
   // init new array
@@ -373,49 +292,48 @@ const Signup = () => {
     return newArr;
   };
 
+  const submitErrorCheck = (field, errorMessage, isDoctor = true) => {
+    let isDoctorFormState = !!isDoctor
+      ? formState.isDoctor
+      : !formState.isDoctor;
+
+    if (!formState[field] && isDoctorFormState) {
+      setFormState({
+        ...formState,
+        errors: [`Please include ${errorMessage}`],
+      });
+    }
+  };
+
+  const handleSubmitArray = [
+    ['licence', 'a valid licence number'],
+    ['accreditation', 'a valid accreditation'],
+    ['specialtyField', 'a specialty field'],
+    ['education', 'your education'],
+    ['specialtyField', 'a specialty field'],
+    ['yearsExp', 'your years of experience'],
+    ['languages', 'the languages you speak'],
+    ['bloodType', 'your blood type', false],
+  ];
+
   //handler for submitting form
   const handleSubmit = async () => {
-    if (!formState.licence && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include a valid licence number'],
-      });
-    }
+    // submitErrorCheck('licence', 'a valid licence number')
+    // submitErrorCheck('accreditation', 'a valid accreditation')
+    // submitErrorCheck('specialtyField', 'a specialty field')
+    // submitErrorCheck('education', 'your education')
+    // submitErrorCheck('specialtyField', 'a specialty field')
+    // submitErrorCheck('yearsExp', 'your years of experience')
+    // submitErrorCheck('languages', 'the languages you speak')
+    // submitErrorCheck(false, 'bloodType', 'your blood type')
 
-    if (!formState.accreditation && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include a valid accreditation'],
-      });
-    }
-
-    if (!formState.specialtyField && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include a specialty field'],
-      });
-    }
-
-    if (!formState.education && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your education'],
-      });
-    }
-
-    if (!formState.yearsExp && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your years of experience'],
-      });
-    }
-
-    if (!formState.languages && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include the languages you speak'],
-      });
-    }
+    handleSubmitArray.forEach(item => {
+      if (!item[3]) {
+        submitErrorCheck(item[0], item[1]);
+      } else {
+        submitErrorCheck(item[0], item[1], item[3]);
+      }
+    });
 
     if (!formState.bloodType && !formState.isDoctor) {
       setFormState({
@@ -437,7 +355,7 @@ const Signup = () => {
       : sanitizedClientForm();
 
     axios
-      .post(endpoint, sanitizedForm /*mockForm2*/, {
+      .post(endpoint, sanitizedForm /*mockForm*/, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
@@ -478,163 +396,106 @@ const Signup = () => {
     switch (formState.step) {
       case 0:
         return (
-          <div className="form-wrapper">
-            <div className="trim" />
-            <div className="form-container">
-              <div className="form-header">
-                <h1>Sign up</h1>
-                <span>1/4</span>
-              </div>
-              <h3>Are you a Doctor?</h3>
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="form-button-wrapper">
-                <Button
-                  action="No"
-                  color="pink"
-                  onClick={handleNo}
-                  icon="cross"
-                />
-                <Button
-                  action="Yes"
-                  color="pink"
-                  onClick={handleYes}
-                  icon="check"
-                />
-              </div>
+          <FormWrapper>
+            <FormHeader title="Sign up" step="1/4" />
+            <h3>Are you a Doctor?</h3>
+            <ErrorWrapper formState={formState} />
+            <div className="form-button-wrapper">
+              <Button
+                action="No"
+                color="pink"
+                onClick={handleNo}
+                icon="cross"
+              />
+              <Button
+                action="Yes"
+                color="pink"
+                onClick={handleYes}
+                icon="check"
+              />
             </div>
-          </div>
+          </FormWrapper>
         );
       case 1:
         return (
-          <div className="form-wrapper">
-            <div className="trim" />
-            <div className="form-container">
-              <div className="form-header">
-                <h1>Sign up</h1>
-                <span>2/4</span>
-              </div>
-              <StepOne
-                formState={formState}
-                onValueChange={onValueChange}
-                onKeyUp={handleEnterKey}
+          <FormWrapper>
+            <FormHeader title="Sign up" step="2/4" />
+            <StepOne
+              formState={formState}
+              onValueChange={onValueChange}
+              onKeyUp={handleEnterKey}
+            />
+            <ErrorWrapper formState={formState} />
+            <div className="form-button-wrapper">
+              <Button
+                action="Previous"
+                color="navy"
+                onClick={onPrev}
+                icon="arrowLeft"
               />
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="form-button-wrapper">
-                <Button
-                  action="Previous"
-                  color="navy"
-                  onClick={onPrev}
-                  icon="arrowLeft"
-                />
-                <Button
-                  action="Next"
-                  color="pink"
-                  onClick={onNextStepOne}
-                  icon="arrowRight"
-                />
-              </div>
+              <Button
+                action="Next"
+                color="pink"
+                onClick={onNextStepOne}
+                icon="arrowRight"
+              />
             </div>
-          </div>
+          </FormWrapper>
         );
       case 2:
         return (
-          <div className="form-wrapper">
-            <div className="trim" />
-            <div className="form-container">
-              <div className="form-header">
-                <h1>Sign up</h1>
-                <span>3/4</span>
-              </div>
-
-              <StepTwo
-                formState={formState}
-                onValueChange={onValueChange}
-                onKeyUp={handleEnterKey}
+          <FormWrapper>
+            <FormHeader title="Sign up" step="3/4" />
+            <StepTwo
+              formState={formState}
+              onValueChange={onValueChange}
+              onKeyUp={handleEnterKey}
+            />
+            <ErrorWrapper formState={formState} />
+            <div className="form-button-wrapper">
+              <Button
+                action="Previous"
+                color="navy"
+                onClick={onPrev}
+                icon="arrowLeft"
               />
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="form-button-wrapper">
-                <Button
-                  action="Previous"
-                  color="navy"
-                  onClick={onPrev}
-                  icon="arrowLeft"
-                />
-                <Button
-                  action="Next"
-                  color="pink"
-                  onClick={onNextStepTwo}
-                  icon="arrowRight"
-                />
-              </div>
+              <Button
+                action="Next"
+                color="pink"
+                onClick={onNextStepTwo}
+                icon="arrowRight"
+              />
             </div>
-          </div>
+          </FormWrapper>
         );
       case 3:
         return (
-          <div className="form-wrapper">
-            <div className="trim" />
-            <div className="form-container">
-              <div className="form-header">
-                <h1>Sign up</h1>
-                <span>4/4</span>
-              </div>
-              <StepThree
-                formState={formState}
-                onValueChange={onValueChange}
-                handleAddClick={handleAddClick}
-                handleRemoveClick={handleRemoveClick}
-                onArrValueChange={onArrValueChange}
-                handleLanguages={handleLanguages}
+          <FormWrapper>
+            <FormHeader title="Sign up" step="4/4" />
+            <StepThree
+              formState={formState}
+              onValueChange={onValueChange}
+              handleAddClick={handleAddClick}
+              handleRemoveClick={handleRemoveClick}
+              onArrValueChange={onArrValueChange}
+              handleLanguages={handleLanguages}
+            />
+            <ErrorWrapper formState={formState} />
+            <div className="form-button-wrapper">
+              <Button
+                action="Previous"
+                color="navy"
+                onClick={onPrev}
+                icon="arrowLeft"
               />
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="form-button-wrapper">
-                <Button
-                  action="Previous"
-                  color="navy"
-                  onClick={onPrev}
-                  icon="arrowLeft"
-                />
-                <Button
-                  action="Submit"
-                  color="pink"
-                  onClick={handleSubmit}
-                  icon="check"
-                />
-              </div>
+              <Button
+                action="Submit"
+                color="pink"
+                onClick={handleSubmit}
+                icon="check"
+              />
             </div>
-          </div>
+          </FormWrapper>
         );
     }
     console.log(formState);
