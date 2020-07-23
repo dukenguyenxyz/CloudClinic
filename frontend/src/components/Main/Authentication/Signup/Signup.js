@@ -13,8 +13,8 @@ import faker from 'faker';
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
-    step: 0,
-    isDoctor: false,
+    step: 3,
+    isDoctor: true,
     errors: [],
     validationIcon: '',
     username: '',
@@ -40,7 +40,7 @@ const Signup = () => {
     bloodType: '',
     //Doctor states
     licence: '',
-    accreditation: '',
+    accreditation: [''],
     specialtyField: '',
     subSpecialtyField: '',
     education: '',
@@ -275,6 +275,14 @@ const Signup = () => {
     });
   };
 
+  const handleAccreditation = (e, i) => {
+    // console.log(e.target.value);
+    setFormState(formState => ({
+      ...formState,
+      ['accreditation']: [e.target.value, ...formState['accreditation']],
+    }));
+  };
+
   //Handlers for adding/removing extra form fields
   const handleRemoveClick = (key, i) => {
     //spread value at the formState key into list
@@ -461,7 +469,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    console.log(formState);
+    // console.log(formState);
     switch (formState.step) {
       case 0:
         return (
@@ -596,6 +604,7 @@ const Signup = () => {
                 handleRemoveClick={handleRemoveClick}
                 onArrValueChange={onArrValueChange}
                 handleLanguages={handleLanguages}
+                handleAccreditation={handleAccreditation}
               />
               <div className="auth-error-wrapper">
                 <ul>

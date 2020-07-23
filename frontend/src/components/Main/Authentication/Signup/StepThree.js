@@ -12,6 +12,7 @@ const StepThree = ({
   handleRemoveClick,
   onArrValueChange,
   handleLanguages,
+  handleAccreditation,
 }) => {
   const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -219,13 +220,49 @@ const StepThree = ({
         icon="licence"
         onValueChange={e => onValueChange(e, 'licence')}
       />
-      <AuthInput
+      {/* <AuthInput
         value={formState.accreditation}
         placeholder="Accreditation"
         type="text"
         icon="briefcase"
         onValueChange={e => onValueChange(e, 'accreditation')}
-      />
+      /> */}
+      {/* <AuthInput
+        value={formState.accreditation}
+        placeholder="Accreditation"
+        type="text"
+        icon="briefcase"
+        onValueChange={e => handleAccreditation(e)}
+      /> */}
+      {formState.accreditation.map((element, i) => {
+        return (
+          <div key={i}>
+            <AuthInput
+              value={element[i]}
+              placeholder="Accreditation"
+              type="text"
+              icon="briefcase"
+              onValueChange={e => handleAccreditation(e, i)}
+            />
+            <div className="btn-box">
+              {formState.accreditation.length !== 1 && (
+                <Button
+                  onClick={() => handleRemoveClick('accreditation', i)}
+                  icon="minus"
+                  color="mid"
+                />
+              )}
+              {formState.accreditation.length - 1 === i && (
+                <Button
+                  onClick={() => handleAddClick('accreditation', '')}
+                  icon="plus"
+                  color="mid"
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
       <AuthInput
         value={formState.specialtyField}
         placeholder="Specialty Field"
