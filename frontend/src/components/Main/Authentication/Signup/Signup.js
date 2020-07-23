@@ -13,7 +13,7 @@ import faker from 'faker';
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
-    step: 3,
+    step: 0,
     isDoctor: true,
     errors: [],
     validationIcon: '',
@@ -40,10 +40,10 @@ const Signup = () => {
     bloodType: '',
     //Doctor states
     licence: '',
-    accreditation: [''],
+    accreditations: [{ accreditation: '' }],
     specialtyField: '',
-    subSpecialtyField: '',
-    education: '',
+    subSpecialtyField: 'Ear Nose Throat',
+    educations: [{ education: '' }],
     yearsExp: '',
     languages: [''],
   });
@@ -54,74 +54,74 @@ const Signup = () => {
   //   const email = () => faker.internet.email();
   //   const newEmail = email();
 
-  //   mockForm2 = {
-  //     firstName: 'Lisa',
-  //     lastName: 'Huang',
-  //     title: 'Mr',
-  //     sex: 'female',
-  //     weight: '55',
-  //     dateOfBirth: '05/11/1999',
-  //     phoneNumber: '04104820594',
-  //     email: `${newEmail}`,
-  //     password: '123456789',
-  //     confirmPassword: '123456789',
-  //     isDoctor: 'true',
-  //     address: {
-  //       number: '4',
-  //       street: 'Beamish Street',
-  //       city: 'Sydney',
-  //       state: 'New South Wales',
-  //       country: 'Australia',
-  //       postcode: '2149',
-  //     },
-  //     doctorInfo: {
-  //       licence: 'MIT',
-  //       accreditations: ['USyd', 'UNSW'],
-  //       specialtyField: 'Dentistry',
-  //       subSpecialtyField: 'Prosthodontics',
-  //       education: ['ANU', 'Macquarie University'],
-  //       yearsExperience: '10',
-  //       tags: ['Orthodontics', 'Prosthodontics'],
-  //       languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-  //     },
-  //     clientInfo: {
-  //       medicalHistory: [
-  //         {
-  //           startDate: '03/05/2005',
-  //           condition: 'High Blood Pressure',
-  //           notes: 'Due to old age',
-  //         },
-  //         {
-  //           startDate: '11/11/2003',
-  //           condition: 'Pneumonia',
-  //           notes: 'Due to travel to Africa',
-  //         },
-  //       ],
-  //       allergies: [
-  //         {
-  //           name: 'Dust allergy',
-  //           severity: '3',
-  //         },
-  //         {
-  //           name: 'Pollen allergy',
-  //           severity: '2',
-  //         },
-  //       ],
-  //       medication: [
-  //         {
-  //           name: 'Magic mushroom',
-  //           dosage: '200',
-  //           manufacturer: 'Brazil',
-  //         },
-  //         {
-  //           name: 'Cannabis',
-  //           dosage: '100',
-  //           manufacturer: 'Australia',
-  //         },
-  //       ],
-  //       bloodType: 'A+',
-  //     },
-  //   };
+  // mockForm2 = {
+  //   firstName: 'Lisa',
+  //   lastName: 'Huang',
+  //   title: 'Mr',
+  //   sex: 'female',
+  //   weight: '55',
+  //   dateOfBirth: '05/11/1999',
+  //   phoneNumber: '04104820594',
+  //   email: `${newEmail}`,
+  //   password: '123456789',
+  //   confirmPassword: '123456789',
+  //   isDoctor: 'true',
+  //   address: {
+  //     number: '4',
+  //     street: 'Beamish Street',
+  //     city: 'Sydney',
+  //     state: 'New South Wales',
+  //     country: 'Australia',
+  //     postcode: '2149',
+  //   },
+  //   doctorInfo: {
+  //     licence: 'MIT',
+  //     accreditations: ['USyd', 'UNSW'],
+  //     specialtyField: 'Dentistry',
+  //     subSpecialtyField: 'Prosthodontics',
+  //     education: ['ANU', 'Macquarie University'],
+  //     yearsExperience: '10',
+  //     tags: ['Orthodontics', 'Prosthodontics'],
+  //     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+  //   },
+  //   clientInfo: {
+  //     medicalHistory: [
+  //       {
+  //         startDate: '03/05/2005',
+  //         condition: 'High Blood Pressure',
+  //         notes: 'Due to old age',
+  //       },
+  //       {
+  //         startDate: '11/11/2003',
+  //         condition: 'Pneumonia',
+  //         notes: 'Due to travel to Africa',
+  //       },
+  //     ],
+  //     allergies: [
+  //       {
+  //         name: 'Dust allergy',
+  //         severity: '3',
+  //       },
+  //       {
+  //         name: 'Pollen allergy',
+  //         severity: '2',
+  //       },
+  //     ],
+  //     medication: [
+  //       {
+  //         name: 'Magic mushroom',
+  //         dosage: '200',
+  //         manufacturer: 'Brazil',
+  //       },
+  //       {
+  //         name: 'Cannabis',
+  //         dosage: '100',
+  //         manufacturer: 'Australia',
+  //       },
+  //     ],
+  //     bloodType: 'A+',
+  //   },
+  // };
 
   //   console.log(newEmail);
   //   console.log('mounted');
@@ -275,18 +275,11 @@ const Signup = () => {
     });
   };
 
-  const handleAccreditation = (e, i) => {
-    // console.log(e.target.value);
-    setFormState(formState => ({
-      ...formState,
-      ['accreditation']: [e.target.value, ...formState['accreditation']],
-    }));
-  };
-
   //Handlers for adding/removing extra form fields
   const handleRemoveClick = (key, i) => {
     //spread value at the formState key into list
     const list = [...formState[key]];
+
     //at index i, remove one item
     list.splice(i, 1);
     setFormState({
@@ -328,10 +321,10 @@ const Signup = () => {
       },
       doctorInfo: {
         licence: formState.licence,
-        accreditations: formState.accreditation,
+        accreditations: deleteKeys('accreditations', 'accreditation'),
         specialtyField: formState.specialtyField,
         subSpecialtyField: formState.subSpecialtyField,
-        education: formState.education,
+        education: deleteKeys('educations', 'education'),
         yearsExperience: formState.yearsExp,
         languagesSpoken: formState.languages,
       },
@@ -366,6 +359,18 @@ const Signup = () => {
         bloodType: formState.bloodType,
       },
     };
+  };
+
+  // init new array
+  // loop over each object in the array
+  // grab the value and push into the new array
+  // return the new array
+  const deleteKeys = (key, subKey) => {
+    const newArr = [];
+    formState[key].forEach(el => {
+      newArr.push(el[subKey]);
+    });
+    return newArr;
   };
 
   //handler for submitting form
@@ -449,7 +454,7 @@ const Signup = () => {
         navigate('/profile');
       })
       .catch(error => {
-        // console.log(error.response);
+        console.log(error.response);
         setFormState({
           ...formState,
           errors: [`${error.response.data}`],
@@ -469,7 +474,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    // console.log(formState);
+    console.log(formState);
     switch (formState.step) {
       case 0:
         return (
@@ -604,7 +609,6 @@ const Signup = () => {
                 handleRemoveClick={handleRemoveClick}
                 onArrValueChange={onArrValueChange}
                 handleLanguages={handleLanguages}
-                handleAccreditation={handleAccreditation}
               />
               <div className="auth-error-wrapper">
                 <ul>

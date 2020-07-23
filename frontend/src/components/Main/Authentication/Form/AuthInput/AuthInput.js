@@ -40,6 +40,7 @@ const AuthInput = ({
   isMobile,
   onKeyUp,
   validationIcon,
+  onKeyPress,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -122,6 +123,7 @@ const AuthInput = ({
         maxLength={maxLength}
         onKeyUp={onKeyUp}
         checked={value && true}
+        onKeyPress={onKeyPress}
       />
       <i className="icon-validation">{getValidationIcon()}</i>
     </div>

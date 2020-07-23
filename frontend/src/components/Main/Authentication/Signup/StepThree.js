@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
@@ -12,7 +12,6 @@ const StepThree = ({
   handleRemoveClick,
   onArrValueChange,
   handleLanguages,
-  handleAccreditation,
 }) => {
   const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -211,6 +210,8 @@ const StepThree = ({
     </>
   );
 
+  // const [accredInput, setAccredInput] = useState('');
+
   const doctorSignup = (
     <>
       <AuthInput
@@ -220,41 +221,34 @@ const StepThree = ({
         icon="licence"
         onValueChange={e => onValueChange(e, 'licence')}
       />
-      {/* <AuthInput
-        value={formState.accreditation}
-        placeholder="Accreditation"
-        type="text"
-        icon="briefcase"
-        onValueChange={e => onValueChange(e, 'accreditation')}
-      /> */}
-      {/* <AuthInput
-        value={formState.accreditation}
-        placeholder="Accreditation"
-        type="text"
-        icon="briefcase"
-        onValueChange={e => handleAccreditation(e)}
-      /> */}
-      {formState.accreditation.map((element, i) => {
+      {formState.accreditations.map((val, i) => {
         return (
           <div key={i}>
             <AuthInput
-              value={element[i]}
+              name="accreditation"
+              value={val.accreditation}
               placeholder="Accreditation"
               type="text"
               icon="briefcase"
-              onValueChange={e => handleAccreditation(e, i)}
+              onValueChange={e =>
+                onArrValueChange(e, 'accreditations', i, 'accreditation')
+              }
             />
             <div className="btn-box">
-              {formState.accreditation.length !== 1 && (
+              {formState.accreditations.length !== 1 && (
                 <Button
-                  onClick={() => handleRemoveClick('accreditation', i)}
+                  onClick={() => handleRemoveClick('accreditations', i)}
                   icon="minus"
                   color="mid"
                 />
               )}
-              {formState.accreditation.length - 1 === i && (
+              {formState.accreditations.length - 1 === i && (
                 <Button
-                  onClick={() => handleAddClick('accreditation', '')}
+                  onClick={() =>
+                    handleAddClick('accreditations', {
+                      accreditation: '',
+                    })
+                  }
                   icon="plus"
                   color="mid"
                 />
@@ -277,13 +271,42 @@ const StepThree = ({
         icon="fileText"
         onValueChange={e => onValueChange(e, 'subSpecialtyField')}
       />
-      <AuthInput
-        value={formState.education}
-        placeholder="Education"
-        type="text"
-        icon="education"
-        onValueChange={e => onValueChange(e, 'education')}
-      />
+      {formState.educations.map((val, i) => {
+        return (
+          <div key={i}>
+            <AuthInput
+              name="education"
+              value={val.education}
+              placeholder="Education"
+              type="text"
+              icon="briefcase"
+              onValueChange={e =>
+                onArrValueChange(e, 'educations', i, 'education')
+              }
+            />
+            <div className="btn-box">
+              {formState.educations.length !== 1 && (
+                <Button
+                  onClick={() => handleRemoveClick('educations', i)}
+                  icon="minus"
+                  color="mid"
+                />
+              )}
+              {formState.educations.length - 1 === i && (
+                <Button
+                  onClick={() =>
+                    handleAddClick('educations', {
+                      education: '',
+                    })
+                  }
+                  icon="plus"
+                  color="mid"
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
       <AuthInput
         value={formState.yearsExp}
         placeholder="Years of Experience"
