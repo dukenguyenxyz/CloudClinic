@@ -34,11 +34,9 @@ const Signup = () => {
     state: '',
     country: 'Australia',
     postcode: '',
-    existingConditions: [
-      { condition: '', conditionStartDate: '', conditionComment: '' },
-    ],
-    allergies: [{ allergy: '', severity: '' }],
-    medications: [{ medication: '', dosage: '', manufacturer: '' }],
+    existingConditions: [{ condition: '', startDate: '', notes: '' }],
+    allergies: [{ name: '', severity: '' }],
+    medication: [{ name: '', dosage: '', manufacturer: '' }],
     bloodType: '',
     //Doctor states
     licence: '',
@@ -299,7 +297,7 @@ const Signup = () => {
     });
   };
 
-  const sanitizedForm = () => {
+  const sanitizedDoctorForm = () => {
     return {
       firstName: formState.firstName,
       lastName: formState.lastName,
@@ -329,10 +327,34 @@ const Signup = () => {
         yearsExperience: formState.yearsExp,
         languagesSpoken: formState.languages,
       },
+    };
+  };
+
+  const sanitizedClientForm = () => {
+    return {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      title: formState.title,
+      sex: formState.sex,
+      weight: formState.weight,
+      dateOfBirth: formState.dob,
+      phoneNumber: formState.phone,
+      email: formState.email,
+      password: formState.password,
+      confirmPassword: formState.confirmPassword,
+      isDoctor: formState.isDoctor,
+      address: {
+        number: formState.addressNumber,
+        street: formState.street,
+        city: formState.city,
+        state: formState.state,
+        country: formState.country,
+        postcode: formState.postcode,
+      },
       clientInfo: {
         medicalHistory: formState.existingConditions,
         allergies: formState.allergies,
-        medication: formState.medications,
+        medication: formState.medication,
         bloodType: formState.bloodType,
       },
     };
@@ -397,8 +419,12 @@ const Signup = () => {
 
     // Make axios post request to backend
 
+    const sanitizedForm = formState.isDoctor
+      ? sanitizedDoctorForm()
+      : sanitizedClientForm();
+
     axios
-      .post(endpoint, sanitizedForm() /*mockForm2*/, {
+      .post(endpoint, sanitizedForm /*mockForm2*/, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },

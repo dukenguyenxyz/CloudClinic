@@ -39,8 +39,7 @@ const StepThree = ({
             />
             <AuthInput
               name="conditionStartDate"
-              value={val.conditionStartDate}
-              // placeholder="Condition Start Date"
+              value={val.startDate}
               type="date"
               icon="calendar"
               placeholder="Start date"
@@ -48,22 +47,17 @@ const StepThree = ({
               max="2020-01-01"
               min="1900-01-01"
               onValueChange={e =>
-                onArrValueChange(
-                  e,
-                  'existingConditions',
-                  i,
-                  'conditionStartDate'
-                )
+                onArrValueChange(e, 'existingConditions', i, 'startDate')
               }
             />
             <AuthInput
               name="conditionComment"
-              value={val.conditionComment}
+              value={val.notes}
               placeholder="Comments"
               type="text"
               icon="textArea"
               onValueChange={e =>
-                onArrValueChange(e, 'existingConditions', i, 'conditionComment')
+                onArrValueChange(e, 'existingConditions', i, 'notes')
               }
             />
             <div className="btn-box">
@@ -79,8 +73,8 @@ const StepThree = ({
                   onClick={() =>
                     handleAddClick('existingConditions', {
                       condition: '',
-                      conditionStartDate: '',
-                      conditionComment: '',
+                      startDate: '',
+                      notes: '',
                     })
                   }
                   icon="plus"
@@ -99,13 +93,11 @@ const StepThree = ({
           <div key={i}>
             <AuthInput
               name="allergy"
-              value={val.allergy}
+              value={val.name}
               placeholder="Allergy"
               type="text"
               icon="alertCircle"
-              onValueChange={e =>
-                onArrValueChange(e, 'allergies', i, 'allergy')
-              }
+              onValueChange={e => onArrValueChange(e, 'allergies', i, 'name')}
             />
 
             <AuthSelect
@@ -147,18 +139,16 @@ const StepThree = ({
 
       <h3>Medication</h3>
 
-      {formState.medications.map((val, i) => {
+      {formState.medication.map((val, i) => {
         return (
           <div key={i}>
             <AuthInput
               name="medication"
-              value={val.medication}
+              value={val.name}
               placeholder="Medication"
               type="text"
               icon="medication"
-              onValueChange={e =>
-                onArrValueChange(e, 'medications', i, 'medication')
-              }
+              onValueChange={e => onArrValueChange(e, 'medication', i, 'name')}
             />
             <AuthInput
               name="dosage"
@@ -169,7 +159,7 @@ const StepThree = ({
               max="5000"
               icon="hash"
               onValueChange={e =>
-                onArrValueChange(e, 'medications', i, 'dosage')
+                onArrValueChange(e, 'medication', i, 'dosage')
               }
             />
             <AuthInput
@@ -179,21 +169,21 @@ const StepThree = ({
               type="text"
               icon="briefcase"
               onValueChange={e =>
-                onArrValueChange(e, 'medications', i, 'manufacturer')
+                onArrValueChange(e, 'medication', i, 'manufacturer')
               }
             />
             <div className="btn-box">
-              {formState.medications.length !== 1 && (
+              {formState.medication.length !== 1 && (
                 <Button
-                  onClick={() => handleRemoveClick('medications', i)}
+                  onClick={() => handleRemoveClick('medication', i)}
                   icon="minus"
                   color="mid"
                 />
               )}
-              {formState.medications.length - 1 === i && (
+              {formState.medication.length - 1 === i && (
                 <Button
                   onClick={() =>
-                    handleAddClick('medications', {
+                    handleAddClick('medication', {
                       medication: '',
                       dosage: '',
                       manufacturer: '',
@@ -268,17 +258,6 @@ const StepThree = ({
         console.log(val);
         return (
           <div key={i} className="auth-multi">
-            {/* <AuthInput
-              name="language"
-              value={val}
-              placeholder="Language Spoken"
-              type="text"
-              icon="language"
-              // onValueChange={e =>
-              //   onArrValueChange(e, 'languages', i, 'language')
-              // }
-              onValueChange={e => on2DArrValueChange(e, 'languages')}
-            /> */}
             <AuthSelect
               value={formState.languages[i]}
               placeholder="Language"
