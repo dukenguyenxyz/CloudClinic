@@ -4,7 +4,7 @@ import AuthInput from '../Form/AuthInput/AuthInput';
 import AuthSelect from '../Form/AuthSelect/AuthSelect';
 import countries from '../Form/countries';
 
-const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
+const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
   const sexOptions = ['male', 'female'];
   const titleOptions = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'];
 
@@ -58,9 +58,11 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         type="number"
         min="1"
         max="300"
+        maxLength="3"
         icon="clipboard"
         onValueChange={e => onValueChange(e, 'weight')}
         onKeyUp={onKeyUp}
+        onInput={onInput}
       />
       <AuthInput
         value={formState.dob}
@@ -142,8 +144,10 @@ const StepTwo = ({ formState, onValueChange, onKeyUp }) => {
         icon="postcode"
         min="1"
         max="100000"
+        maxLength="6"
         onValueChange={e => onValueChange(e, 'postcode')}
         onKeyUp={onKeyUp}
+        onInput={onInput}
       />
     </>
   );

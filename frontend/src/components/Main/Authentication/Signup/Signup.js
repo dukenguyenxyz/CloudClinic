@@ -14,7 +14,7 @@ const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
     step: 0,
-    isDoctor: true,
+    isDoctor: false,
     errors: [],
     validationIcon: '',
     username: '',
@@ -42,7 +42,7 @@ const Signup = () => {
     licence: '',
     accreditations: [{ accreditation: '' }],
     specialtyField: '',
-    subSpecialtyField: 'Ear Nose Throat',
+    subSpecialtyField: '',
     educations: [{ education: '' }],
     yearsExp: '',
     languages: [''],
@@ -126,6 +126,12 @@ const Signup = () => {
   //   console.log(newEmail);
   //   console.log('mounted');
   // }, []);
+
+  const maxLengthCheck = el => {
+    if (el.target.value.length > el.target.maxLength) {
+      el.target.value = el.target.value.slice(0, el.target.maxLength);
+    }
+  };
 
   const handleYes = () => {
     setFormState({
@@ -382,7 +388,7 @@ const Signup = () => {
       });
     }
 
-    if (!formState.accreditation && formState.isDoctor) {
+    if (!formState.accreditations && formState.isDoctor) {
       setFormState({
         ...formState,
         errors: ['Please include a valid accreditation'],
@@ -396,7 +402,7 @@ const Signup = () => {
       });
     }
 
-    if (!formState.education && formState.isDoctor) {
+    if (!formState.educations && formState.isDoctor) {
       setFormState({
         ...formState,
         errors: ['Please include your education'],
@@ -566,6 +572,7 @@ const Signup = () => {
                 formState={formState}
                 onValueChange={onValueChange}
                 onKeyUp={handleEnterKey}
+                onInput={maxLengthCheck}
               />
               <div className="auth-error-wrapper">
                 <ul>
@@ -609,6 +616,7 @@ const Signup = () => {
                 handleRemoveClick={handleRemoveClick}
                 onArrValueChange={onArrValueChange}
                 handleLanguages={handleLanguages}
+                onInput={maxLengthCheck}
               />
               <div className="auth-error-wrapper">
                 <ul>
