@@ -34,6 +34,7 @@
     "mongoose-seed": "^0.6.0"
   },
   "devDependencies": {
+    "body-parser": "^1.19.0",
     "concurrently": "^5.2.0",
     "eslint": "^7.2.0",
     "eslint-config-airbnb": "^18.2.0",
@@ -46,6 +47,7 @@
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.0",
     "jest": "^26.1.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2"

@@ -1,5 +1,7 @@
 // Essential packages
 const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 // Subimportant packages
 const dotenv = require('dotenv');
@@ -20,7 +22,12 @@ const app = express();
 require('./config/mongodb');
 
 // Middleware
-app.use(express.json());
+// app.use(express.json());
+
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -31,6 +38,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE');
     return res.status(200).json({});
   }
+  next();
 });
 
 // Add a single baseUrl Route ('/api') here for DRY
