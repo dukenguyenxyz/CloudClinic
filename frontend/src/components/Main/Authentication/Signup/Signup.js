@@ -212,32 +212,30 @@ const Signup = () => {
     });
   };
 
-  const sanitizedCommonForm = () => {
-    return {
-      firstName: formState.firstName,
-      lastName: formState.lastName,
-      title: formState.title,
-      sex: formState.sex,
-      weight: formState.weight,
-      dateOfBirth: formState.dob,
-      phoneNumber: formState.phone,
-      email: formState.email,
-      password: formState.password,
-      confirmPassword: formState.confirmPassword,
-      isDoctor: formState.isDoctor,
-      address: {
-        number: formState.addressNumber,
-        street: formState.street,
-        city: formState.city,
-        state: formState.state,
-        country: formState.country,
-        postcode: formState.postcode,
-      },
-    };
+  const sanitizedCommonForm = {
+    firstName: formState.firstName,
+    lastName: formState.lastName,
+    title: formState.title,
+    sex: formState.sex,
+    weight: formState.weight,
+    dateOfBirth: formState.dob,
+    phoneNumber: formState.phone,
+    email: formState.email,
+    password: formState.password,
+    confirmPassword: formState.confirmPassword,
+    isDoctor: formState.isDoctor,
+    address: {
+      number: formState.addressNumber,
+      street: formState.street,
+      city: formState.city,
+      state: formState.state,
+      country: formState.country,
+      postcode: formState.postcode,
+    },
   };
 
   const sanitizedDoctorForm = () => {
-    const doctorForm = sanitizedCommonForm();
+    const doctorForm = { ...sanitizedCommonForm };
     doctorForm.doctorInfo = {
       licence: formState.licence,
       accreditations: deleteKeys('accreditations', 'accreditation'),
@@ -252,7 +250,7 @@ const Signup = () => {
   };
 
   const sanitizedClientForm = () => {
-    const clientForm = sanitizedCommonForm();
+    const clientForm = { ...sanitizedCommonForm };
     clientForm.clientInfo = {
       medicalHistory: formState.existingConditions,
       allergies: formState.allergies,
@@ -363,7 +361,7 @@ const Signup = () => {
     }
   };
 
-  const displayFormStep = () => {
+  return () => {
     console.log(formState);
     switch (formState.step) {
       case 0:
@@ -472,8 +470,6 @@ const Signup = () => {
     }
     console.log(formState);
   };
-
-  return displayFormStep();
 };
 
 export default Signup;
