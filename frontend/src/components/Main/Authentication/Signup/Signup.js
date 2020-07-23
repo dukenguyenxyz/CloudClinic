@@ -467,6 +467,8 @@ const Signup = () => {
             </div>
           </FormWrapper>
         );
+      default:
+        return '';
     }
     console.log(formState);
   };
