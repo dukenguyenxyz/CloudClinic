@@ -480,7 +480,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    console.log(formState);
+    // console.log(formState);
     switch (formState.step) {
       case 0:
         return (

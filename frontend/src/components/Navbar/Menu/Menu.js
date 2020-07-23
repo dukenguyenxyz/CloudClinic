@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@reach/router';
+import { Link, Redirect, navigate, redirectTo } from '@reach/router';
 import { motion } from 'framer-motion';
 import './Menu.scss';
 import {
@@ -25,7 +25,7 @@ const NavLink = props => (
   />
 );
 
-const Menu = ({ isOpen, user }) => {
+const Menu = ({ isOpen, user, location }) => {
   const iconSize = 20;
   const container = {
     show: {
@@ -51,6 +51,14 @@ const Menu = ({ isOpen, user }) => {
     cursor: user ? 'pointer' : 'not-allowed',
   };
 
+  const handleDisabledRoute = e => {
+    e.preventDefault();
+    console.log(e.currentTarget);
+    return e.currentTarget.attributes[0].nodeName === 'disabled'
+      ? navigate('/authentication', { replace: true })
+      : navigate(`${e.currentTarget.href}`, { replace: true });
+  };
+
   return (
     <div className="menu-wrapper">
       <motion.ul
@@ -59,7 +67,11 @@ const Menu = ({ isOpen, user }) => {
         animate={isOpen ? 'show' : 'hidden'}
       >
         <li>
-          <NavLink to="profile" disabled={user ? false : true}>
+          <NavLink
+            to="profile"
+            disabled={user ? false : true}
+            onClick={handleDisabledRoute}
+          >
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <User size={iconSize} color={user ? '#212429' : '#dde2e5'} />
@@ -70,7 +82,11 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="patients" disabled={user ? false : true}>
+          <NavLink
+            to="patients"
+            disabled={user ? false : true}
+            onClick={handleDisabledRoute}
+          >
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <Clipboard size={iconSize} color={user ? '#212429' : '#dde2e5'} />
@@ -81,7 +97,11 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="messaging" disabled={user ? false : true}>
+          <NavLink
+            to="messaging"
+            disabled={user ? false : true}
+            onClick={handleDisabledRoute}
+          >
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <MessageSquare
@@ -95,7 +115,11 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="appointments" disabled={user ? false : true}>
+          <NavLink
+            to="appointments"
+            disabled={user ? false : true}
+            onClick={handleDisabledRoute}
+          >
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <Calendar size={iconSize} color={user ? '#212429' : '#dde2e5'} />
@@ -106,7 +130,11 @@ const Menu = ({ isOpen, user }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="settings" disabled={user ? false : true}>
+          <NavLink
+            to="settings"
+            disabled={user ? false : true}
+            onClick={handleDisabledRoute}
+          >
             <div className="menu-item" style={isDisabledStyle}>
               <div className="tab" />
               <Settings size={iconSize} color={user ? '#212429' : '#dde2e5'} />

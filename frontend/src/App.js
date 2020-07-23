@@ -19,25 +19,29 @@ import AccountSettings from './components/AccountSettings/AccountSettings';
 import UserProfile from './components/Main/Profile/UserProfile/UserProfile';
 import PatientList from './components/Main/Patients/PatientList/PatientList';
 import ViewNavigation from './components/ViewNavigation/ViewNavigation';
+import MotionContainer from './components/MotionContainer/MotionContainer';
 
 function App() {
   const routeVariants = {
     initial: {
       opacity: 0,
       x: '-100vw',
+      scale: 0.9,
     },
     in: {
       opacity: 1,
       x: 0,
+      scale: 1,
     },
     out: {
       opacity: 0,
       x: '100vw',
+      scale: 0.9,
     },
   };
 
   const routeTransition = {
-    duration: 2,
+    duration: 0.9,
     type: 'tween',
     ease: 'easeInOut',
   };
@@ -50,83 +54,32 @@ function App() {
             <Layout>
               <Navbar location={location} />
               <Main>
-                <Header location={location} />
-                <ViewNavigation location={location} />
-                <AnimatePresence exitBeforeEnter key={location.key}>
-                  <Router location={location}>
-                    <Home
-                      path="/"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                    <PrivateRoute
-                      as={Profile}
-                      path="/profile"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                    <PrivateRoute
-                      as={Patients}
-                      path="/patients"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    >
-                      <PatientList path="/" />
-                      <UserProfile path=":id" />
-                    </PrivateRoute>
-                    <PrivateRoute
-                      as={Messaging}
-                      path="/messaging"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                    <PrivateRoute
-                      as={Appointments}
-                      path="/appointments"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                    <PrivateRoute
-                      as={AccountSettings}
-                      path="/settings"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                    <Authentication
-                      path="/authentication"
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                    <FourOhFour
-                      default
-                      variants={routeVariants}
-                      initialAnimation={'initial'}
-                      inAnimation={'in'}
-                      outAnimation={'out'}
-                      transition={routeTransition}
-                    />
-                  </Router>
+                <AnimatePresence exitBeforeEnter>
+                  <MotionContainer
+                    location={location}
+                    variants={routeVariants}
+                    initialAnimation={'initial'}
+                    inAnimation={'in'}
+                    outAnimation={'out'}
+                    transition={routeTransition}
+                    key={location.key}
+                  >
+                    <Header location={location} />
+                    <ViewNavigation location={location} />
+                    <Router location={location}>
+                      <Home path="/" />
+                      <PrivateRoute as={Profile} path="/profile" />
+                      <PrivateRoute as={Patients} path="/patients">
+                        <PatientList path="/" />
+                        <UserProfile path=":id" />
+                      </PrivateRoute>
+                      <PrivateRoute as={Messaging} path="/messaging" />
+                      <PrivateRoute as={Appointments} path="/appointments" />
+                      <PrivateRoute as={AccountSettings} path="/settings" />
+                      <Authentication path="/authentication" />
+                      <FourOhFour default />
+                    </Router>
+                  </MotionContainer>
                 </AnimatePresence>
               </Main>
             </Layout>
