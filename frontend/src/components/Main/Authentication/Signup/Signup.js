@@ -13,7 +13,7 @@ import faker from 'faker';
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
-    step: 2,
+    step: 0,
     isDoctor: false,
     errors: [],
     validationIcon: '',
@@ -52,82 +52,82 @@ const Signup = () => {
 
   let mockForm2;
 
-  useEffect(() => {
-    const email = () => faker.internet.email();
-    const newEmail = email();
+  // useEffect(() => {
+  //   const email = () => faker.internet.email();
+  //   const newEmail = email();
 
-    mockForm2 = {
-      firstName: 'Lisa',
-      lastName: 'Huang',
-      title: 'Mr',
-      sex: 'female',
-      weight: '55',
-      dateOfBirth: '05/11/1999',
-      phoneNumber: '04104820594',
-      email: `${newEmail}`,
-      password: '123456789',
-      confirmPassword: '123456789',
-      isDoctor: 'true',
-      address: {
-        number: '4',
-        street: 'Beamish Street',
-        city: 'Sydney',
-        state: 'New South Wales',
-        country: 'Australia',
-        postcode: '2149',
-      },
-      doctorInfo: {
-        licence: 'MIT',
-        accreditations: ['USyd', 'UNSW'],
-        specialtyField: 'Dentistry',
-        subSpecialtyField: 'Prosthodontics',
-        education: ['ANU', 'Macquarie University'],
-        yearsExperience: '10',
-        tags: ['Orthodontics', 'Prosthodontics'],
-        languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-      },
-      clientInfo: {
-        medicalHistory: [
-          {
-            startDate: '03/05/2005',
-            condition: 'High Blood Pressure',
-            notes: 'Due to old age',
-          },
-          {
-            startDate: '11/11/2003',
-            condition: 'Pneumonia',
-            notes: 'Due to travel to Africa',
-          },
-        ],
-        allergies: [
-          {
-            name: 'Dust allergy',
-            severity: '3',
-          },
-          {
-            name: 'Pollen allergy',
-            severity: '2',
-          },
-        ],
-        medication: [
-          {
-            name: 'Magic mushroom',
-            dosage: '200',
-            manufacturer: 'Brazil',
-          },
-          {
-            name: 'Cannabis',
-            dosage: '100',
-            manufacturer: 'Australia',
-          },
-        ],
-        bloodType: 'A+',
-      },
-    };
+  //   mockForm2 = {
+  //     firstName: 'Lisa',
+  //     lastName: 'Huang',
+  //     title: 'Mr',
+  //     sex: 'female',
+  //     weight: '55',
+  //     dateOfBirth: '05/11/1999',
+  //     phoneNumber: '04104820594',
+  //     email: `${newEmail}`,
+  //     password: '123456789',
+  //     confirmPassword: '123456789',
+  //     isDoctor: 'true',
+  //     address: {
+  //       number: '4',
+  //       street: 'Beamish Street',
+  //       city: 'Sydney',
+  //       state: 'New South Wales',
+  //       country: 'Australia',
+  //       postcode: '2149',
+  //     },
+  //     doctorInfo: {
+  //       licence: 'MIT',
+  //       accreditations: ['USyd', 'UNSW'],
+  //       specialtyField: 'Dentistry',
+  //       subSpecialtyField: 'Prosthodontics',
+  //       education: ['ANU', 'Macquarie University'],
+  //       yearsExperience: '10',
+  //       tags: ['Orthodontics', 'Prosthodontics'],
+  //       languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+  //     },
+  //     clientInfo: {
+  //       medicalHistory: [
+  //         {
+  //           startDate: '03/05/2005',
+  //           condition: 'High Blood Pressure',
+  //           notes: 'Due to old age',
+  //         },
+  //         {
+  //           startDate: '11/11/2003',
+  //           condition: 'Pneumonia',
+  //           notes: 'Due to travel to Africa',
+  //         },
+  //       ],
+  //       allergies: [
+  //         {
+  //           name: 'Dust allergy',
+  //           severity: '3',
+  //         },
+  //         {
+  //           name: 'Pollen allergy',
+  //           severity: '2',
+  //         },
+  //       ],
+  //       medication: [
+  //         {
+  //           name: 'Magic mushroom',
+  //           dosage: '200',
+  //           manufacturer: 'Brazil',
+  //         },
+  //         {
+  //           name: 'Cannabis',
+  //           dosage: '100',
+  //           manufacturer: 'Australia',
+  //         },
+  //       ],
+  //       bloodType: 'A+',
+  //     },
+  //   };
 
-    console.log(newEmail);
-    console.log('mounted');
-  }, []);
+  //   console.log(newEmail);
+  //   console.log('mounted');
+  // }, []);
 
   const handleYes = () => {
     setFormState({
@@ -317,55 +317,23 @@ const Signup = () => {
         street: formState.street,
         city: formState.city,
         state: formState.state,
-        country: 'Australia',
-        postcode: '2149',
+        country: formState.country,
+        postcode: formState.postcode,
       },
       doctorInfo: {
-        licence: 'MIT',
-        accreditations: ['USyd', 'UNSW'],
-        specialtyField: 'Dentistry',
-        subSpecialtyField: 'Prosthodontics',
-        education: ['ANU', 'Macquarie University'],
-        yearsExperience: '10',
-        tags: ['Orthodontics', 'Prosthodontics'],
-        languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+        licence: formState.licence,
+        accreditations: formState.accreditation,
+        specialtyField: formState.specialtyField,
+        subSpecialtyField: formState.subSpecialtyField,
+        education: formState.education,
+        yearsExperience: formState.yearsExp,
+        languagesSpoken: formState.languages,
       },
       clientInfo: {
-        medicalHistory: [
-          {
-            startDate: '03/05/2005',
-            condition: 'High Blood Pressure',
-            notes: 'Due to old age',
-          },
-          {
-            startDate: '11/11/2003',
-            condition: 'Pneumonia',
-            notes: 'Due to travel to Africa',
-          },
-        ],
-        allergies: [
-          {
-            name: 'Dust allergy',
-            severity: '3',
-          },
-          {
-            name: 'Pollen allergy',
-            severity: '2',
-          },
-        ],
-        medication: [
-          {
-            name: 'Magic mushroom',
-            dosage: '200',
-            manufacturer: 'Brazil',
-          },
-          {
-            name: 'Cannabis',
-            dosage: '100',
-            manufacturer: 'Australia',
-          },
-        ],
-        bloodType: 'A+',
+        medicalHistory: formState.existingConditions,
+        allergies: formState.allergies,
+        medication: formState.medications,
+        bloodType: formState.bloodType,
       },
     };
   };
@@ -422,7 +390,7 @@ const Signup = () => {
     }
 
     const developmentUrl = 'http://localhost:5000';
-    const productionUrl = 'http://cloudclinic.tech';
+    // const productionUrl = 'http://cloudclinic.tech';
     const endpoint = `${developmentUrl}/api/users/signup`;
 
     // axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -430,7 +398,7 @@ const Signup = () => {
     // Make axios post request to backend
 
     axios
-      .post(endpoint, mockForm2, {
+      .post(endpoint, sanitizedForm() /*mockForm2*/, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
@@ -467,7 +435,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    // console.log(formState);
+    console.log(formState);
     switch (formState.step) {
       case 0:
         return (
