@@ -335,7 +335,6 @@ const StepThree = ({
         onInput={onInput}
       />
       {formState.languages.map((val, i) => {
-        console.log(val);
         return (
           <div key={i} className="auth-multi">
             <AuthSelect

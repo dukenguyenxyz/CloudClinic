@@ -76,7 +76,10 @@ function App() {
                       <PrivateRoute as={Messaging} path="/messaging" />
                       <PrivateRoute as={Appointments} path="/appointments" />
                       <PrivateRoute as={AccountSettings} path="/settings" />
-                      <Authentication path="/authentication" />
+                      <Authentication
+                        path="/authentication"
+                        location={location}
+                      />
                       <FourOhFour default />
                     </Router>
                   </MotionContainer>

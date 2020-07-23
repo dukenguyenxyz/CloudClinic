@@ -53,7 +53,6 @@ const Menu = ({ isOpen, user, location }) => {
 
   const handleDisabledRoute = e => {
     e.preventDefault();
-    console.log(e.currentTarget);
     return e.currentTarget.attributes[0].nodeName === 'disabled'
       ? navigate('/authentication', { replace: true })
       : navigate(`${e.currentTarget.href}`, { replace: true });

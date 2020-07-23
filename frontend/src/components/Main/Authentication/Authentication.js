@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Authentication.scss';
 import Signup from './Signup/Signup';
 import Signin from './Signin/Signin';
 import Button from '../../Button/Button';
 
-const Authentication = ({}) => {
-  const [authAction, setAuthAction] = useState(false);
+const Authentication = ({ location }) => {
+  // we get true or false value from location.state.signIn based on the state prop from either the sign in or sign up Link component
+  // see Link component in home component if confused
+  const [authAction, setAuthAction] = useState(location.state.signIn);
+
+  let jwt = localStorage.getItem('jwt');
+
+  useEffect(() => {
+    // we need to do some validation here to make sure the jwt is valid
+    // if it's invalid localStorage.removeItem('jwt');
+    // if jwt exists and is valid, set auth action to true to return the sign in view
+    if (jwt) setAuthAction(true);
+  }, []);
 
   const handleClick = () => {
     setAuthAction(!authAction);
   };
+
   return (
     <div className="authentication-wrapper">
       <div className="panel-l">
