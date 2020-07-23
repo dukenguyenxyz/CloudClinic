@@ -11,7 +11,7 @@ const StepThree = ({
   handleAddClick,
   handleRemoveClick,
   onArrValueChange,
-  on2DArrValueChange,
+  handleLanguages,
 }) => {
   const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -286,7 +286,7 @@ const StepThree = ({
               directive="language"
               icon="language"
               options={languages}
-              onValueChange={e => onValueChange(e, 'languages')}
+              onValueChange={e => handleLanguages(e, i)}
             />
             <div className="btn-box">
               {formState.languages.length !== 1 && (

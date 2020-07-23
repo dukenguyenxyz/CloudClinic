@@ -311,10 +311,13 @@ const Signup = () => {
     });
   };
 
-  const on2DArrValueChange = (e, key) => {
+  const handleLanguages = (e, i) => {
+    const list = [...formState['languages']];
+    list[i] = e.target.value;
+
     setFormState({
       ...formState,
-      [key]: formState[key].concat(e.target.value),
+      ['languages']: list,
     });
   };
 
@@ -552,7 +555,7 @@ const Signup = () => {
                 handleAddClick={handleAddClick}
                 handleRemoveClick={handleRemoveClick}
                 onArrValueChange={onArrValueChange}
-                on2DArrValueChange={on2DArrValueChange}
+                handleLanguages={handleLanguages}
               />
               <div className="auth-error-wrapper">
                 <ul>
