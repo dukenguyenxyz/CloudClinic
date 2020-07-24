@@ -9,11 +9,9 @@ const Authentication = ({ location }) => {
   // see Link component in home component if confused
   const [authAction, setAuthAction] = useState(location.state.signIn);
 
-  let jwt = localStorage.getItem('jwt');
+  const jwt = localStorage.getItem('jwt');
 
   useEffect(() => {
-    // we need to do some validation here to make sure the jwt is valid
-    // if it's invalid localStorage.removeItem('jwt');
     // if jwt exists and is valid, set auth action to true to return the sign in view
     if (jwt) setAuthAction(true);
   }, []);

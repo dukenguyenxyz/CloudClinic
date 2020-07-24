@@ -121,6 +121,7 @@ const Signup = () => {
       !formState.dob ||
       !formState.phone ||
       !formState.addressNumber ||
+      !formState.state ||
       !formState.street ||
       !formState.city ||
       !formState.country ||

@@ -12,6 +12,7 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
         type="text"
         icon="username"
         minLength="3"
+        maxLength="20"
         onValueChange={e => onValueChange(e, 'username')}
         onKeyUp={onKeyUp}
       />
@@ -20,6 +21,7 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
         placeholder="Email"
         type="email"
         icon="email"
+        maxLength="255"
         minLength="3"
         onValueChange={e => onValueChange(e, 'email')}
         onKeyUp={onKeyUp}
@@ -46,9 +48,6 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
       />
     </>
   );
-
-  // const doctorSignup = <h1>Im a doctor</h1>;
-  // return <>{isDoctor ? doctorSignup : clientSignup}</>;
   return <>{clientSignup}</>;
 };
 
