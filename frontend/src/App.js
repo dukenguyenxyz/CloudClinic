@@ -97,10 +97,6 @@ function App() {
                         <PatientList path="/" />
                         <UserProfile path=":id" />
                       </PrivateDoctorRoute>
-                      {/* <PrivateRoute as={Patients} path="/patients">
-                        <PatientList path="/" />
-                        <UserProfile path=":id" />
-                      </PrivateRoute> */}
                       <PrivateRoute as={Messaging} path="/messaging" />
                       <PrivateRoute as={Appointments} path="/appointments" />
                       <PrivateRoute as={AccountSettings} path="/settings" />

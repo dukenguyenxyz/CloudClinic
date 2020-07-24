@@ -58,6 +58,19 @@ const Menu = ({ isOpen, user }) => {
       : navigate(`${e.currentTarget.href}`, { replace: true });
   };
 
+  const hidePatientsLink = () => {
+    if (!user || user.isDoctor) {
+      return true;
+    }
+
+    if (!user.isDoctor) {
+      // hide patient link
+      return false;
+    }
+  };
+
+  console.log(user);
+
   return (
     <div className="menu-wrapper">
       <motion.ul
@@ -80,7 +93,7 @@ const Menu = ({ isOpen, user }) => {
             </div>
           </NavLink>
         </li>
-        {user.isDoctor && (
+        {hidePatientsLink() && (
           <li>
             <NavLink
               to="patients"
