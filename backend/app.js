@@ -9,7 +9,7 @@ const path = require('path');
 const connectDB = require('./config/mongodb');
 
 // Access dotenv
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: './config/.env' });
 
 // Import Routes
 const usersRoute = require('./src/routes/users');
