@@ -1,8 +1,5 @@
-// Optional packages
-// const colors = require('colors');
-// Subimportant packages
 const dotenv = require('dotenv');
-// Access dotenv
+
 dotenv.config({ path: './config/config.env' });
 const app = require('./app');
 

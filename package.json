@@ -1,0 +1,28 @@
+{
+  "name": "cloudclinic",
+  "version": "1.0.0",
+  "description": "<img src=\"./CloudClinic_Logo.svg\" width=\"240\"/>",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm start --prefix \"./backend\"",
+    "backend": "npm run nodemon --prefix \"./backend\"",
+    "frontend": "npm start --prefix \"./frontend\"",
+    "concurrent": "npm run dev --prefix \"./backend\"",
+    "test": "npm run test --prefix \"./backend",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix \"./backend\"; (npm install --prefix \"./frontend\" && npm run build -prefix \"./frontend\")",
+    "install": "npm install --prefix \"./backend\"; npm install --prefix \"./frontend\""
+  },
+  "engines": {
+    "node": "14.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dukeraphaelng/CloudClinic.git"
+  },
+  "author": "Duke Nguyen, Hugh Greethead, Harry Buisman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dukeraphaelng/CloudClinic/issues"
+  },
+  "homepage": "https://github.com/dukeraphaelng/CloudClinic#readme"
+}
