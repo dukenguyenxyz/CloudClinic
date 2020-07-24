@@ -157,7 +157,7 @@ const Signup = () => {
     setFormState({
       ...formState,
       step: formState.step - 1,
-      errors: [''],
+      errors: [],
     });
   };
 
@@ -297,6 +297,20 @@ const Signup = () => {
     return newArr;
   };
 
+  const checkEmptyObjectInputFields = key => {
+    formState[key].forEach(el => {
+      const inputValues = Object.values(el);
+      for (let i = 0; i < inputValues.length; i++) {
+        if (!inputValues[i]) {
+          setFormState({
+            ...formState,
+            errors: ['Please fill in all fields'],
+          });
+        }
+      }
+    });
+  };
+
   const submitErrorCheck = (field, errorMessage, isDoctor = true) => {
     let isDoctorFormState = !!isDoctor
       ? formState.isDoctor
@@ -331,6 +345,10 @@ const Signup = () => {
       }
     });
 
+    checkEmptyObjectInputFields('existingConditions');
+    checkEmptyObjectInputFields('allergies');
+    checkEmptyObjectInputFields('medication');
+
     if (!formState.bloodType && !formState.isDoctor) {
       setFormState({
         ...formState,
@@ -350,30 +368,32 @@ const Signup = () => {
       ? sanitizedDoctorForm()
       : sanitizedClientForm();
 
-    axios
-      .post(endpoint, sanitizedForm /*mockForm*/, {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-      })
-      .then(response => {
-        console.log(response.data.user);
+    if (formState.errors.length === 0) {
+      axios
+        .post(endpoint, sanitizedForm /*mockForm*/, {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        })
+        .then(response => {
+          console.log(response.data.user);
 
-        const jwt = response.data.token;
-        const user = response.data.user;
-        localStorage.setItem('jwt', jwt);
+          const jwt = response.data.token;
+          const user = response.data.user;
+          localStorage.setItem('jwt', jwt);
 
-        setUser(user);
+          setUser(user);
 
-        navigate('/profile');
-      })
-      .catch(error => {
-        console.log(error.response);
-        setFormState({
-          ...formState,
-          errors: [`${error.response.data}`],
+          navigate('/profile');
+        })
+        .catch(error => {
+          console.log(error.response);
+          setFormState({
+            ...formState,
+            errors: [`${error.response.data}`, ...formState.errors],
+          });
         });
-      });
+    }
   };
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
@@ -388,7 +408,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    // console.log(formState);
+    console.log(formState);
     switch (formState.step) {
       case 0:
         return (
