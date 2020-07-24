@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './UserProfile.scss';
 import Card from '../../../Card/Card';
+import axios from 'axios'
 
 const UserProfile = props => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    // we get access to user id through props here
-    // query db and pull user info into state to display
+
+    const jwt = localStorage.getItem('jwt');
+    const developmentUrl = 'http://localhost:5000';
+    // const productionUrl = 'http://cloudclinic.tech';
+    const endpoint = `${developmentUrl}/api/users/clients/:id`;
+    // const clientsEndpoint = `${developmentUrl}/api/users/clients`;
+  
+  
+    const res = await axios.get(endpoint, {
+    headers: {
+      'Authorization': jwt
+    }
+  });
+
+
   }, []);
 
   return (
