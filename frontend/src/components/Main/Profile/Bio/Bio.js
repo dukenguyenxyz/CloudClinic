@@ -1,14 +1,14 @@
 import React from 'react';
 import Card from '../../../Card/Card';
 
-const Bio = () => {
+const Bio = ({ user }) => {
   return (
     <Card>
       <div className="user-profile-container">
         <div className="user-header-wrapper">
           <div className="avatar" />
           <div className="name">
-            Michael
+            {user.isDoctor && 'Dr.'} Michael
             <br />
             Gordon
           </div>
@@ -17,7 +17,7 @@ const Bio = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>First Name</span>
-              <span>Michael</span>
+              <span>{user.firstName}</span>
             </div>
           </div>
           <div className="grid-item">

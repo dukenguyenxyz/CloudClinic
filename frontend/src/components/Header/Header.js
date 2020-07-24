@@ -4,8 +4,16 @@ import './Header.scss';
 import { AuthContext, NavbarContext } from '../../globalState/index';
 import Logo from '../Navbar/Logo/Logo';
 import MobileMenu from '../MobileMenu/MobileMenu';
+import { motion } from 'framer-motion';
 
-const Header = ({ location }) => {
+const Header = ({
+  location,
+  variants,
+  initialAnimation,
+  inAnimation,
+  outAnimation,
+  transition,
+}) => {
   const { user } = useContext(AuthContext);
   const { isOpen, setIsOpen } = useContext(NavbarContext);
   const [isMobile, setIsMobile] = useState(false);
@@ -17,6 +25,10 @@ const Header = ({ location }) => {
 
     if (location.pathname === '/' && !user) {
       return `Home`;
+    }
+
+    if (location.pathname === '/profile' && user) {
+      return `Your Profile`;
     }
 
     if (location.state !== null) {
@@ -49,19 +61,33 @@ const Header = ({ location }) => {
   return isMobile ? (
     <>
       <MobileMenu isOpen={isOpen} user={user} setIsOpen={setIsOpen} />
-      <header className="header-wrapper">
+      <motion.header
+        className="header-wrapper"
+        variants={variants}
+        initial={initialAnimation}
+        animate={inAnimation}
+        exit={outAnimation}
+        transition={transition}
+      >
         <div className="mobile-header">
           <Logo isOpen={isOpen} isMobile={isMobile} />
           <Search />
         </div>
         <h1>{getPathName()}</h1>
-      </header>
+      </motion.header>
     </>
   ) : (
-    <header className="header-wrapper">
+    <motion.header
+      className="header-wrapper"
+      variants={variants}
+      initial={initialAnimation}
+      animate={inAnimation}
+      exit={outAnimation}
+      transition={transition}
+    >
       <h1>{getPathName()}</h1>
       <Search />
-    </header>
+    </motion.header>
   );
 };
 

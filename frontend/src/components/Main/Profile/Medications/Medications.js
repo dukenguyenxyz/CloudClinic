@@ -1,5 +1,7 @@
 import React from 'react';
 import Card from '../../../Card/Card';
+import { v4 as uuidv4 } from 'uuid';
+
 const Medications = () => {
   const medications = [
     {
@@ -24,7 +26,7 @@ const Medications = () => {
             <div className="user-info">
               <span>Type</span>
               {medications.map(el => (
-                <span>{el.name}</span>
+                <span key={uuidv4()}>{el.name}</span>
               ))}
             </div>
           </div>
@@ -32,7 +34,7 @@ const Medications = () => {
             <div className="user-info">
               <span>Brand</span>
               {medications.map(el => (
-                <span>{el.manufacturer}</span>
+                <span key={uuidv4()}>{el.manufacturer}</span>
               ))}
             </div>
           </div>
@@ -40,7 +42,7 @@ const Medications = () => {
             <div className="user-info">
               <span>Ml</span>
               {medications.map(el => (
-                <span>{el.dosage}</span>
+                <span key={uuidv4()}>{el.dosage}</span>
               ))}
             </div>
           </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import Card from '../../../Card/Card';
+import { v4 as uuidv4 } from 'uuid';
+
 const DoctorInfo = () => {
   // doctorInfo: {
   //     licence: 'MIT',
@@ -22,7 +24,7 @@ const DoctorInfo = () => {
         <div className="user-header-wrapper">
           <h2>Information</h2>
         </div>
-        <div className="user-details-wrapper">
+        <div className="user-details-wrapper doctor-info">
           <div className="grid-item">
             <div className="user-info">
               <span>licence</span>
@@ -33,7 +35,7 @@ const DoctorInfo = () => {
             <div className="user-info">
               <span>accreditations</span>
               {accreditations.map(el => (
-                <span>{el}</span>
+                <span key={uuidv4()}>{el}</span>
               ))}
             </div>
           </div>
@@ -53,7 +55,7 @@ const DoctorInfo = () => {
             <div className="user-info">
               <span>Education</span>
               {education.map(el => (
-                <span>{el}</span>
+                <span key={uuidv4()}>{el}</span>
               ))}
             </div>
           </div>
@@ -67,7 +69,7 @@ const DoctorInfo = () => {
             <div className="user-info">
               <span>Languages</span>
               {languagesSpoken.map(el => (
-                <span>{el}</span>
+                <span key={uuidv4()}>{el}</span>
               ))}
             </div>
           </div>
@@ -75,7 +77,7 @@ const DoctorInfo = () => {
             <div className="user-info">
               <span>Tags</span>
               {tags.map(el => (
-                <span>{el}</span>
+                <span key={uuidv4()}>{el}</span>
               ))}
             </div>
           </div>

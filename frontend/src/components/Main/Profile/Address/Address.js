@@ -1,6 +1,25 @@
 import React from 'react';
 import Card from '../../../Card/Card';
 const Address = () => {
+  const address = {
+    number: '4',
+    street: 'Beamish Street',
+    city: 'Sydney',
+    state: 'New South Wales',
+    country: 'Australia',
+    postcode: '2149',
+  };
+
+  const getStreet = () => {
+    return `${address.number} ${address.street}`;
+  };
+  const getCityAndState = () => {
+    return `${address.city}, ${address.state}`;
+  };
+  const getCountryAndPostcode = () => {
+    return `${address.country}, ${address.postcode}`;
+  };
+
   return (
     <Card>
       <div className="user-profile-container">
@@ -8,41 +27,11 @@ const Address = () => {
           <h2>Address</h2>
         </div>
         <div className="user-details-wrapper">
-          <div className="grid-item">
-            <div className="user-info">
-              <span>Number</span>
-              <span>4</span>
-            </div>
-          </div>
-          <div className="grid-item">
-            <div className="user-info">
-              <span>Street</span>
-              <span>Beamish Street</span>
-            </div>
-          </div>
-          <div className="grid-item">
-            <div className="user-info">
-              <span>City</span>
-              <span>Sydney</span>
-            </div>
-          </div>
-          <div className="grid-item">
-            <div className="user-info">
-              <span>State</span>
-              <span>NSW</span>
-            </div>
-          </div>
-          <div className="grid-item">
-            <div className="user-info">
-              <span>Country</span>
-              <span>Australia</span>
-            </div>
-          </div>
-          <div className="grid-item">
-            <div className="user-info">
-              <span>Postcode</span>
-              <span>2149</span>
-            </div>
+          <div className="user-info">
+            <span>Full Address</span>
+            <span>{getStreet()}</span>
+            <span>{getCityAndState()}</span>
+            <span>{getCountryAndPostcode()}</span>
           </div>
         </div>
       </div>

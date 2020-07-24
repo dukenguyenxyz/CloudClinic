@@ -5,6 +5,7 @@ export const AuthContextProvider = ({ children }) => {
   // const [isDoctor, setIsDoctor] = useState(false);
   const [user, setUser] = useState({
     firstName: 'DHH',
+    isDoctor: false,
   });
   // const [user, setUser] = useState(null);
 

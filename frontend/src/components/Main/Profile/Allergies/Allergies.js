@@ -1,5 +1,7 @@
 import React from 'react';
 import Card from '../../../Card/Card';
+import { v4 as uuidv4 } from 'uuid';
+
 const Allergies = () => {
   const allergies = [
     {
@@ -32,7 +34,7 @@ const Allergies = () => {
             <div className="user-info">
               <span>Type</span>
               {allergies.map(el => (
-                <span>{el.name}</span>
+                <span key={uuidv4()}>{el.name}</span>
               ))}
             </div>
           </div>
@@ -40,7 +42,7 @@ const Allergies = () => {
             <div className="user-info">
               <span>Severity</span>
               {allergies.map(el => (
-                <span>{severityEnum[el.severity]}</span>
+                <span key={uuidv4()}>{severityEnum[el.severity]}</span>
               ))}
             </div>
           </div>

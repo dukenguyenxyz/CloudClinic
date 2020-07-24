@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './UserProfile.scss';
 import Card from '../../../Card/Card';
 import axios from 'axios';
@@ -9,24 +9,56 @@ import Medications from '../Medications/Medications';
 import Address from '../Address/Address';
 import DoctorInfo from '../DoctorInfo/DoctorInfo';
 import Contact from '../Contact/Contact';
+import { AuthContext } from '../../../../globalState/index';
 
 const UserProfile = props => {
-  const [user, setUser] = useState({});
-  return (
-    <div className="user-profile-wrapper">
-      <div className="panel-left">
-        <Bio />
-        <div className="sub-cards">
-          <Contact />
-          <DoctorInfo />
-          <Address />
-          <Allergies />
-          <Medications />
+  const { user, setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    console.log(user);
+    // if user obj not in state, make axios call the get user info
+    // set user with authcontext callback
+  }, []);
+
+  const doctorProfile = () => {
+    return (
+      <div className="user-profile-wrapper">
+        <div className="panel-left">
+          <Bio user={user} />
+          <div className="sub-cards">
+            <DoctorInfo />
+            <Address />
+            <Contact />
+          </div>
         </div>
+        <h1>Something here</h1>
       </div>
-      <MedicalHistory />
-    </div>
-  );
+    );
+  };
+
+  const clientProfile = () => {
+    return (
+      <div className="user-profile-wrapper">
+        <div className="panel-left">
+          <Bio user={user} />
+          <div className="sub-cards">
+            <Allergies />
+            <Medications />
+            <Contact />
+            <Address />
+          </div>
+        </div>
+        <MedicalHistory />
+      </div>
+    );
+  };
+
+  const showProfile = () => {
+    return user.isDoctor ? doctorProfile() : clientProfile();
+  };
+
+  return <React.Fragment>{showProfile()}</React.Fragment>;
 };
 
 export default UserProfile;
