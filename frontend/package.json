@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "cloudclinic-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,16 +8,31 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.0",
     "faker": "^4.1.0",
     "framer-motion": "^2.0.1",
+    "install": "^0.13.0",
     "moment": "^2.27.0",
     "node-sass": "^4.14.1",
+    "npm": "^6.14.7",
+    "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-big-calendar": "^0.26.0",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
     "react-headroom": "^3.0.0",
     "react-scripts": "3.4.1",
+    "typescript": "^3.9.7",
     "uuid": "^8.2.0"
   },
   "scripts": {
@@ -44,16 +59,5 @@
   },
   "devDependencies": {
     "cypress": "^4.11.0",
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-config-node": "^4.1.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.20.3",
-    "eslint-plugin-react-hooks": "^4.0.0",
-    "prettier": "^2.0.5"
   }
 }

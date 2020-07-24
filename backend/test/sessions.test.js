@@ -88,6 +88,8 @@ test('Doctor: should get clients', async () => {
     .set('Authorization', authUser.tokens[0].token)
     .expect(200);
 
+  console.log(response.body);
+
   expect(response.body).toBeTruthy();
 });
 // Client: should not get clients (empty clients)

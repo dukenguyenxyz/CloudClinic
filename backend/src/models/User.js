@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const Session = require('./Session');
 
 // Access dotenv
-dotenv.config({ path: '../../config/config.env' });
+dotenv.config({ path: '../../config/.env' });
 
 // Add validation for each of these fields with Joi later
 

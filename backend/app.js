@@ -6,9 +6,10 @@ const morgan = require('morgan');
 // Subimportant packages
 const dotenv = require('dotenv');
 const path = require('path');
+const connectDB = require('./config/mongodb');
 
 // Access dotenv
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: './config/.env' });
 
 // Import Routes
 const usersRoute = require('./src/routes/users');
@@ -19,7 +20,7 @@ const samplePrivateRoute = require('./src/routes/samplePrivate');
 const app = express();
 
 // Connect to MongoDB with Mongoose
-require('./config/mongodb');
+connectDB();
 
 // Middleware
 // app.use(express.json());
