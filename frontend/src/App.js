@@ -68,7 +68,9 @@ function App() {
                     <ViewNavigation location={location} />
                     <Router location={location}>
                       <Home path="/" />
-                      <PrivateRoute as={Profile} path="/profile" />
+                      <PrivateRoute as={Profile} path="/profile">
+                        <UserProfile path=":id" />
+                      </PrivateRoute>
                       <PrivateRoute as={Patients} path="/patients">
                         <PatientList path="/" />
                         <UserProfile path=":id" />

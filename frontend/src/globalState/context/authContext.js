@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
   // const [isDoctor, setIsDoctor] = useState(false);
-  // const [user, setUser] = useState({
-  //   firstName: 'DHH',
-  // });
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    firstName: 'DHH',
+  });
+  // const [user, setUser] = useState(null);
 
   const authState = {
     user,
