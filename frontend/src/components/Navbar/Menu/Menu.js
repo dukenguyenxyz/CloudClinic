@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect, navigate, redirectTo } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import { motion } from 'framer-motion';
 import './Menu.scss';
 import {
@@ -25,7 +25,7 @@ const NavLink = props => (
   />
 );
 
-const Menu = ({ isOpen, user, location }) => {
+const Menu = ({ isOpen, user }) => {
   const iconSize = 20;
   const container = {
     show: {
@@ -80,21 +80,26 @@ const Menu = ({ isOpen, user, location }) => {
             </div>
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="patients"
-            disabled={user ? false : true}
-            onClick={handleDisabledRoute}
-          >
-            <div className="menu-item" style={isDisabledStyle}>
-              <div className="tab" />
-              <Clipboard size={iconSize} color={user ? '#212429' : '#dde2e5'} />
-              <motion.span variants={item} style={isDisabledStyle}>
-                Patients
-              </motion.span>
-            </div>
-          </NavLink>
-        </li>
+        {user.isDoctor && (
+          <li>
+            <NavLink
+              to="patients"
+              disabled={user ? false : true}
+              onClick={handleDisabledRoute}
+            >
+              <div className="menu-item" style={isDisabledStyle}>
+                <div className="tab" />
+                <Clipboard
+                  size={iconSize}
+                  color={user ? '#212429' : '#dde2e5'}
+                />
+                <motion.span variants={item} style={isDisabledStyle}>
+                  Patients
+                </motion.span>
+              </div>
+            </NavLink>
+          </li>
+        )}
         <li>
           <NavLink
             to="messaging"
