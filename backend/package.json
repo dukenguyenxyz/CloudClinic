@@ -31,9 +31,7 @@
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "mongoose": "^5.9.22",
-    "mongoose-seed": "^0.6.0"
-  },
-  "devDependencies": {
+    "mongoose-seed": "^0.6.0",
     "body-parser": "^1.19.0",
     "concurrently": "^5.2.0",
     "eslint": "^7.2.0",
@@ -51,5 +49,6 @@
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2"
-  }
+  },
+  "devDependencies": {}
 }
