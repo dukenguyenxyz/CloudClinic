@@ -191,6 +191,7 @@ const Signup = () => {
       !formState.dob ||
       !formState.phone ||
       !formState.addressNumber ||
+      !formState.state ||
       !formState.street ||
       !formState.city ||
       !formState.country ||
@@ -379,8 +380,32 @@ const Signup = () => {
     return newArr;
   };
 
+  const checkEmptyInputFields = key => {
+    console.log('key:', key);
+    formState[key].forEach(el => {
+      console.log('el:', el);
+      const inputValues = Object.values(el);
+      console.log(inputValues);
+
+      for (let i = 0; i < inputValues.length; i++) {
+        console.log(inputValues[i]);
+
+        if (!inputValues[i]) {
+          setFormState({
+            ...formState,
+            errors: ['Please fill in all fields'],
+          });
+        }
+      }
+    });
+  };
+
   //handler for submitting form
   const handleSubmit = async () => {
+    checkEmptyInputFields('existingConditions');
+    checkEmptyInputFields('allergies');
+    checkEmptyInputFields('medication');
+
     if (!formState.licence && formState.isDoctor) {
       setFormState({
         ...formState,
