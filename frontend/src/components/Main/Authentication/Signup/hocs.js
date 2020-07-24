@@ -12,7 +12,7 @@ export const FormWrapper = props => {
 
 export const FormHeader = ({ title, step }) => {
   return (
-    <div classNakme="form-header">
+    <div className="form-header">
       <h1>{title}</h1>
       <span>{step}</span>
     </div>

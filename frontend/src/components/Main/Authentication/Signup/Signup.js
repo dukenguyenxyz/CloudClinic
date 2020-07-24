@@ -389,7 +389,7 @@ const Signup = () => {
     }
   };
 
-  return () => {
+  const displayFormStep = () => {
     console.log(formState);
     switch (formState.step) {
       case 0:
@@ -498,8 +498,9 @@ const Signup = () => {
       default:
         return '';
     }
-    console.log(formState);
   };
+
+  return displayFormStep();
 };
 
 export default Signup;
