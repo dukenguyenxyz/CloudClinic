@@ -13,7 +13,7 @@ import faker from 'faker';
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
-    step: 3,
+    step: 0,
     isDoctor: false,
     errors: [],
     validationIcon: '',
