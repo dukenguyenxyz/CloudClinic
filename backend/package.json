@@ -8,7 +8,8 @@
     "nodemon": "nodemon server",
     "test": "jest --watch  --runInBand --detectOpenHandles",
     "frontend": "npm start --prefix \"../frontend\"",
-    "dev": "concurrently \"npm run nodemon\" \"npm run frontend\""
+    "dev": "concurrently \"npm run nodemon\" \"npm run frontend\"",
+    "seed": "node \"src/seed/seed\""
   },
   "repository": {
     "type": "git",

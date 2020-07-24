@@ -13,7 +13,6 @@ const user = {
   lastName: 'Buisman',
   title: 'Sir',
   sex: 'male',
-  weight: '55',
   dateOfBirth: '05/11/1999',
   phoneNumber: '04104820594',
   email: 'asdfasfdasdfaSd123@gmail.com',
@@ -39,6 +38,7 @@ const user = {
     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
   },
   clientInfo: {
+    weight: '55',
     medicalHistory: [
       {
         startDate: '03/05/2005',

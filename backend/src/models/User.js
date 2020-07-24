@@ -36,11 +36,6 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     enum: ['male', 'female'],
   },
-  weight: {
-    type: Number,
-    min: 1,
-    max: 442,
-  },
   dateOfBirth: {
     type: Date,
   },
@@ -175,6 +170,11 @@ const userSchema = new mongoose.Schema({
     },
   },
   clientInfo: {
+    weight: {
+      type: Number,
+      min: 1,
+      max: 442,
+    },
     medicalHistory: [
       {
         _id: {
