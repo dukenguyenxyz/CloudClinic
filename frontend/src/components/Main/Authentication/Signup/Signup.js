@@ -15,7 +15,7 @@ const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
     step: 0,
-    isDoctor: true,
+    isDoctor: false,
     errors: [],
     validationIcon: '',
     username: '',
@@ -43,7 +43,7 @@ const Signup = () => {
     licence: '',
     accreditations: [{ accreditation: '' }],
     specialtyField: '',
-    subSpecialtyField: 'Ear Nose Throat',
+    subSpecialtyField: '',
     educations: [{ education: '' }],
     yearsExp: '',
     languages: [''],
@@ -52,6 +52,12 @@ const Signup = () => {
   // Testing sign up with pre-filled mock form
   let mockForm;
   useEffect(() => mockForm, []);
+
+  const maxLengthCheck = el => {
+    if (el.target.value.length > el.target.maxLength) {
+      el.target.value = el.target.value.slice(0, el.target.maxLength);
+    }
+  };
 
   const handleYes = () => {
     setFormState({
@@ -316,15 +322,6 @@ const Signup = () => {
 
   //handler for submitting form
   const handleSubmit = async () => {
-    // submitErrorCheck('licence', 'a valid licence number')
-    // submitErrorCheck('accreditation', 'a valid accreditation')
-    // submitErrorCheck('specialtyField', 'a specialty field')
-    // submitErrorCheck('education', 'your education')
-    // submitErrorCheck('specialtyField', 'a specialty field')
-    // submitErrorCheck('yearsExp', 'your years of experience')
-    // submitErrorCheck('languages', 'the languages you speak')
-    // submitErrorCheck(false, 'bloodType', 'your blood type')
-
     handleSubmitArray.forEach(item => {
       if (!item[3]) {
         submitErrorCheck(item[0], item[1]);
@@ -390,7 +387,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    console.log(formState);
+    // console.log(formState);
     switch (formState.step) {
       case 0:
         return (
@@ -448,6 +445,7 @@ const Signup = () => {
               formState={formState}
               onValueChange={onValueChange}
               onKeyUp={handleEnterKey}
+              onInput={maxLengthCheck}
             />
             <ErrorWrapper formState={formState} />
             <div className="form-button-wrapper">
@@ -477,6 +475,7 @@ const Signup = () => {
               handleRemoveClick={handleRemoveClick}
               onArrValueChange={onArrValueChange}
               handleLanguages={handleLanguages}
+              onInput={maxLengthCheck}
             />
             <ErrorWrapper formState={formState} />
             <div className="form-button-wrapper">

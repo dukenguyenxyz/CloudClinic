@@ -12,6 +12,7 @@ const StepThree = ({
   handleRemoveClick,
   onArrValueChange,
   handleLanguages,
+  onInput,
 }) => {
   const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -32,6 +33,7 @@ const StepThree = ({
               value={val.condition}
               placeholder="Condition"
               type="text"
+              maxLength="30"
               icon="condition"
               onValueChange={e =>
                 onArrValueChange(e, 'existingConditions', i, 'condition')
@@ -55,6 +57,7 @@ const StepThree = ({
               value={val.notes}
               placeholder="Comments"
               type="text"
+              maxLength="100"
               icon="textArea"
               onValueChange={e =>
                 onArrValueChange(e, 'existingConditions', i, 'notes')
@@ -71,6 +74,7 @@ const StepThree = ({
               {formState.existingConditions.length - 1 === i && (
                 <Button
                   onClick={() =>
+                    formState.existingConditions[i].condition !== '' &&
                     handleAddClick('existingConditions', {
                       condition: '',
                       startDate: '',
@@ -96,6 +100,7 @@ const StepThree = ({
               value={val.name}
               placeholder="Allergy"
               type="text"
+              maxLength="30"
               icon="alertCircle"
               onValueChange={e => onArrValueChange(e, 'allergies', i, 'name')}
             />
@@ -123,6 +128,7 @@ const StepThree = ({
               {formState.allergies.length - 1 === i && (
                 <Button
                   onClick={() =>
+                    formState.allergies[i].name !== '' &&
                     handleAddClick('allergies', {
                       allergy: '',
                       severity: '',
@@ -148,6 +154,7 @@ const StepThree = ({
               placeholder="Medication"
               type="text"
               icon="medication"
+              maxLength="30"
               onValueChange={e => onArrValueChange(e, 'medication', i, 'name')}
             />
             <AuthInput
@@ -157,10 +164,12 @@ const StepThree = ({
               type="number"
               min="1"
               max="5000"
+              maxLength="4"
               icon="hash"
               onValueChange={e =>
                 onArrValueChange(e, 'medication', i, 'dosage')
               }
+              onInput={onInput}
             />
             <AuthInput
               name="manufacturer"
@@ -168,6 +177,7 @@ const StepThree = ({
               placeholder="Manufacturer"
               type="text"
               icon="briefcase"
+              maxLength="30"
               onValueChange={e =>
                 onArrValueChange(e, 'medication', i, 'manufacturer')
               }
@@ -183,6 +193,7 @@ const StepThree = ({
               {formState.medication.length - 1 === i && (
                 <Button
                   onClick={() =>
+                    formState.medication[i].name !== '' &&
                     handleAddClick('medication', {
                       medication: '',
                       dosage: '',
@@ -218,17 +229,19 @@ const StepThree = ({
         value={formState.licence}
         placeholder="Licence"
         type="text"
+        maxLength="30"
         icon="licence"
         onValueChange={e => onValueChange(e, 'licence')}
       />
       {formState.accreditations.map((val, i) => {
         return (
-          <div key={i}>
+          <div key={i} className="auth-multi">
             <AuthInput
               name="accreditation"
               value={val.accreditation}
               placeholder="Accreditation"
               type="text"
+              maxLength="30"
               icon="briefcase"
               onValueChange={e =>
                 onArrValueChange(e, 'accreditations', i, 'accreditation')
@@ -245,6 +258,7 @@ const StepThree = ({
               {formState.accreditations.length - 1 === i && (
                 <Button
                   onClick={() =>
+                    formState.accreditations[i].accreditation !== '' &&
                     handleAddClick('accreditations', {
                       accreditation: '',
                     })
@@ -261,6 +275,7 @@ const StepThree = ({
         value={formState.specialtyField}
         placeholder="Specialty Field"
         type="text"
+        maxLength="30"
         icon="fileText"
         onValueChange={e => onValueChange(e, 'specialtyField')}
       />
@@ -268,17 +283,19 @@ const StepThree = ({
         value={formState.subSpecialtyField}
         placeholder="Sub Specialty Field"
         type="text"
+        maxLength="30"
         icon="fileText"
         onValueChange={e => onValueChange(e, 'subSpecialtyField')}
       />
       {formState.educations.map((val, i) => {
         return (
-          <div key={i}>
+          <div key={i} className="auth-multi">
             <AuthInput
               name="education"
               value={val.education}
               placeholder="Education"
               type="text"
+              maxLength="30"
               icon="briefcase"
               onValueChange={e =>
                 onArrValueChange(e, 'educations', i, 'education')
@@ -295,6 +312,7 @@ const StepThree = ({
               {formState.educations.length - 1 === i && (
                 <Button
                   onClick={() =>
+                    formState.educations[i].education !== '' &&
                     handleAddClick('educations', {
                       education: '',
                     })
@@ -312,10 +330,11 @@ const StepThree = ({
         placeholder="Years of Experience"
         type="number"
         icon="hash"
+        maxLength="2"
         onValueChange={e => onValueChange(e, 'yearsExp')}
+        onInput={onInput}
       />
       {formState.languages.map((val, i) => {
-        console.log(val);
         return (
           <div key={i} className="auth-multi">
             <AuthSelect
@@ -338,6 +357,7 @@ const StepThree = ({
               {formState.languages.length - 1 === i && (
                 <Button
                   onClick={() =>
+                    formState.languages[i] !== '' &&
                     handleAddClick('languages', {
                       language: '',
                     })

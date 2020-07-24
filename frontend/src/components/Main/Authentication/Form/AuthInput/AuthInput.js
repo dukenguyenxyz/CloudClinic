@@ -41,6 +41,7 @@ const AuthInput = ({
   onKeyUp,
   validationIcon,
   onKeyPress,
+  onInput,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -124,6 +125,7 @@ const AuthInput = ({
         onKeyUp={onKeyUp}
         checked={value && true}
         onKeyPress={onKeyPress}
+        onInput={onInput}
       />
       <i className="icon-validation">{getValidationIcon()}</i>
     </div>

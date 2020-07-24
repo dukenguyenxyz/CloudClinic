@@ -2,23 +2,10 @@ import React from 'react';
 import './Home.scss';
 import Button from '../Button/Button';
 import { Link } from '@reach/router';
-import { motion } from 'framer-motion';
 
-const Home = ({
-  inAnimation,
-  outAnimation,
-  transition,
-  initialAnimation,
-  variants,
-}) => {
+const Home = ({}) => {
   return (
-    <motion.div
-      variants={variants}
-      initial={initialAnimation}
-      animate={inAnimation}
-      exit={outAnimation}
-      transition={transition}
-    >
+    <div>
       <div className="circle-wrapper">
         <div className="home-wrapper">
           <div>
@@ -28,10 +15,10 @@ const Home = ({
               Voluptatum, eum.
             </p>
             <div className="auth-button-wrapper">
-              <Link to="authentication">
+              <Link to="authentication" state={{ signIn: true }}>
                 <Button action="Sign in" color="navy" />
               </Link>
-              <Link to="authentication">
+              <Link to="authentication" state={{ signIn: false }}>
                 <Button action="Sign up" color="pink" />
               </Link>
             </div>
@@ -147,7 +134,7 @@ const Home = ({
           </small>
         </footer>
       </section>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,23 +1,10 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
-const FourOhFour = ({
-  inAnimation,
-  outAnimation,
-  transition,
-  initialAnimation,
-  variants,
-}) => {
+const FourOhFour = ({}) => {
   return (
-    <motion.div
-      variants={variants}
-      initial={initialAnimation}
-      animate={inAnimation}
-      exit={outAnimation}
-      transition={transition}
-    >
+    <div>
       <h1>404: Sorry, page not found</h1>
-    </motion.div>
+    </div>
   );
 };
 

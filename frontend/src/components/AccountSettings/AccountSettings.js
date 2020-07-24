@@ -1,24 +1,12 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import './AccountSettings.scss';
 
-const AccountSettings = ({
-  inAnimation,
-  outAnimation,
-  transition,
-  initialAnimation,
-  variants,
-}) => {
+const AccountSettings = ({}) => {
   return (
-    <motion.div
-      variants={variants}
-      initial={initialAnimation}
-      animate={inAnimation}
-      exit={outAnimation}
-      transition={transition}
-    >
+    <div>
       <h1>Account settings</h1>
-    </motion.div>
+    </div>
   );
 };
 
