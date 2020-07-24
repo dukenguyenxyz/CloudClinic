@@ -13,7 +13,7 @@ import faker from 'faker';
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [formState, setFormState] = useState({
-    step: 0,
+    step: 3,
     isDoctor: false,
     errors: [],
     validationIcon: '',
@@ -381,15 +381,11 @@ const Signup = () => {
   };
 
   const checkEmptyInputFields = key => {
-    console.log('key:', key);
     formState[key].forEach(el => {
-      console.log('el:', el);
       const inputValues = Object.values(el);
       console.log(inputValues);
 
       for (let i = 0; i < inputValues.length; i++) {
-        console.log(inputValues[i]);
-
         if (!inputValues[i]) {
           setFormState({
             ...formState,
@@ -488,7 +484,7 @@ const Signup = () => {
         console.log(error.response);
         setFormState({
           ...formState,
-          errors: [`${error.response.data}`],
+          errors: [`${error.response.data}`, ...formState.errors],
         });
       });
   };
@@ -505,7 +501,7 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    // console.log(formState);
+    console.log(formState);
     switch (formState.step) {
       case 0:
         return (
