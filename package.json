@@ -1,14 +1,19 @@
 {
-  "name": "CloudClinic",
+  "name": "cloudclinic",
   "version": "1.0.0",
   "description": "<img src=\"./CloudClinic_Logo.svg\" width=\"240\"/>",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "backend": "nodemon backend/server.js",
+    "start": "npm start --prefix \"./backend\"",
+    "backend": "npm run nodemon --prefix \"./backend\"",
     "frontend": "npm start --prefix \"./frontend\"",
-    "concurrent": "npm run dev --prefix \"./backend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "concurrent": "npm run dev --prefix \"./backend\"",
+    "test": "npm run test --prefix \"./backend",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix \"./backend\" npm install --prefix \"./frontend\" npm run build -prefix \"./frontend\"",
+    "install": "npm install --prefix \"./backend\" npm install --prefix \"./frontend\""
+  },
+  "engines": {
+    "node": "14.3.0"
   },
   "repository": {
     "type": "git",
