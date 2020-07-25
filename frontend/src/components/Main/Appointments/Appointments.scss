@@ -40,6 +40,11 @@
     border-top: none;
   }
 
+  .rbc-label {
+    color: var(--mid-grey);
+    font-size: 12px;
+  }
+
   .rbc-time-view {
     border: none;
     border-top: 1px solid var(--light-grey);
@@ -62,6 +67,9 @@
       display: grid;
       grid-template-columns: repeat(3, 70px);
       gap: 8px;
+      @media all and (max-width: 820px) {
+        justify-content: center;
+      }
       button {
         padding: 12px 8px;
         border: none;
@@ -90,10 +98,25 @@
 
     .rbc-toolbar-label {
       font-weight: 600;
+      font-size: 28px;
+      white-space: nowrap;
+
+      @media all and (max-width: 820px) {
+        font-size: 28px;
+        margin: 12px 0;
+      }
     }
 
     .rbc-btn-group:last-child {
       justify-content: end;
+
+      @media all and (max-width: 820px) {
+        justify-content: center;
+      }
+    }
+
+    @media all and (max-width: 820px) {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -119,10 +142,18 @@
     background-color: var(--dark-blue);
     border: var(--black);
     box-shadow: var(--box-shadow);
+    font-size: 14px;
   }
 
   .rbc-allday-cell {
     display: none;
+  }
+
+  .rbc-date-cell {
+    a {
+      font-size: 12px;
+      color: var(--dark-grey);
+    }
   }
 
   .rbc-time-header-content {
@@ -159,7 +190,7 @@
 .calendar-form-wrapper {
   margin: 24px 0 96px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.6fr 1fr;
 
   .form-wrapper {
     grid-column: 2/2;
@@ -209,6 +240,9 @@
         display: flex;
         line-height: 1;
         margin-top: 2px;
+        @media all and (max-width: 530px) {
+          margin-left: 0px;
+        }
       }
 
       div {
@@ -222,15 +256,35 @@
 
       .time-slot {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
+
+        span {
+          white-space: nowrap;
+        }
 
         .appointment-time {
           color: var(--mid-grey);
         }
+
+        @media all and (max-width: 530px) {
+          flex-direction: column;
+          align-items: flex-start;
+
+          input {
+            margin: 0 12px 12px 0;
+          }
+        }
       }
     }
+
+    @media all and (max-width: 768px) {
+      grid-column: 1/1;
+    }
+  }
+
+  @media all and (max-width: 768px) {
+    grid-template-columns: 1fr;
   }
 }
 

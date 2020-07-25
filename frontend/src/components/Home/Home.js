@@ -64,10 +64,10 @@ const Home = ({}) => {
               <li>Lorem ipsum dolor sit amet consectetur.</li>
             </ul>
             <div className="auth-button-wrapper">
-              <Link to="authentication">
+              <Link to="authentication" state={{ signIn: true }}>
                 <Button action="Sign in" color="navy" />
               </Link>
-              <Link to="authentication">
+              <Link to="authentication" state={{ signIn: false }}>
                 <Button action="Sign up" color="pink" />
               </Link>
             </div>

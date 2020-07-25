@@ -2,7 +2,7 @@ import React from 'react';
 import Card from '../../../Card/Card';
 
 const Bio = ({ user }) => {
-  console.log(user);
+  // console.log(user);
   return (
     <Card>
       <div className="user-profile-container">

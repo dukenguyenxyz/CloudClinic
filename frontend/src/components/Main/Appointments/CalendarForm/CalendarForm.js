@@ -27,7 +27,7 @@ const CalendarForm = ({
   useEffect(() => {
     // Requst doctor sessions
     // set doctorSessions
-    console.log(moment().add(1, 'hour').toDate());
+    // console.log(moment().add(1, 'hour').toDate());
   }, []);
 
   const handleSubmit = () => {
@@ -64,6 +64,19 @@ const CalendarForm = ({
     // return a new array with the formatted date/times
   };
 
+  const displaySessionTime = () => {
+    if (formState.startTime) {
+      const sessionStart = moment(formState.startTime).format(
+        'dddd Do MMM h:mm'
+      );
+      const sessionEnd = moment(formState.endTime).format('h:mm a');
+      return `${sessionStart} - ${sessionEnd}`;
+    } else {
+      return '';
+    }
+  };
+
+  console.log(formState);
   return (
     <div className="form-wrapper">
       <div className="trim" />
@@ -82,16 +95,20 @@ const CalendarForm = ({
             options={doctors}
             onValueChange={e => handleSelect(e, 'doctor')}
           />
+          <h4>Select an appointment date and time</h4>
           <div className="react-datepicker-master-wrapper">
-            <label htmlFor="date" className="date-label">
+            {/* <label htmlFor="date" className="date-label">
               Select an appointment
-            </label>
+            </label> */}
             <Clock color="#212429" size={14} />
             <DatePicker
               name="date"
+              popperPlacement="bottom-end"
+              placeholderText="Click to select a date and time"
               showTimeSelect
               selected={formState.startTime}
               minDate={moment().toDate()}
+              maxDate={moment().add(1, 'year').toDate()}
               minTime={moment().hours(8).minutes(0)._d}
               maxTime={moment().hours(17).minutes(0)._d}
               // excludeDates={[new Date(), subDays(new Date(), 1)]}
@@ -101,12 +118,16 @@ const CalendarForm = ({
                 setFormState({
                   ...formState,
                   startTime: date,
+                  endTime: moment(date)
+                    .add(formState.sessionDuration, 'minutes')
+                    .toDate(),
                 })
               }
               timeClassName={handleColor}
               dateFormat="MMMM d, yyyy h:mm aa"
             />
           </div>
+          <h4>Select a duration</h4>
           <fieldset className="appointment-time-slot-wrapper">
             <div className="time-slot">
               <div>
@@ -115,12 +136,14 @@ const CalendarForm = ({
                   name="duration"
                   id=""
                   value="15"
-                  onChange={e => handleSessionDuration(e)}
+                  onChange={e => handleSessionDuration(e, '15')}
                 />
                 <span>15 min</span>
               </div>
               {/* <span>{`${moment()}`}</span> */}
-              <span className="appointment-time">Monday 26th 9:30 - 10:00</span>
+              <span className="appointment-time">
+                {formState.sessionDuration === '15' ? displaySessionTime() : ''}
+              </span>
             </div>
             <div className="time-slot">
               <div>
@@ -129,12 +152,14 @@ const CalendarForm = ({
                   name="duration"
                   id=""
                   value="30"
-                  onChange={e => handleSessionDuration(e)}
+                  onChange={e => handleSessionDuration(e, '30')}
                 />
                 <span>30 min</span>
               </div>
               {/* <span>{`${moment()}`}</span> */}
-              <span className="appointment-time">Monday 26th 9:30 - 10:00</span>
+              <span className="appointment-time">
+                {formState.sessionDuration === '30' ? displaySessionTime() : ''}
+              </span>
             </div>
             <div className="time-slot">
               <div>
@@ -143,12 +168,14 @@ const CalendarForm = ({
                   name="duration"
                   id=""
                   value="60"
-                  onChange={e => handleSessionDuration(e)}
+                  onChange={e => handleSessionDuration(e, '60')}
                 />
                 <span>60 min</span>
               </div>
               {/* <span>{`${moment()}`}</span> */}
-              <span className="appointment-time">Monday 26th 9:30 - 10:00</span>
+              <span className="appointment-time">
+                {formState.sessionDuration === '60' ? displaySessionTime() : ''}
+              </span>
             </div>
           </fieldset>
         </div>

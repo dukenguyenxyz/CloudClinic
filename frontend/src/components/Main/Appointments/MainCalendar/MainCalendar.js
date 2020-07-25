@@ -31,8 +31,8 @@ const MainCalendar = ({ formState }) => {
           endAccessor="end"
           defaultDate={moment().toDate()}
           localizer={localizer}
-          defaultView="week"
-          views={['month', 'day', 'week']}
+          defaultView="work_week"
+          views={['month', 'day', 'work_week']}
         />
       </div>
     </div>
