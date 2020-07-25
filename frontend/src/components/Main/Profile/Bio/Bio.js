@@ -14,7 +14,6 @@ const Bio = ({ user }) => {
     return age;
   };
 
-  console.log(user);
   return (
     <Card>
       <div className="user-profile-container">

@@ -2,18 +2,7 @@ import React from 'react';
 import Card from '../../../Card/Card';
 import { v4 as uuidv4 } from 'uuid';
 
-const Allergies = () => {
-  const allergies = [
-    {
-      name: 'Dust allergy',
-      severity: '3',
-    },
-    {
-      name: 'Pollen allergy',
-      severity: '2',
-    },
-  ];
-
+const Allergies = ({ user }) => {
   const severityEnum = Object.freeze({
     '1': 'Minor',
     '2': 'Moderate',
@@ -33,15 +22,17 @@ const Allergies = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>Type</span>
-              {allergies.map(el => (
-                <span key={uuidv4()}>{el.name}</span>
+              {user.clientInfo.allergies.map(el => (
+                <span key={uuidv4()}>
+                  {el.name.charAt(0).toUpperCase() + el.name.slice(1)}
+                </span>
               ))}
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>Severity</span>
-              {allergies.map(el => (
+              {user.clientInfo.allergies.map(el => (
                 <span key={uuidv4()}>{severityEnum[el.severity]}</span>
               ))}
             </div>
