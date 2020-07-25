@@ -47,7 +47,7 @@ export const AuthContextProvider = ({ children }) => {
     lastName: 'Ullrich',
     sex: 'female',
     dateOfBirth: '2000-02-20T07:23:07.967Z',
-    phoneNumber: '132.168.4313 x6094',
+    phoneNumber: '0481925664',
     email: 'Malika_Goyette0@gmail.com',
     title: 'Mr',
     isDoctor: false,

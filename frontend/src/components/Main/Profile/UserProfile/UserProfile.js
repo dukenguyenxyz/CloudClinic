@@ -44,8 +44,8 @@ const UserProfile = props => {
           <div className="sub-cards">
             <Allergies user={user} />
             <Medications user={user} />
-            <Contact />
-            <Address />
+            <Contact user={user} />
+            <Address user={user} />
           </div>
         </div>
         <MedicalHistory />
