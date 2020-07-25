@@ -316,8 +316,13 @@ const runSeeds = () => {
 
 runSeeds();
 
+const dbServer =
+  process.env.NODE_ENV === 'production'
+    ? process.env.MONGO_URI
+    : 'mongodb://127.0.0.1:27017/cloudclinic';
+
 // Commen this section out to test seeds internal
-seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function () {
+seeder.connect(dbServer, function () {
   // Load Mongoose models
   seeder.loadModels(['../models/User.js', '../models/Session.js']);
 

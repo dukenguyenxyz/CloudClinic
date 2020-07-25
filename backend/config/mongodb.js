@@ -3,16 +3,10 @@
 const mongoose = require('mongoose');
 require('colors');
 
-let dbServer;
-
-switch (process.env.NODE_ENV) {
-  case 'development':
-    dbServer = 'mongodb://127.0.0.1:27017/cloudclinic';
-    break;
-  case 'production':
-    dbServer = process.env.MONGO_URI;
-    break;
-}
+const dbServer =
+  process.env.NODE_ENV === 'production'
+    ? process.env.MONGO_URI
+    : 'mongodb://127.0.0.1:27017/cloudclinic';
 
 const connectDB = async () => {
   try {
