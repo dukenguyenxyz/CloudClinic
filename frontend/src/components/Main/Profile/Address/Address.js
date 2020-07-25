@@ -1,23 +1,14 @@
 import React from 'react';
 import Card from '../../../Card/Card';
-const Address = () => {
-  const address = {
-    number: '4',
-    street: 'Beamish Street',
-    city: 'Sydney',
-    state: 'New South Wales',
-    country: 'Australia',
-    postcode: '2149',
-  };
-
+const Address = ({ user }) => {
   const getStreet = () => {
-    return `${address.number} ${address.street}`;
+    return `${user.address.number} ${user.address.street}`;
   };
   const getCityAndState = () => {
-    return `${address.city}, ${address.state}`;
+    return `${user.address.city}, ${user.address.state}`;
   };
   const getCountryAndPostcode = () => {
-    return `${address.country}, ${address.postcode}`;
+    return `${user.address.country}, ${user.address.postcode}`;
   };
 
   return (

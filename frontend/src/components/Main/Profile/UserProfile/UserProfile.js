@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import './UserProfile.scss';
 import Card from '../../../Card/Card';
 import axios from 'axios';
+import SessionHistory from '../SessionHistory/SessionHistory';
 import MedicalHistory from '../MedicalHistory/MedicalHistory';
 import Bio from '../Bio/Bio';
 import Allergies from '../Allergies/Allergies';
@@ -26,9 +27,9 @@ const UserProfile = props => {
         <div className="panel-left">
           <Bio user={user} />
           <div className="sub-cards">
-            <DoctorInfo />
-            <Address />
-            <Contact />
+            <DoctorInfo user={user} />
+            <Address user={user} />
+            <Contact user={user} />
           </div>
         </div>
         <h1>Something here</h1>
@@ -43,12 +44,14 @@ const UserProfile = props => {
           <Bio user={user} />
           <div className="sub-cards">
             <Allergies user={user} />
-            <Medications />
-            <Contact />
-            <Address />
+            <Medications user={user} />
+            <Contact user={user} />
+            <Address user={user} />
           </div>
         </div>
-        <MedicalHistory />
+
+        <MedicalHistory user={user} />
+        <SessionHistory user={user} />
       </div>
     );
   };

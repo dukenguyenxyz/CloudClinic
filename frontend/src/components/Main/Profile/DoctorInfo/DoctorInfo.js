@@ -2,22 +2,8 @@ import React from 'react';
 import Card from '../../../Card/Card';
 import { v4 as uuidv4 } from 'uuid';
 
-const DoctorInfo = () => {
-  // doctorInfo: {
-  //     licence: 'MIT',
-  //     accreditations: ['USyd', 'UNSW'],
-  //     specialtyField: 'Dentistry',
-  //     subSpecialtyField: 'Prosthodontics',
-  //     education: ['ANU', 'Macquarie University'],
-  //     yearsExperience: '10',
-  //     tags: ['Orthodontics', 'Prosthodontics'],
-  //     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-  //   },
-
-  const accreditations = ['Doctor of Medicine', 'Doctor of Dental Medicine'];
-  const languagesSpoken = ['Cantonese', 'Mandarin', 'Japanese', 'English'];
-  const education = ['ANU', 'Macquarie University'];
-  const tags = ['Orthodontics', 'Prosthodontics'];
+const DoctorInfo = ({ user }) => {
+  // const tags = ['Orthodontics', 'Prosthodontics'];
   return (
     <Card>
       <div className="user-profile-container">
@@ -28,13 +14,13 @@ const DoctorInfo = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>licence</span>
-              <span>ADHFDSJH32</span>
+              <span>{user.doctorInfo.licence}</span>
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>accreditations</span>
-              {accreditations.map(el => (
+              {user.doctorInfo.accreditations.map(el => (
                 <span key={uuidv4()}>{el}</span>
               ))}
             </div>
@@ -42,19 +28,19 @@ const DoctorInfo = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>specialty</span>
-              <span>Dentistry</span>
+              <span>{user.doctorInfo.specialtyField}</span>
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>subspecialty</span>
-              <span>Prosthodontics</span>
+              <span>{user.doctorInfo.subSpecialtyField}</span>
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>Education</span>
-              {education.map(el => (
+              {user.doctorInfo.education.map(el => (
                 <span key={uuidv4()}>{el}</span>
               ))}
             </div>
@@ -62,25 +48,25 @@ const DoctorInfo = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>Experience</span>
-              <span>10 Years</span>
+              <span>{user.doctorInfo.yearsExperience} Years</span>
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>Languages</span>
-              {languagesSpoken.map(el => (
+              {user.doctorInfo.languagesSpoken.map(el => (
                 <span key={uuidv4()}>{el}</span>
               ))}
             </div>
           </div>
-          <div className="grid-item">
+          {/* <div className="grid-item">
             <div className="user-info">
               <span>Tags</span>
               {tags.map(el => (
                 <span key={uuidv4()}>{el}</span>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </Card>

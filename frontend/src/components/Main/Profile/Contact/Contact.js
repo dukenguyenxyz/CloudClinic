@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '../../../Card/Card';
 
-const Contact = () => {
+const Contact = ({ user }) => {
   return (
     <Card>
       <div className="user-profile-container">
@@ -12,13 +12,13 @@ const Contact = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>Phone</span>
-              <span>04104820594</span>
+              <span>{user.phoneNumber}</span>
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>Email</span>
-              <span>lorem@gmail.com</span>
+              <span>{user.email}</span>
             </div>
           </div>
         </div>
