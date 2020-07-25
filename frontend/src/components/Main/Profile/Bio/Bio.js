@@ -46,12 +46,6 @@ const Bio = ({ user }) => {
           </div>
           <div className="grid-item">
             <div className="user-info">
-              <span>Weight</span>
-              <span>{user.clientInfo.weight} kg</span>
-            </div>
-          </div>
-          <div className="grid-item">
-            <div className="user-info">
               <span>Sex</span>
               <span>{user.sex === 'male' ? 'M' : 'F'}</span>
             </div>
@@ -62,12 +56,24 @@ const Bio = ({ user }) => {
               <span>{moment(user.dateOfBirth).format('DD/MM/YYYY')}</span>
             </div>
           </div>
-          <div className="grid-item">
-            <div className="user-info">
-              <span>Blood Type</span>
-              <span>{user.clientInfo.bloodType}</span>
-            </div>
-          </div>
+          {user.clientInfo ? (
+            <>
+              <div className="grid-item">
+                <div className="user-info">
+                  <span>Weight</span>
+                  <span>{user.clientInfo.weight} kg</span>
+                </div>
+              </div>
+              <div className="grid-item">
+                <div className="user-info">
+                  <span>Blood Type</span>
+                  <span>{user.clientInfo.bloodType}</span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     </Card>

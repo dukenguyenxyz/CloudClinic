@@ -27,7 +27,7 @@ const UserProfile = props => {
         <div className="panel-left">
           <Bio user={user} />
           <div className="sub-cards">
-            <DoctorInfo />
+            <DoctorInfo user={user} />
             <Address user={user} />
             <Contact user={user} />
           </div>
