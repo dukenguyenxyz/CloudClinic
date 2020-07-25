@@ -316,7 +316,7 @@ const runSeeds = () => {
 
 runSeeds();
 
-// // Commen this section out to test seeds internal
+// Commen this section out to test seeds internal
 seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function () {
   // Load Mongoose models
   seeder.loadModels(['../models/User.js', '../models/Session.js']);
