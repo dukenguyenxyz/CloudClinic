@@ -5,15 +5,20 @@ import Signin from './Signin/Signin';
 import Button from '../../Button/Button';
 
 const Authentication = ({ location }) => {
-  // we get true or false value from location.state.signIn based on the state prop from either the sign in or sign up Link component
-  // see Link component in home component if confused
-  const [authAction, setAuthAction] = useState(location.state.signIn);
-
+  const [authAction, setAuthAction] = useState(false);
   const jwt = localStorage.getItem('jwt');
 
   useEffect(() => {
     // if jwt exists and is valid, set auth action to true to return the sign in view
-    if (jwt) setAuthAction(true);
+    if (jwt) {
+      setAuthAction(true);
+    }
+
+    // we get true or false value from location.state.signIn based on the state prop from either the sign in or sign up Link component
+    // see Link component in home component if confused
+    if (location.state) {
+      setAuthAction(location.state.signIn);
+    }
   }, []);
 
   const handleClick = () => {

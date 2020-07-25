@@ -123,8 +123,8 @@ const Signup = () => {
       },
     };
 
-    console.log(newEmail);
-    console.log('mounted');
+    // console.log(newEmail);
+    // console.log('mounted');
   }, []);
 
   const maxLengthCheck = el => {

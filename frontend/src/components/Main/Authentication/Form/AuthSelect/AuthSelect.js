@@ -7,6 +7,7 @@ import {
   User,
   Navigation,
   MessageCircle,
+  UserPlus,
 } from 'react-feather';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -32,6 +33,8 @@ const AuthSelect = ({
         return <Navigation color="#212429" size={14} />;
       case 'language':
         return <MessageCircle color="#212429" size={14} />;
+      case 'userPlus':
+        return <UserPlus color="#212429" size={14} />;
       default:
         return '';
     }
@@ -49,6 +52,8 @@ const AuthSelect = ({
         return 'Select sex';
       case 'language':
         return 'Select languages spoken';
+      case 'doctor':
+        return 'Select a doctor';
       default:
         return 'Choose here';
     }

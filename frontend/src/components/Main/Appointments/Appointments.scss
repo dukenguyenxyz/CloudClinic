@@ -84,7 +84,7 @@
       }
 
       .rbc-active {
-        background: var(--accent);
+        background: var(--mid-blue);
       }
     }
 
@@ -153,5 +153,94 @@
         }
       }
     }
+  }
+}
+
+.calendar-form-wrapper {
+  margin: 24px 0 96px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .form-wrapper {
+    grid-column: 2/2;
+    margin-right: 0;
+    overflow: visible;
+
+    .react-datepicker-wrapper {
+      width: 100%;
+      .react-datepicker__input-container {
+        width: 100%;
+        align-self: end;
+        position: relative;
+        display: flex;
+        align-items: center;
+        color: var(--black);
+        margin-bottom: var(--component-padding);
+        input {
+          width: 100%;
+          padding: 12px;
+          border-radius: 4px;
+          border: none;
+          outline: none;
+          padding-left: 38px;
+          background: none;
+          color: var(--black);
+
+          border: 1px solid var(--light-grey);
+
+          &::placeholder {
+            color: #bfbfbf;
+          }
+        }
+      }
+    }
+
+    .appointment-time-slot-wrapper {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      border: 1px solid var(--light-grey);
+      padding: 24px;
+      border-radius: 4px;
+
+      span {
+        margin-left: 16px;
+        font-size: 14px;
+        color: var(--mid-grey);
+        display: flex;
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      div {
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+      }
+
+      & > div:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.react-datepicker-master-wrapper {
+  position: relative;
+  .date-label {
+    position: absolute;
+    font-size: 14px;
+    color: var(--mid-grey);
+    transform: scale(0.8) translateY(-12px);
+    padding: 0 4px;
+    background-color: var(--white);
+    z-index: 1;
+  }
+
+  svg {
+    position: absolute;
+    margin-left: 12px;
+    top: 14px;
+    display: flex;
   }
 }

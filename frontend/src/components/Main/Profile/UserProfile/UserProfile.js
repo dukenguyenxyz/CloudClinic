@@ -16,7 +16,6 @@ const UserProfile = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log(user);
     // if user obj not in state, make axios call the get user info
     // set user with authcontext callback
   }, []);

@@ -6,7 +6,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
-const MainCalendar = () => {
+const MainCalendar = ({ formState }) => {
   const [state, setState] = useState({
     name: 'React',
     events,
@@ -31,6 +31,7 @@ const MainCalendar = () => {
           endAccessor="end"
           defaultDate={moment().toDate()}
           localizer={localizer}
+          defaultView="week"
           views={['month', 'day', 'week']}
         />
       </div>
