@@ -206,20 +206,29 @@
       span {
         margin-left: 16px;
         font-size: 14px;
-        color: var(--mid-grey);
         display: flex;
         line-height: 1;
         margin-top: 2px;
       }
 
       div {
-        margin-bottom: 24px;
         display: flex;
         align-items: center;
       }
 
       & > div:last-of-type {
         margin-bottom: 0;
+      }
+
+      .time-slot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .appointment-time {
+          color: var(--mid-grey);
+        }
       }
     }
   }

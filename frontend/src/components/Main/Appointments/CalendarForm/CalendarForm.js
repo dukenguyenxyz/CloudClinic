@@ -108,35 +108,47 @@ const CalendarForm = ({
             />
           </div>
           <fieldset className="appointment-time-slot-wrapper">
-            <div>
-              <input
-                type="radio"
-                name="duration"
-                id=""
-                value="15"
-                onChange={e => handleSessionDuration(e)}
-              />
-              <span>15 min</span>
+            <div className="time-slot">
+              <div>
+                <input
+                  type="radio"
+                  name="duration"
+                  id=""
+                  value="15"
+                  onChange={e => handleSessionDuration(e)}
+                />
+                <span>15 min</span>
+              </div>
+              {/* <span>{`${moment()}`}</span> */}
+              <span className="appointment-time">Monday 26th 9:30 - 10:00</span>
             </div>
-            <div>
-              <input
-                type="radio"
-                name="duration"
-                id=""
-                value="30"
-                onChange={e => handleSessionDuration(e)}
-              />
-              <span>30 min</span>
+            <div className="time-slot">
+              <div>
+                <input
+                  type="radio"
+                  name="duration"
+                  id=""
+                  value="30"
+                  onChange={e => handleSessionDuration(e)}
+                />
+                <span>30 min</span>
+              </div>
+              {/* <span>{`${moment()}`}</span> */}
+              <span className="appointment-time">Monday 26th 9:30 - 10:00</span>
             </div>
-            <div>
-              <input
-                type="radio"
-                name="duration"
-                id=""
-                value="60"
-                onChange={e => handleSessionDuration(e)}
-              />
-              <span>60 min</span>
+            <div className="time-slot">
+              <div>
+                <input
+                  type="radio"
+                  name="duration"
+                  id=""
+                  value="60"
+                  onChange={e => handleSessionDuration(e)}
+                />
+                <span>60 min</span>
+              </div>
+              {/* <span>{`${moment()}`}</span> */}
+              <span className="appointment-time">Monday 26th 9:30 - 10:00</span>
             </div>
           </fieldset>
         </div>
