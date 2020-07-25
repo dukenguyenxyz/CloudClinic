@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-continue */
 /* eslint-disable radix */
 const seeder = require('mongoose-seed');
@@ -60,6 +61,8 @@ const generateUser = () => {
 // Currently only seeding with one item of each array, good if could seed one array with multiple unique items
 
 const seedClients = (numClients) => {
+  const clients = [];
+
   const clientInfo = {
     titles: ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'],
     bloodTypes: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
@@ -121,8 +124,14 @@ const seedClients = (numClients) => {
 
     const newClient = Object.assign(generateUser(), clientInfoGen);
 
-    userDocs[0].documents.push(newClient);
+    clients.push(newClient);
+
+    // userDocs[0].documents.push(newClient);
   }
+
+  userDocs[0].documents.push(clients);
+
+  return clients;
 };
 
 // Seed tags
@@ -240,7 +249,7 @@ const seedFreeSessions = (doctorsP) => {
       startTime = endTime.add(restMin, 'minutes');
     }
 
-    return sessions;
+    return [...sessions];
   };
 
   doctorsP.forEach((doctor) => {
@@ -249,6 +258,7 @@ const seedFreeSessions = (doctorsP) => {
         startTime: setHour(day, rangeP[0]),
         endTime: setHour(day, range.morning[1]),
         doctor: doctor._id,
+        client: null,
       };
     };
 
@@ -273,25 +283,40 @@ const seedFreeSessions = (doctorsP) => {
         );
         sessionDocs[0].documents.push(freeSessions);
 
-        console.log(freeSessions);
+        // console.log(freeSessions);
       });
     }
   });
 };
 
-const seedBookings = (rate) => {
-  console.log(rate);
+const seedBookings = (clients, rate = 6) => {
+  const sessions = sessionDocs[0].documents;
+
+  // // Check whether we are actually getting back a flattened array of objects
+  console.log('This should be a Session object:', sessions[0]);
+
+  // // Rate of booking
+  const finalRate = parseInt((rate / 10) * sessions.length, 10);
+
+  // // Sessions that are randomly chosen for booking
+  const toBookSessions = _.sampleSize(sessions, finalRate);
+
+  toBookSessions.forEach((session) => {
+    session.client = _.sample(clients)._id;
+  });
 };
 
 const runSeeds = () => {
-  seedClients(30);
+  const clients = seedClients(30);
   const doctors = seedDoctors(10);
   seedFreeSessions(doctors);
-  // seedBookings(60);
+  sessionDocs[0].documents = _.flattenDeep(sessionDocs[0].documents);
+  seedBookings(clients);
 };
 
 runSeeds();
 
+// // Commen this section out to test seeds internal
 seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function () {
   // Load Mongoose models
   seeder.loadModels(['../models/User.js', '../models/Session.js']);
