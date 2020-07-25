@@ -42,7 +42,7 @@ const UserProfile = props => {
         <div className="panel-left">
           <Bio user={user} />
           <div className="sub-cards">
-            <Allergies />
+            <Allergies user={user} />
             <Medications />
             <Contact />
             <Address />

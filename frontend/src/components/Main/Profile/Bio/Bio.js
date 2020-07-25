@@ -2,15 +2,16 @@ import React from 'react';
 import Card from '../../../Card/Card';
 
 const Bio = ({ user }) => {
+  console.log(user);
   return (
     <Card>
       <div className="user-profile-container">
         <div className="user-header-wrapper">
           <div className="avatar" />
           <div className="name">
-            {user.isDoctor && 'Dr.'} Michael
+            {user.isDoctor && 'Dr.'} {user.firstName}
             <br />
-            Gordon
+            {user.lastName}
           </div>
         </div>
         <div className="user-details-wrapper">
