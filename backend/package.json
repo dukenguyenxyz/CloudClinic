@@ -9,7 +9,7 @@
     "test": "jest --watch  --runInBand --detectOpenHandles",
     "frontend": "npm start --prefix \"../frontend\"",
     "dev": "concurrently \"npm run nodemon\" \"npm run frontend\"",
-    "seed": "node \"src/seed/seed\""
+    "seed": "cd src && cd seed && node seed"
   },
   "repository": {
     "type": "git",

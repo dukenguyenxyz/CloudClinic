@@ -57,74 +57,6 @@ const generateUser = () => {
   };
 };
 
-// Currently only seeding with one item of each array, good if could seed one array with multiple unique items
-
-const seedClients = (numClients) => {
-  const clientInfo = {
-    titles: ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'],
-    bloodTypes: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-    medications: [
-      'penicilin',
-      'prednisone',
-      'metformin',
-      'ibuprofen',
-      'paracetamol',
-    ],
-    conditions: [
-      'asthma',
-      'hypertension',
-      'arthritis',
-      'diabetes',
-      'bronchitis',
-      'influenza',
-    ],
-    allergies: [
-      'eggs',
-      'milk',
-      'peanuts',
-      'soy',
-      'wheat',
-      'shellfish',
-      'sesame',
-    ],
-  };
-
-  for (let i = 0; i < numClients; i += 1) {
-    const clientInfoGen = {
-      title: _.sample(clientInfo.titles),
-      isDoctor: false,
-      clientInfo: {
-        weight: _.random(40, 100),
-        medicalHistory: [
-          {
-            startDate: faker.date.recent(),
-            condition: _.sample(clientInfo.conditions),
-            notes: 'Lorem Ipsum',
-          },
-        ],
-        allergies: [
-          {
-            name: _.sample(clientInfo.allergies),
-            severity: _.random(1, 5),
-          },
-        ],
-        medication: [
-          {
-            name: _.sample(clientInfo.medications),
-            dosage: _.random(1, 5),
-            manufacturer: faker.company.companyName(),
-          },
-        ],
-        bloodType: _.sample(clientInfo.bloodType),
-      },
-    };
-
-    const newClient = Object.assign(generateUser(), clientInfoGen);
-
-    userDocs[0].documents.push(newClient);
-  }
-};
-
 // Seed tags
 // Seed multiple languages not just one
 const seedDoctors = (numDoctors) => {
@@ -206,6 +138,7 @@ const seedFreeSessions = (doctorsP) => {
 
   const startDate = moment().add(1, 'days');
   const endDate = moment().add(1, 'months');
+  const numDays = endDate.diff(startDate, 'days');
 
   const range = {
     morning: [8, 9],
@@ -262,6 +195,20 @@ const seedFreeSessions = (doctorsP) => {
         continue;
       }
 
+      // // Create morning Sessions
+      // const morningSessions = {
+      //   startTime: setHour(day, range.morning[0]),
+      //   endTime: setHour(day, range.morning[1]),
+      //   doctor: doctor._id,
+      // };
+
+      // // Create afternoon Sessions
+      // const afternoonSessions = {
+      //   startTime: setHour(day, range.afternoon[0]),
+      //   endTime: setHour(day, range.afternoon[1]),
+      //   doctor: doctor._id,
+      // };
+
       const morningSessions = sessionBluePrint(day, range.morning);
       const afternoonSessions = sessionBluePrint(day, range.afternoon);
 
@@ -279,32 +226,5 @@ const seedFreeSessions = (doctorsP) => {
   });
 };
 
-const seedBookings = (rate) => {
-  console.log(rate);
-};
-
-const runSeeds = () => {
-  seedClients(30);
-  const doctors = seedDoctors(10);
-  seedFreeSessions(doctors);
-  // seedBookings(60);
-};
-
-runSeeds();
-
-seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function () {
-  // Load Mongoose models
-  seeder.loadModels(['../models/User.js', '../models/Session.js']);
-
-  // Clear specified collections
-  seeder.clearModels(['User', 'Session'], function () {
-    // Callback to populate DB once collections have been cleared
-    seeder.populateModels(userDocs, function () {
-      seeder.populateModels(sessionDocs, function () {
-        seeder.disconnect();
-      });
-    });
-  });
-});
-
-console.log(`Seeding starts`.green.bold);
+const doctors = seedDoctors(10);
+seedFreeSessions(doctors);
