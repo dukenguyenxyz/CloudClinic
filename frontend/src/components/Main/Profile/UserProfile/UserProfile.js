@@ -43,7 +43,7 @@ const UserProfile = props => {
           <Bio user={user} />
           <div className="sub-cards">
             <Allergies user={user} />
-            <Medications />
+            <Medications user={user} />
             <Contact />
             <Address />
           </div>

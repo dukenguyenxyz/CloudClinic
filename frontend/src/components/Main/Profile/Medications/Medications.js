@@ -2,19 +2,7 @@ import React from 'react';
 import Card from '../../../Card/Card';
 import { v4 as uuidv4 } from 'uuid';
 
-const Medications = () => {
-  const medications = [
-    {
-      name: 'Magic mushroom',
-      dosage: '200',
-      manufacturer: 'Brazil',
-    },
-    {
-      name: 'Cannabis',
-      dosage: '100',
-      manufacturer: 'Australia',
-    },
-  ];
+const Medications = ({ user }) => {
   return (
     <Card>
       <div className="user-profile-container">
@@ -25,15 +13,17 @@ const Medications = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>Type</span>
-              {medications.map(el => (
-                <span key={uuidv4()}>{el.name}</span>
+              {user.clientInfo.medication.map(el => (
+                <span key={uuidv4()}>
+                  {el.name.charAt(0).toUpperCase() + el.name.slice(1)}
+                </span>
               ))}
             </div>
           </div>
           <div className="grid-item">
             <div className="user-info">
               <span>Brand</span>
-              {medications.map(el => (
+              {user.clientInfo.medication.map(el => (
                 <span key={uuidv4()}>{el.manufacturer}</span>
               ))}
             </div>
@@ -41,7 +31,7 @@ const Medications = () => {
           <div className="grid-item">
             <div className="user-info">
               <span>Ml</span>
-              {medications.map(el => (
+              {user.clientInfo.medication.map(el => (
                 <span key={uuidv4()}>{el.dosage}</span>
               ))}
             </div>
