@@ -1,4 +1,4 @@
-describe('Doctor Sign Up', () => {
+describe('Client Sign Up', () => {
   it('Visits CloudClinic', () => {
     cy.visit('http://localhost:3000');
 
