@@ -1,8 +1,8 @@
 /* eslint-disable radix */
-const faker = require('faker');
-const moment = require('moment');
-const _ = require('lodash');
 const seeder = require('mongoose-seed');
+const faker = require('faker');
+const _ = require('lodash');
+const moment = require('moment');
 require('colors');
 
 // // Data array containing seed data - documents organized by Model
@@ -14,7 +14,7 @@ const data = [
 ];
 
 const generateUser = () => {
-  const sexes = ['male', 'female', 'other'];
+  const sexes = ['male', 'female'];
 
   return {
     firstName: faker.name.firstName(),
@@ -185,12 +185,12 @@ runSeeds();
 seeder.connect('mongodb://127.0.0.1:27017/cloudclinic', function () {
   // Load Mongoose models
   seeder.loadModels([
-    './../backend/src/models/User.js',
-    './../backend/src/models/Session.js',
+    '../models/User.js',
+    // '../models/Session.js',
   ]);
 
   // Clear specified collections
-  seeder.clearModels(['User, Session'], function () {
+  seeder.clearModels(['User'], function () {
     // Callback to populate DB once collections have been cleared
     seeder.populateModels(data, function () {
       seeder.disconnect();
