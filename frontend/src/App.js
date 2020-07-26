@@ -17,7 +17,7 @@ import Patients from './components/Main/Patients/Patients';
 import Home from './components/Home/Home';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PrivateDoctorRoute from './components/PrivateDoctorRoute/PrivateDoctorRoute';
-import AccountSettings from './components/AccountSettings/AccountSettings';
+import AccountSettings from './components/Main/AccountSettings/AccountSettings';
 import UserProfile from './components/Main/Profile/UserProfile/UserProfile';
 import PatientList from './components/Main/Patients/PatientList/PatientList';
 import ViewNavigation from './components/ViewNavigation/ViewNavigation';

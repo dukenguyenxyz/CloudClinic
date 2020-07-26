@@ -9,6 +9,7 @@ import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import faker from 'faker';
+import { signUpClient, signUpDoctor } from '../../../AxiosTest/userRoutes';
 
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
@@ -383,7 +384,6 @@ const Signup = () => {
   const checkEmptyInputFields = key => {
     formState[key].forEach(el => {
       const inputValues = Object.values(el);
-      console.log(inputValues);
 
       for (let i = 0; i < inputValues.length; i++) {
         if (!inputValues[i]) {
@@ -451,9 +451,9 @@ const Signup = () => {
       });
     }
 
-    const developmentUrl = 'http://localhost:5000';
+    // const developmentUrl = 'http://localhost:5000';
     // const productionUrl = 'http://cloudclinic.tech';
-    const endpoint = `${developmentUrl}/api/users/signup`;
+    // const endpoint = `${developmentUrl}/api/users/signup`;
 
     // axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -463,30 +463,37 @@ const Signup = () => {
       ? sanitizedDoctorForm()
       : sanitizedClientForm();
 
-    axios
-      .post(endpoint, /*sanitizedForm*/ mockForm2, {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
+    signUpClient(sanitizedForm, setUser, '/profile', error =>
+      setFormState({
+        ...formState,
+        errors: [`${error.response.data}`, ...formState.errors],
       })
-      .then(response => {
-        console.log(response.data.user);
+    );
 
-        const jwt = response.data.token;
-        const user = response.data.user;
-        localStorage.setItem('jwt', jwt);
+    // axios
+    //   .post(endpoint, /*sanitizedForm*/ mockForm2, {
+    //     headers: {
+    //       'Content-Type': 'application/json; charset=utf-8',
+    //     },
+    //   })
+    //   .then(response => {
+    //     console.log(response.data.user);
 
-        setUser(user);
+    //     const jwt = response.data.token;
+    //     const user = response.data.user;
+    //     localStorage.setItem('jwt', jwt);
 
-        navigate('/profile');
-      })
-      .catch(error => {
-        console.log(error.response);
-        setFormState({
-          ...formState,
-          errors: [`${error.response.data}`, ...formState.errors],
-        });
-      });
+    //     setUser(user);
+
+    //     navigate('/profile');
+    //   })
+    //   .catch(error => {
+    //     console.log(error.response);
+    //     setFormState({
+    //       ...formState,
+    //       errors: [`${error.response.data}`, ...formState.errors],
+    //     });
+    //   });
   };
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
@@ -501,7 +508,6 @@ const Signup = () => {
   };
 
   const displayFormStep = () => {
-    console.log(formState);
     switch (formState.step) {
       case 0:
         return (
@@ -666,7 +672,6 @@ const Signup = () => {
           </div>
         );
     }
-    console.log(formState);
   };
 
   return displayFormStep();

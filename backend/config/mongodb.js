@@ -2,11 +2,9 @@
 
 const mongoose = require('mongoose');
 require('colors');
-
-const dbServer =
-  process.env.NODE_ENV === 'production'
-    ? process.env.MONGO_URI
-    : 'mongodb://127.0.0.1:27017/cloudclinic';
+const dotenv = require('dotenv');
+// Access dotenv
+dotenv.config({ path: './.env' });
 
 const connectDB = async () => {
   try {

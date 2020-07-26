@@ -19,6 +19,10 @@ const UserProfile = props => {
   useEffect(() => {
     // if user obj not in state, make axios call the get user info
     // set user with authcontext callback
+    // creat a user {}
+    // get the user string from local storage
+    // parse the string
+    // passing to the user object
   }, []);
 
   const doctorProfile = () => {

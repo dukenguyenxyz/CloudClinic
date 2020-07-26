@@ -7,6 +7,9 @@ const _ = require('lodash');
 const moment = require('moment');
 const mongoose = require('mongoose');
 require('colors');
+const dotenv = require('dotenv');
+// Access dotenv
+dotenv.config({ path: '../../config/.env' });
 
 // // userDocs array containing seed userDocs - documents organized by Model
 const schemaDocs = (modelName) => {
@@ -316,13 +319,10 @@ const runSeeds = () => {
 
 runSeeds();
 
-const dbServer =
-  process.env.NODE_ENV === 'production'
-    ? process.env.MONGO_URI
-    : 'mongodb://127.0.0.1:27017/cloudclinic';
+const dbServer = process.env.MONGO_URI;
 
 // Commen this section out to test seeds internal
-seeder.connect(process.env.MONGO_URI, function () {
+seeder.connect(dbServer, function () {
   // Load Mongoose models
   seeder.loadModels(['../models/User.js', '../models/Session.js']);
 
