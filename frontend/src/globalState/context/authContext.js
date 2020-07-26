@@ -3,45 +3,41 @@ import React, { useState } from 'react';
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
   // First time user
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
   // ***** SUPER USER DOCTOR ****** //
-  //   const [user, setUser] = useState({
-  //   address: {
-  //     number: 173,
-  //     street: 'Amya Divide',
-  //     city: 'Halvorsontown',
-  //     state: 'Utah',
-  //     country: 'Poland',
-  //     postcode: 76960
-  //   },
-  //   doctorInfo: {
-  //     accreditations: [],
-  //     education: [
-  //       'Australian National University'
-  //     ],
-  //     tags: [],
-  //     languagesSpoken: [
-  //       'Portuguese'
-  //     ],
-  //     licence: 'AustDocL36',
-  //     specialtyField: 'Cardiology',
-  //     subSpecialtyField: 'Paediatrics',
-  //     yearsExperience: 42,
-  //     rating: 3
-  //   },
-  //   _id: '5f1ce5596be99c5a19d56461',
-  //   firstName: 'Lamar',
-  //   lastName: 'Stoltenberg',
-  //   sex: 'male',
-  //   dateOfBirth: '2020-06-19T09:06:39.083Z',
-  //   phoneNumber: '596-170-7132 x438',
-  //   email: 'Vivian36@gmail.com',
-  //   title: 'Dr',
-  //   isDoctor: true,
-  //   createdAt: '2020-07-26T02:07:22.335Z',
-  //   __v: 1
-  // });
+  const [user, setUser] = useState({
+    address: {
+      number: 173,
+      street: 'Amya Divide',
+      city: 'Halvorsontown',
+      state: 'Utah',
+      country: 'Poland',
+      postcode: 76960,
+    },
+    doctorInfo: {
+      accreditations: [],
+      education: ['Australian National University'],
+      tags: [],
+      languagesSpoken: ['Portuguese'],
+      licence: 'AustDocL36',
+      specialtyField: 'Cardiology',
+      subSpecialtyField: 'Paediatrics',
+      yearsExperience: 42,
+      rating: 3,
+    },
+    _id: '5f1ce5596be99c5a19d56461',
+    firstName: 'Lamar',
+    lastName: 'Stoltenberg',
+    sex: 'male',
+    dateOfBirth: '2020-06-19T09:06:39.083Z',
+    phoneNumber: '596-170-7132 x438',
+    email: 'Vivian36@gmail.com',
+    title: 'Dr',
+    isDoctor: true,
+    createdAt: '2020-07-26T02:07:22.335Z',
+    __v: 1,
+  });
 
   // localStorage.setItem(
   //   'jwt',

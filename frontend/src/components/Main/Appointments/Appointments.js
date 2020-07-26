@@ -24,7 +24,14 @@ const Appointments = () => {
   });
 
   const [doctorAvailability, setDoctorAvailability] = useState({
-    sessions: [{ startTime: '', endTime: '' }],
+    openningTime: moment().set({ hour: 6, minute: 0 }).toDate(),
+    closingTime: moment().set({ hour: 18, minute: 0 }).toDate(),
+    lunchBreakStart: moment().set({ hour: 12, minute: 0 }).toDate(),
+    lunchBreakEnd: moment().set({ hour: 13, minute: 0 }).toDate(),
+    unavailableDateTimes: [
+      { startDateTime: moment().toDate(), endDateTime: moment().toDate() },
+    ],
+    rrule: '',
   });
 
   useEffect(() => {

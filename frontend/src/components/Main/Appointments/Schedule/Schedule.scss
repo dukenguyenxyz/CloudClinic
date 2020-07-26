@@ -1,0 +1,32 @@
+.schedule-wrapper {
+  .client-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+
+    .client {
+      display: flex;
+      align-items: center;
+
+      .name {
+        margin-left: 16px;
+      }
+    }
+
+    .process {
+      display: flex;
+
+      & > :first-child {
+        margin-right: 8px;
+      }
+
+      button {
+        padding: unset;
+        padding: 4px 12px;
+        font-size: 10px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}

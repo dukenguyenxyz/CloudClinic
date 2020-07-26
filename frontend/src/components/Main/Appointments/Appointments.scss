@@ -336,3 +336,61 @@
     grid-column: 1/1;
   }
 }
+
+.start-end-time-wrapper {
+  display: grid;
+  padding-top: 12px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  h5 {
+    color: var(--mid-grey);
+  }
+
+  .start-end-time-container {
+    display: flex;
+    flex-direction: column;
+
+    .lunch-time {
+      position: relative;
+    }
+  }
+}
+
+#appointment-form-button-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  i {
+    display: flex;
+  }
+  .button-wrapper {
+    button {
+      padding: 8px;
+    }
+    svg {
+      position: unset;
+      margin-left: unset;
+      top: unset;
+      display: unset;
+    }
+  }
+
+  .checkbox-wrapper {
+    display: flex;
+  }
+
+  .grid-item {
+    display: flex;
+    font-size: 14px;
+    & > :first-child {
+      margin-right: 12px;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.react-datepicker {
+  display: flex !important;
+}

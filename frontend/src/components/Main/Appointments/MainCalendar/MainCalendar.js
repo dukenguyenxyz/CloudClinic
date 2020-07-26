@@ -22,7 +22,7 @@ const MainCalendar = ({ formState }) => {
     <div>
       <div
         style={{
-          height: '100vh',
+          height: '90vh',
         }}
       >
         <Calendar

@@ -5,10 +5,12 @@ import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import Button from '../../../Button/Button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Clock } from 'react-feather';
+import { Clock, Calendar } from 'react-feather';
 import moment from 'moment';
 import { setHours, setMinutes } from 'date-fns';
 import axios from 'axios';
+import Schedule from '../Schedule/Schedule';
+
 const CalendarForm = ({
   clientFormState,
   setClientFormState,
@@ -116,31 +118,193 @@ const CalendarForm = ({
                   <h1>Set your availability</h1>
                 </div>
                 <div>
-                  <h4>Select your openning hour</h4>
+                  <h4>Select your working hours</h4>
                   <div className="react-datepicker-master-wrapper">
-                    <Clock color="#212429" size={14} />
-                    <DatePicker />
-                  </div>
-                </div>
-                <div>
-                  <h4>Select your closing hour</h4>
-                  <div className="react-datepicker-master-wrapper">
-                    <Clock color="#212429" size={14} />
-                    <DatePicker />
+                    <div className="start-end-time-wrapper">
+                      <div className="start-end-time-container">
+                        <h5>Open</h5>
+                        <div className="lunch-time">
+                          <Clock color="#212429" size={14} />
+                          <DatePicker
+                            selected={doctorAvailability.openningTime}
+                            onChange={date =>
+                              setDoctorAvailability({
+                                ...doctorAvailability,
+                                openningTime: date,
+                              })
+                            }
+                            showTimeSelect
+                            showTimeSelectOnly
+                            minTime={moment().hours(5).minutes(0)._d}
+                            maxTime={moment().hours(22).minutes(0)._d}
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="h:mm aa"
+                          />
+                        </div>
+                      </div>
+                      <div className="start-end-time-container">
+                        <h5>Close</h5>
+                        <div className="lunch-time">
+                          <Clock color="#212429" size={14} />
+                          <DatePicker
+                            selected={doctorAvailability.closingTime}
+                            onChange={date =>
+                              setDoctorAvailability({
+                                ...doctorAvailability,
+                                closingTime: date,
+                              })
+                            }
+                            showTimeSelect
+                            showTimeSelectOnly
+                            minTime={doctorAvailability.openningTime}
+                            maxTime={moment().hours(23).minutes(0)._d}
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="h:mm aa"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div>
                   <h4>Select your lunch break hours</h4>
                   <div className="react-datepicker-master-wrapper">
-                    <Clock color="#212429" size={14} />
-                    <DatePicker />
+                    <div className="start-end-time-wrapper">
+                      <div className="start-end-time-container">
+                        <h5>Start</h5>
+                        <div className="lunch-time">
+                          <Clock color="#212429" size={14} />
+                          <DatePicker
+                            selected={doctorAvailability.lunchBreakStart}
+                            onChange={date =>
+                              setDoctorAvailability({
+                                ...doctorAvailability,
+                                lunchBreakStart: date,
+                              })
+                            }
+                            showTimeSelect
+                            showTimeSelectOnly
+                            minTime={moment().hours(10).minutes(0)._d}
+                            maxTime={moment().hours(16).minutes(0)._d}
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="h:mm aa"
+                          />
+                        </div>
+                      </div>
+                      <div className="start-end-time-container">
+                        <h5>End</h5>
+                        <div className="lunch-time">
+                          <Clock color="#212429" size={14} />
+                          <DatePicker
+                            selected={doctorAvailability.lunchBreakEnd}
+                            onChange={date =>
+                              setDoctorAvailability({
+                                ...doctorAvailability,
+                                lunchBreakEnd: date,
+                              })
+                            }
+                            showTimeSelect
+                            showTimeSelectOnly
+                            minTime={moment().hours(10).minutes(0)._d}
+                            maxTime={moment().hours(16).minutes(0)._d}
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="h:mm aa"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <h4>Select any unavailable hours</h4>
+                  <h4>Select your unavailability</h4>
                   <div className="react-datepicker-master-wrapper">
-                    <Clock color="#212429" size={14} />
-                    <DatePicker />
+                    <div className="start-end-time-wrapper">
+                      <div className="start-end-time-container">
+                        <h5>Start date and time</h5>
+                        <div className="lunch-time">
+                          <Calendar color="#212429" size={14} />
+                          <DatePicker
+                            selected={
+                              doctorAvailability.unavailableDateTimes[0]
+                                .startDateTime
+                            }
+                            // onChange={date =>
+                            //   setDoctorAvailability({
+                            //     ...doctorAvailability,
+                            //     lunchBreakStart: date,
+                            //   })
+                            // }
+                            showTimeSelect
+                            minTime={moment().hours(10).minutes(0)._d}
+                            maxTime={moment().hours(16).minutes(0)._d}
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="MMMM d, h:mm aa"
+                          />
+                        </div>
+                      </div>
+                      <div className="start-end-time-container">
+                        <h5>End date and time</h5>
+                        <div className="lunch-time">
+                          <Calendar color="#212429" size={14} />
+                          <DatePicker
+                            selected={
+                              doctorAvailability.unavailableDateTimes[0]
+                                .startDateTime
+                            }
+                            // onChange={date =>
+                            //   setDoctorAvailability({
+                            //     ...doctorAvailability,
+                            //     lunchBreakEnd: date,
+                            //   })
+                            // }
+                            showTimeSelect
+                            minTime={moment().hours(10).minutes(0)._d}
+                            maxTime={moment().hours(16).minutes(0)._d}
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="MMMM d, h:mm aa"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div id="appointment-form-button-wrapper">
+                      <div className="grid-item">
+                        <div className="radio-group">
+                          <input
+                            type="radio"
+                            id="allDay"
+                            name="condition"
+                            value="allDay"
+                          />
+                          <label htmlFor="allDay">All Day</label>
+                          <input
+                            type="radio"
+                            id="everyWeek"
+                            name="condition"
+                            value="everyWeek"
+                          />
+                          <label htmlFor="female">Every Week</label>
+                          <input
+                            type="radio"
+                            id="other"
+                            name="condition"
+                            value="daily"
+                          />
+                          <label htmlFor="other">Daily</label>
+                        </div>
+
+                        {/* <Button action="Custom" color="mid" icon="" /> */}
+                      </div>
+                      <div className="grid-item">
+                        <Button icon="plus" color="dark" />
+                        <Button icon="minus" color="navy" />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="auth-error-wrapper">
@@ -163,7 +327,7 @@ const CalendarForm = ({
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <h1>hello</h1>
+                <Schedule />
               </React.Fragment>
             )}
           </div>
