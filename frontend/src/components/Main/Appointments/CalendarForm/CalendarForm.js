@@ -275,27 +275,33 @@ const CalendarForm = ({
                     <div id="appointment-form-button-wrapper">
                       <div className="grid-item">
                         <div className="radio-group">
-                          <input
-                            type="radio"
-                            id="allDay"
-                            name="condition"
-                            value="allDay"
-                          />
-                          <label htmlFor="allDay">All Day</label>
-                          <input
-                            type="radio"
-                            id="everyWeek"
-                            name="condition"
-                            value="everyWeek"
-                          />
-                          <label htmlFor="female">Every Week</label>
-                          <input
-                            type="radio"
-                            id="other"
-                            name="condition"
-                            value="daily"
-                          />
-                          <label htmlFor="other">Daily</label>
+                          <div className="option">
+                            <input
+                              type="radio"
+                              id="allDay"
+                              name="condition"
+                              value="allDay"
+                            />
+                            <label htmlFor="allDay">All Day</label>
+                          </div>
+                          <div className="option">
+                            <input
+                              type="radio"
+                              id="everyWeek"
+                              name="condition"
+                              value="everyWeek"
+                            />
+                            <label htmlFor="female">Every Week</label>
+                          </div>
+                          <div className="option">
+                            <input
+                              type="radio"
+                              id="other"
+                              name="condition"
+                              value="daily"
+                            />
+                            <label htmlFor="other">Daily</label>
+                          </div>
                         </div>
 
                         {/* <Button action="Custom" color="mid" icon="" /> */}

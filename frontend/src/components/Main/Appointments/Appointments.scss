@@ -117,6 +117,7 @@
 
     @media all and (max-width: 820px) {
       grid-template-columns: 1fr;
+      margin-bottom: 24px;
     }
   }
 
@@ -387,10 +388,30 @@
     .radio-group {
       display: flex;
       flex-direction: column;
+
+      .option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        & > :first-child {
+          margin-right: 12px;
+        }
+
+        label {
+          white-space: nowrap;
+          user-select: none;
+        }
+      }
     }
   }
 }
 
 .react-datepicker {
   display: flex !important;
+}
+
+input[type='radio'] {
+  border: 0px;
+  width: 1.25rem;
+  height: 1.25rem;
 }

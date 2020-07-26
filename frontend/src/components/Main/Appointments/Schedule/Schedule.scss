@@ -9,8 +9,18 @@
       display: flex;
       align-items: center;
 
-      .name {
-        margin-left: 16px;
+      // .name {
+      //   margin-left: 16px;
+      // }
+    }
+
+    // .middle {
+    // }
+
+    .booking {
+      color: var(--mid-grey);
+      @media all and (max-width: 530px) {
+        font-size: 12px;
       }
     }
 
@@ -27,6 +37,27 @@
         font-size: 10px;
         text-transform: uppercase;
       }
+
+      @media all and (max-width: 1042px) {
+        display: grid;
+        gap: 12px 0px;
+      }
+
+      @media all and (max-width: 530px) {
+        display: flex;
+        gap: 0px 0px;
+        grid-column: 2/2;
+
+        & > :first-child {
+          margin-right: 12px;
+        }
+      }
+    }
+
+    @media all and (max-width: 530px) {
+      display: grid;
+      grid-template-columns: 50px repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px 12px;
     }
   }
 }
