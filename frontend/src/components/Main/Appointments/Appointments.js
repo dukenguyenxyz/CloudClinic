@@ -34,10 +34,10 @@ const Appointments = () => {
   const getDoctorSessions = async () => {
     const URL = 'http://localhost:5000';
     // const URL = 'cloudclinic00.herokuapp.com';
-    const endpoint = `${URL}/api/users/sessions`;
-    // const endpoint = `${URL}/api/users/clients/${user._id}`;
+    const endpoint = `${URL}/api/sessions/`;
 
     const jwt = localStorage.getItem('jwt');
+    console.log(jwt);
     await axios
       .get(endpoint, {
         headers: {

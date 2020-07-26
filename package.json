@@ -8,7 +8,7 @@
     "backend": "npm run nodemon --prefix \"./backend\"",
     "frontend": "npm start --prefix \"./frontend\"",
     "concurrent": "npm run dev --prefix \"./backend\"",
-    "test": "npm run test --prefix \"./backend",
+    "test": "npm run test --prefix \"./backend\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix \"./backend\"; (npm install --prefix \"./frontend\" && npm run build -prefix \"./frontend\")",
     "install": "npm install --prefix \"./backend\"; npm install --prefix \"./frontend\"",
     "seed": "npm seed --prefix \"./backend\""

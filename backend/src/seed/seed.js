@@ -322,7 +322,7 @@ const dbServer =
     : 'mongodb://127.0.0.1:27017/cloudclinic';
 
 // Commen this section out to test seeds internal
-seeder.connect(dbServer, function () {
+seeder.connect(process.env.MONGO_URI, function () {
   // Load Mongoose models
   seeder.loadModels(['../models/User.js', '../models/Session.js']);
 
