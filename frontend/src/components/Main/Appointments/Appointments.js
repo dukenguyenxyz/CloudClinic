@@ -15,12 +15,16 @@ const Appointments = () => {
     return moment(Math[method](+date / +duration) * +duration);
   }
 
-  const [formState, setFormState] = useState({
+  const [clientFormState, setClientFormState] = useState({
     doctor: '',
     client: user.firstName,
     startTime: round(moment(), moment.duration(15, 'minutes'), 'ceil').toDate(),
     endTime: '',
     sessionDuration: '',
+  });
+
+  const [doctorAvailability, setDoctorAvailability] = useState({
+    sessions: [{ startTime: '', endTime: '' }],
   });
 
   useEffect(() => {
@@ -49,52 +53,64 @@ const Appointments = () => {
       });
   };
 
-  const doctorCalendar = () => {
-    return <MainCalendar formState={formState} />;
-  };
-
-  const clientCalendar = () => {
-    return <MainCalendar formState={formState} />;
-  };
-
-  const showCalendar = () => {
-    return user.isDoctor ? doctorCalendar() : clientCalendar();
-  };
-
   const handleSelect = (e, key) => {
-    setFormState({
-      ...formState,
+    setClientFormState({
+      ...clientFormState,
       [key]: e.target.value,
     });
   };
 
   const handleSessionDuration = (e, duration) => {
     if (e.target.value === duration) {
-      const endTime = moment(formState.startTime)
+      const endTime = moment(clientFormState.startTime)
         .add(duration, 'minutes')
         .toDate();
 
-      setFormState({
-        ...formState,
+      setClientFormState({
+        ...clientFormState,
         sessionDuration: duration,
         endTime,
       });
     }
   };
 
-  return (
-    <div className="appointments-wrapper">
-      <section className="calendar-form-wrapper">
-        <CalendarForm
-          formState={formState}
-          setFormState={setFormState}
-          handleSelect={handleSelect}
-          handleSessionDuration={handleSessionDuration}
-        />
-      </section>
-      {showCalendar()}
-    </div>
-  );
+  const doctorAppointments = () => {
+    return (
+      <div className="appointments-wrapper">
+        <section className="calendar-form-wrapper">
+          <CalendarForm
+            doctorAvailability={doctorAvailability}
+            setDoctorAvailability={setDoctorAvailability}
+            user={user}
+          />
+        </section>
+        <MainCalendar doctorAvailability={doctorAvailability} />
+      </div>
+    );
+  };
+
+  const clientAppointments = () => {
+    return (
+      <div className="appointments-wrapper">
+        <section className="calendar-form-wrapper">
+          <CalendarForm
+            clientFormState={clientFormState}
+            setClientFormState={setClientFormState}
+            handleSelect={handleSelect}
+            handleSessionDuration={handleSessionDuration}
+            user={user}
+          />
+        </section>
+        <MainCalendar clientFormState={clientFormState} />
+      </div>
+    );
+  };
+
+  const showAppointmentView = () => {
+    return user.isDoctor ? doctorAppointments() : clientAppointments();
+  };
+
+  return showAppointmentView();
 };
 
 export default Appointments;
