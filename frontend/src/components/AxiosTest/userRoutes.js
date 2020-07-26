@@ -4,7 +4,6 @@ import { navigate } from '@reach/router';
 // import faker from 'faker';
 import {
   url,
-  jwt,
   request,
   JWTHeader,
   JSONHeader,
@@ -17,7 +16,8 @@ import {
 // User Routes
 
 // Hardcoded ? -- START
-export const signUpClient = async (
+// Route in production
+export const signUpUser = async (
   user,
   setUserCallback,
   redirect,
@@ -26,7 +26,6 @@ export const signUpClient = async (
   await axios
     .post(`${url}/api/users/signup`, user, JSONHeader)
     .then(res => {
-      console.log(res);
       localStorage.setItem('cloudclinicJWT', res.data.token);
       setUserCallback(res.data.user);
       navigate(redirect);
@@ -37,18 +36,34 @@ export const signUpClient = async (
     });
 };
 
-export const signUpDoctor = async () => {
+// Testing routes
+export const signUpClient = async setUserCallback => {
   await axios
-    .post(`${url}/api/users/signup`, newUserDoctor, JSONHeader)
+    .post(`${url}/api/users/signup`, newUserClient, JSONHeader)
     .then(res => {
       console.log(res);
+      localStorage.setItem('cloudclinicJWT', res.data.token);
+      setUserCallback(res.data.user);
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-export const signInClient = async () => {
+export const signUpDoctor = async setUserCallback => {
+  await axios
+    .post(`${url}/api/users/signup`, newUserDoctor, JSONHeader)
+    .then(res => {
+      console.log(res);
+      localStorage.setItem('cloudclinicJWT', res.data.token);
+      setUserCallback(res.data.user);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+export const signInClient = async setUserCallback => {
   await request
     .post('users/signin', {
       email: newUserClient.email,
@@ -56,13 +71,15 @@ export const signInClient = async () => {
     })
     .then(res => {
       console.log(res);
+      localStorage.setItem('cloudclinicJWT', res.data.token);
+      setUserCallback(res.data.user);
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-export const signInDoctor = async () => {
+export const signInDoctor = async setUserCallback => {
   await request
     .post('users/signin', {
       email: newUserDoctor.email,
@@ -70,6 +87,8 @@ export const signInDoctor = async () => {
     })
     .then(res => {
       console.log(res);
+      localStorage.setItem('cloudclinicJWT', res.data.token);
+      setUserCallback(res.data.user);
     })
     .catch(err => {
       console.log(err);
@@ -77,22 +96,26 @@ export const signInDoctor = async () => {
 };
 // Hardcoded ? -- END
 
-export const signOut = async () => {
+export const signOut = async setUserCallback => {
   await request
-    .patch('users/signout', {})
+    .patch('users/signout')
     .then(res => {
       console.log(res);
+      localStorage.removeItem('cloudclinicJWT');
+      setUserCallback(null);
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-export const signOutAll = async () => {
+export const signOutAll = async setUserCallback => {
   await request
-    .patch('users/signoutall', {})
+    .patch('users/signoutall')
     .then(res => {
       console.log(res);
+      localStorage.removeItem('cloudclinicJWT');
+      setUserCallback(null);
     })
     .catch(err => {
       console.log(err);
@@ -100,8 +123,6 @@ export const signOutAll = async () => {
 };
 
 export const viewProfile = async () => {
-  console.log(jwt);
-
   await request
     .get('users/profile')
     .then(res => {
@@ -112,22 +133,25 @@ export const viewProfile = async () => {
     });
 };
 
-export const updateProfile = async obj => {
+export const updateProfile = async (setUserCallback, updateParamsObj) => {
   await request
-    .patch('users/profile', obj)
+    .patch('users/profile', updateParamsObj)
     .then(res => {
       console.log(res);
+      setUserCallback(res.data);
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-export const deleteProfile = async () => {
+export const deleteProfile = async setUserCallback => {
   await request
-    .delete('users/profile', {})
+    .delete('users/profile')
     .then(res => {
       console.log(res);
+      localStorage.removeItem('cloudclinicJWT');
+      setUserCallback(null);
     })
     .catch(err => {
       console.log(err);

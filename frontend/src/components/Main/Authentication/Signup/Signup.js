@@ -9,7 +9,7 @@ import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import faker from 'faker';
-import { signUpClient, signUpDoctor } from '../../../AxiosTest/userRoutes';
+import { signUpUser } from '../../../AxiosTest/userRoutes';
 
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
@@ -463,7 +463,7 @@ const Signup = () => {
       ? sanitizedDoctorForm()
       : sanitizedClientForm();
 
-    signUpClient(sanitizedForm, setUser, '/profile', error =>
+    signUpUser(sanitizedForm, setUser, '/profile', error =>
       setFormState({
         ...formState,
         errors: [`${error.response.data}`, ...formState.errors],

@@ -34,6 +34,12 @@ const AxiosTest = () => {
   const { user, setUser } = useContext(AuthContext);
   const [response, setResponse] = useState({});
 
+  const clientID = null;
+  const doctorID = '5f1ce5596be99c5a19d56452';
+  const sessionID = null;
+  const sessions = [];
+  const updateSessionParams = {};
+
   useEffect(() => {}, []);
 
   return (
@@ -46,39 +52,38 @@ const AxiosTest = () => {
           <div className="route-wrapper">
             <Button
               action="sign up client"
-              onClick={signUpClient}
+              onClick={() => signUpClient(setUser)}
               color="pink"
               icon="check"
             />
           </div>
-
           <Button
             action="sign up doctor"
-            onClick={signUpDoctor}
+            onClick={() => signUpDoctor(setUser)}
             color="pink"
             icon="check"
           />
           <Button
-            action="sign in user"
-            onClick={signInClient}
+            action="sign in client"
+            onClick={() => signInClient(setUser)}
             color="pink"
             icon="check"
           />
           <Button
             action="sign in doctor"
-            onClick={signInDoctor}
+            onClick={() => signInDoctor(setUser)}
             color="pink"
             icon="check"
           />
           <Button
             action="sign out user"
-            onClick={signOut}
+            onClick={() => signOut(setUser)}
             color="pink"
             icon="check"
           />
           <Button
             action="sign out all users"
-            onClick={signOutAll}
+            onClick={() => signOutAll(setUser)}
             color="pink"
             icon="check"
           />
@@ -90,13 +95,13 @@ const AxiosTest = () => {
           />
           <Button
             action="update profile"
-            onClick={updateProfile}
+            onClick={() => updateProfile(setUser, { firstName: 'Duke' })}
             color="pink"
             icon="check"
           />
           <Button
             action="delete profile"
-            onClick={deleteProfile}
+            onClick={() => deleteProfile(setUser)}
             color="pink"
             icon="check"
           />
@@ -108,25 +113,19 @@ const AxiosTest = () => {
           />
           <Button
             action="view client"
-            onClick={viewClient}
+            onClick={() => viewClient(clientID)}
+            color="pink"
+            icon="check"
+          />
+          <Button
+            action="view doctors"
+            onClick={() => viewDoctor(doctorID)}
             color="pink"
             icon="check"
           />
           <Button
             action="view doctors"
             onClick={viewDoctors}
-            color="pink"
-            icon="check"
-          />
-          <Button
-            action="view doctors"
-            onClick={viewDoctors}
-            color="pink"
-            icon="check"
-          />
-          <Button
-            action="view doctor"
-            onClick={viewDoctor}
             color="pink"
             icon="check"
           />
@@ -138,31 +137,31 @@ const AxiosTest = () => {
           />
           <Button
             action="create sessions"
-            onClick={createSessions}
+            onClick={() => createSessions(sessions)}
             color="pink"
             icon="check"
           />
           <Button
-            action="create sessions"
-            onClick={deleteSession}
+            action="delete session"
+            onClick={() => deleteSession(sessionID)}
             color="pink"
             icon="check"
           />
           <Button
-            action="create sessions"
-            onClick={bookSession}
+            action="book sessions"
+            onClick={() => bookSession(sessionID)}
             color="pink"
             icon="check"
           />
           <Button
-            action="create sessions"
-            onClick={updateSession}
+            action="update sessions"
+            onClick={() => updateSession(sessionID, updateSessionParams)}
             color="pink"
             icon="check"
           />
           <Button
-            action="create sessions"
-            onClick={cancelSession}
+            action="cancel sessions"
+            onClick={() => cancelSession(sessionID)}
             color="pink"
             icon="check"
           />

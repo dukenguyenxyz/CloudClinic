@@ -1,3 +1,6 @@
+const faker = require('faker');
+const newEmail = faker.internet.email();
+
 describe('Doctor Sign Up', () => {
   it('Visits CloudClinic', () => {
     cy.visit('http://localhost:3000');
@@ -14,9 +17,7 @@ describe('Doctor Sign Up', () => {
       .type('Hazza')
       .should('have.value', 'Hazza');
 
-    cy.get('input[name="Email"]')
-      .type('harry@gmail.com')
-      .should('have.value', 'harry@gmail.com');
+    cy.get('input[name="Email"]').type(newEmail).should('have.value', newEmail);
 
     cy.get('input[name="Password"]')
       .type('password')
