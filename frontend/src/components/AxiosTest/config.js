@@ -6,13 +6,12 @@ const newEmailClient = email();
 const newEmailDoctor = email();
 
 export const url = 'http://localhost:5000';
-export const jwt = localStorage.getItem('jwt');
 
 export const request = axios.create({
   baseURL: `${url}/api/`,
   headers: {
     'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `${jwt}`,
+    Authorization: localStorage.getItem('cloudclinicJWT'),
   },
 });
 
@@ -25,7 +24,7 @@ export const request = axios.create({
 
 export const JWTHeader = {
   headers: {
-    Authorization: `${jwt}`,
+    Authorization: localStorage.getItem('cloudclinicJWT'),
   },
 };
 
@@ -43,7 +42,7 @@ export const newUserClient = {
   weight: '55',
   dateOfBirth: '05/11/1999',
   phoneNumber: '04104820594',
-  email: `${newEmailClient}`,
+  email: newEmailClient,
   password: '123456789',
   confirmPassword: '123456789',
   isDoctor: 'false',
@@ -133,42 +132,5 @@ export const newUserDoctor = {
     yearsExperience: '10',
     tags: ['Orthodontics', 'Prosthodontics'],
     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-  },
-  clientInfo: {
-    medicalHistory: [
-      {
-        startDate: '03/05/2005',
-        condition: 'High Blood Pressure',
-        notes: 'Due to old age',
-      },
-      {
-        startDate: '11/11/2003',
-        condition: 'Pneumonia',
-        notes: 'Due to travel to Africa',
-      },
-    ],
-    allergies: [
-      {
-        name: 'Dust allergy',
-        severity: '3',
-      },
-      {
-        name: 'Pollen allergy',
-        severity: '2',
-      },
-    ],
-    medication: [
-      {
-        name: 'Magic mushroom',
-        dosage: '200',
-        manufacturer: 'Brazil',
-      },
-      {
-        name: 'Cannabis',
-        dosage: '100',
-        manufacturer: 'Australia',
-      },
-    ],
-    bloodType: 'A+',
   },
 };

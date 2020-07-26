@@ -99,7 +99,8 @@ function App() {
                       </PrivateDoctorRoute>
                       <PrivateRoute as={Messaging} path="/messaging" />
                       <PrivateRoute as={Appointments} path="/appointments" />
-                      <PrivateRoute as={AccountSettings} path="/settings" />
+                      {/* <PrivateRoute as={AccountSettings} path="/settings" /> */}
+                      <AccountSettings path="/settings" />
                       <Authentication
                         path="/authentication"
                         location={location}
