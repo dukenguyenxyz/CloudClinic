@@ -83,6 +83,21 @@ const UpdateProfile = () => {
     });
   };
 
+  const checkEmptyInputFields = key => {
+    user.clientInfo[key].forEach(el => {
+      const inputValues = Object.values(el);
+
+      for (let i = 0; i < inputValues.length; i++) {
+        if (!inputValues[i]) {
+          setUser({
+            ...user,
+            errors: ['Please fill in all fields'],
+          });
+        }
+      }
+    });
+  };
+
   //handler for submitting form
   const handleSubmit = async () => {
     if (
@@ -125,66 +140,75 @@ const UpdateProfile = () => {
       });
     }
 
-    if (!user.doctorInfo.licence && user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include a valid licence number'],
-      });
+    if (user.doctorInfo) {
+      if (!user.doctorInfo.licence && user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include a valid licence number'],
+        });
+      }
+
+      if (!user.doctorInfo.accreditations && user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include a valid accreditation'],
+        });
+      }
+
+      if (!user.doctorInfo.specialtyField && user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include a specialty field'],
+        });
+      }
+
+      if (!user.doctorInfo.education && user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include your education'],
+        });
+      }
+
+      if (!user.doctorInfo.yearsExp && user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include your years of experience'],
+        });
+      }
+
+      if (!user.doctorInfo.languagesSpoken && user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include the languages you speak'],
+        });
+      }
     }
 
-    if (!user.doctorInfo.accreditations && user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include a valid accreditation'],
-      });
-    }
+    if (user.clientInfo) {
+      checkEmptyInputFields('medicalHistory');
+      checkEmptyInputFields('allergies');
+      checkEmptyInputFields('medication');
 
-    if (!user.doctorInfo.specialtyField && user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include a specialty field'],
-      });
-    }
+      if (!user.clientInfo.bloodType && !user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include your blood type'],
+        });
+      }
 
-    if (!user.doctorInfo.education && user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include your education'],
-      });
-    }
-
-    if (!user.doctorInfo.yearsExp && user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include your years of experience'],
-      });
-    }
-
-    if (!user.doctorInfo.languagesSpoken && user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include the languages you speak'],
-      });
-    }
-
-    if (!user.clientInfo.bloodType && !user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include your blood type'],
-      });
-    }
-
-    if (!user.clientInfo.weight && !user.isDoctor) {
-      setUser({
-        ...user,
-        errors: ['Please include your weight'],
-      });
+      if (!user.clientInfo.weight && !user.isDoctor) {
+        setUser({
+          ...user,
+          errors: ['Please include your weight'],
+        });
+      }
     }
 
     const developmentUrl = 'http://localhost:5000';
     // const productionUrl = 'http://cloudclinic.tech';
     const endpoint = `${developmentUrl}/api/users/profile`;
     axios.defaults.headers.patch['Content-Type'] = 'application/json';
+    const jwt = localStorage.getItem('jwt');
 
     //if user errors is falsy, i.e. no errors, make axios patch request
     if (!user.errors) {
@@ -192,6 +216,7 @@ const UpdateProfile = () => {
       axios
         .patch(endpoint, user, {
           headers: {
+            Authorization: jwt,
             'Content-Type': 'application/json; charset=utf-8',
           },
         })
@@ -203,10 +228,17 @@ const UpdateProfile = () => {
         })
         .catch(error => {
           console.log(error.response);
-          setUser({
-            ...user,
-            errors: [`${error.response.data}`, ...user.errors],
-          });
+          {
+            user.errors
+              ? setUser({
+                  ...user,
+                  errors: [...user.errors, `${error.response.data}`],
+                })
+              : setUser({
+                  ...user,
+                  errors: [`${error.response.data}`],
+                });
+          }
         });
     }
   };
