@@ -20,7 +20,11 @@ const CalendarForm = ({
   setDoctorAvailability,
   handleAddClick,
   handleRemoveClick,
+  handleUnavailableDateChange,
   user,
+  round,
+  handleUnavailabilityModifiers,
+  handleDoctorAvailabilitySubmit,
 }) => {
   const doctors = ['Dr. Fizz', 'Dr. James', 'Dr. Foo', 'Dr. Bar'];
 
@@ -86,11 +90,14 @@ const CalendarForm = ({
   };
 
   const DoctorForm = () => {
+    // console.log(doctorAvailability);
     return (
       <div className="tab-wrapper">
         <div className="tab-container">
           <h5
-            className={tabState.activeTab === 'availability' && 'active'}
+            className={
+              tabState.activeTab === 'availability' ? 'active' : undefined
+            }
             onClick={() =>
               setTabState({
                 activeTab: 'availability',
@@ -100,7 +107,7 @@ const CalendarForm = ({
             Availability
           </h5>
           <h5
-            className={tabState.activeTab === 'schedule' && 'active'}
+            className={tabState.activeTab === 'schedule' ? 'active' : undefined}
             onClick={() =>
               setTabState({
                 activeTab: 'schedule',
@@ -132,6 +139,7 @@ const CalendarForm = ({
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
+                                errors: [],
                                 openningTime: date,
                               })
                             }
@@ -154,12 +162,15 @@ const CalendarForm = ({
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
+                                errors: [],
                                 closingTime: date,
                               })
                             }
                             showTimeSelect
                             showTimeSelectOnly
-                            minTime={doctorAvailability.openningTime}
+                            minTime={moment(doctorAvailability.openningTime)
+                              .add(1, 'hour')
+                              .toDate()}
                             maxTime={moment().hours(23).minutes(0)._d}
                             timeIntervals={15}
                             timeCaption="Time"
@@ -224,7 +235,7 @@ const CalendarForm = ({
                 <div>
                   <h4>Select your unavailability</h4>
                   <div className="react-datepicker-master-wrapper">
-                    {doctorAvailability.unavailableDateTimes.map((val, i) => {
+                    {doctorAvailability.unavailableDateTimes.map((el, i) => {
                       return (
                         <div key={i}>
                           <div className="start-end-time-wrapper">
@@ -234,16 +245,21 @@ const CalendarForm = ({
                                 <Calendar color="#212429" size={14} />
                                 <DatePicker
                                   selected={
-                                    doctorAvailability.unavailableDateTimes[0]
+                                    doctorAvailability.unavailableDateTimes[i]
                                       .startDateTime
                                   }
-                                  // onChange={date =>
-                                  //   setDoctorAvailability({
-                                  //     ...doctorAvailability,
-                                  //     lunchBreakStart: date,
-                                  //   })
-                                  // }
+                                  onChange={date =>
+                                    handleUnavailableDateChange(
+                                      el,
+                                      i,
+                                      'unavailableDateTimes',
+                                      date,
+                                      'startDateTime'
+                                    )
+                                  }
                                   showTimeSelect
+                                  minDate={moment().toDate()}
+                                  maxDate={moment().add(3, 'year').toDate()}
                                   minTime={moment().hours(10).minutes(0)._d}
                                   maxTime={moment().hours(16).minutes(0)._d}
                                   timeIntervals={15}
@@ -258,16 +274,21 @@ const CalendarForm = ({
                                 <Calendar color="#212429" size={14} />
                                 <DatePicker
                                   selected={
-                                    doctorAvailability.unavailableDateTimes[0]
-                                      .startDateTime
+                                    doctorAvailability.unavailableDateTimes[i]
+                                      .endDateTime
                                   }
-                                  // onChange={date =>
-                                  //   setDoctorAvailability({
-                                  //     ...doctorAvailability,
-                                  //     lunchBreakEnd: date,
-                                  //   })
-                                  // }
+                                  onChange={date =>
+                                    handleUnavailableDateChange(
+                                      el,
+                                      i,
+                                      'unavailableDateTimes',
+                                      date,
+                                      'endDateTime'
+                                    )
+                                  }
                                   showTimeSelect
+                                  minDate={moment().toDate()}
+                                  maxDate={moment().add(3, 'year').toDate()}
                                   minTime={moment().hours(10).minutes(0)._d}
                                   maxTime={moment().hours(16).minutes(0)._d}
                                   timeIntervals={15}
@@ -284,8 +305,15 @@ const CalendarForm = ({
                                   <input
                                     type="radio"
                                     id="allDay"
-                                    name="condition"
+                                    name={`condition${i}`}
                                     value="allDay"
+                                    onChange={e =>
+                                      handleUnavailabilityModifiers(
+                                        e,
+                                        i,
+                                        'unavailableDateTimes'
+                                      )
+                                    }
                                   />
                                   <label htmlFor="allDay">All Day</label>
                                 </div>
@@ -293,8 +321,15 @@ const CalendarForm = ({
                                   <input
                                     type="radio"
                                     id="everyWeek"
-                                    name="condition"
-                                    value="everyWeek"
+                                    name={`condition${i}`}
+                                    value="2" // RRule.WEEKLY
+                                    onChange={e =>
+                                      handleUnavailabilityModifiers(
+                                        e,
+                                        i,
+                                        'unavailableDateTimes'
+                                      )
+                                    }
                                   />
                                   <label htmlFor="female">Every Week</label>
                                 </div>
@@ -302,8 +337,15 @@ const CalendarForm = ({
                                   <input
                                     type="radio"
                                     id="other"
-                                    name="condition"
-                                    value="daily"
+                                    name={`condition${i}`}
+                                    value="3" // RRule.DAILY
+                                    onChange={e =>
+                                      handleUnavailabilityModifiers(
+                                        e,
+                                        i,
+                                        'unavailableDateTimes'
+                                      )
+                                    }
                                   />
                                   <label htmlFor="other">Daily</label>
                                 </div>
@@ -328,8 +370,17 @@ const CalendarForm = ({
                                     doctorAvailability.unavailableDateTimes[i]
                                       .startDateTime !== '' &&
                                     handleAddClick('unavailableDateTimes', {
-                                      startDateTime: moment().toDate(),
-                                      endDateTime: moment().toDate(),
+                                      startDateTime: round(
+                                        moment(),
+                                        moment.duration(15, 'minutes'),
+                                        'ceil'
+                                      ).toDate(),
+                                      endDateTime: round(
+                                        moment(),
+                                        moment.duration(15, 'minutes'),
+                                        'ceil'
+                                      ).toDate(),
+                                      modifier: '',
                                     })
                                   }
                                   icon="plus"
@@ -345,18 +396,18 @@ const CalendarForm = ({
                 </div>
                 <div className="auth-error-wrapper">
                   <ul>
-                    {/* {clientFormState.errors.map((errorMessage, i) => (
-              <li key={i} className="auth-error-message">
-                {errorMessage}
-              </li>
-            ))} */}
+                    {doctorAvailability.errors.map((errorMessage, i) => (
+                      <li key={i} className="auth-error-message">
+                        {errorMessage}
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="form-button-wrapper">
                   <Button
                     action="Confirm"
                     color="pink"
-                    // onClick={handleSubmit}
+                    onClick={() => handleDoctorAvailabilitySubmit()}
                     icon="check"
                   />
                 </div>
