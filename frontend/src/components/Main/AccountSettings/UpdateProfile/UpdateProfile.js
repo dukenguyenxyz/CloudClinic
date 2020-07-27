@@ -16,8 +16,19 @@ const UpdateProfile = () => {
   const onValueChange = (e, key) => {
     setUser({
       ...user,
-      errors: [],
+      // errors: [],
       [key]: e.target.value,
+    });
+  };
+
+  const onNestedValueChange = (e, key, subKey) => {
+    const targetObject = user[key];
+    targetObject[subKey] = e.target.value;
+
+    setUser({
+      ...user,
+      // user.address: e.target.value;
+      [key]: targetObject,
     });
   };
 
@@ -100,17 +111,6 @@ const UpdateProfile = () => {
         options={sexOptions}
         onValueChange={e => onValueChange(e, 'sex')}
       />
-      {/* <AuthInput
-        value={user.clientInfo.weight}
-        placeholder="Weight (kg)"
-        type="number"
-        min="1"
-        max="300"
-        maxLength="3"
-        icon="clipboard"
-        onValueChange={e => onValueChange(e, 'weight')}
-        // onInput={onInput}
-      /> */}
       <AuthInput
         value={user.dateOfBirth}
         placeholder="Date of Birth"
@@ -140,7 +140,7 @@ const UpdateProfile = () => {
         icon="hash"
         minLength="1"
         maxLength="28"
-        onValueChange={e => onValueChange(e, 'addressNumber')}
+        onValueChange={e => onNestedValueChange(e, 'address', 'number')}
       />
       <AuthInput
         value={user.address.street}
@@ -149,7 +149,7 @@ const UpdateProfile = () => {
         icon="mapPin"
         minLength="2"
         maxLength="95"
-        onValueChange={e => onValueChange(e, 'street')}
+        onValueChange={e => onNestedValueChange(e, 'address', 'street')}
       />
       <AuthInput
         value={user.address.city}
@@ -158,7 +158,7 @@ const UpdateProfile = () => {
         icon="home"
         minLength="2"
         maxLength="28"
-        onValueChange={e => onValueChange(e, 'city')}
+        onValueChange={e => onNestedValueChange(e, 'address', 'city')}
       />
       <AuthInput
         value={user.address.state}
@@ -167,7 +167,7 @@ const UpdateProfile = () => {
         icon="postcode"
         minLength="2"
         maxLength="28"
-        onValueChange={e => onValueChange(e, 'state')}
+        onValueChange={e => onNestedValueChange(e, 'address', 'state')}
       />
       <AuthSelect
         value={user.address.country}
@@ -175,7 +175,7 @@ const UpdateProfile = () => {
         type="text"
         icon="navArrow"
         options={countries}
-        onValueChange={e => onValueChange(e, 'country')}
+        onValueChange={e => onNestedValueChange(e, 'address', 'country')}
       />
       <AuthInput
         value={user.address.postcode}
@@ -185,7 +185,7 @@ const UpdateProfile = () => {
         min="1"
         max="100000"
         maxLength="6"
-        onValueChange={e => onValueChange(e, 'postcode')}
+        onValueChange={e => onNestedValueChange(e, 'address', 'postcode')}
         // onInput={onInput}
       />
       {user.isDoctor ? (
@@ -242,7 +242,20 @@ const UpdateProfile = () => {
           })}
         </>
       ) : (
-        <h2>Medical Information</h2>
+        <>
+          <h2>Medical Information</h2>
+          <AuthInput
+            value={user.clientInfo.weight}
+            placeholder="Weight (kg)"
+            type="number"
+            min="1"
+            max="300"
+            maxLength="3"
+            icon="clipboard"
+            // onValueChange={e => onValueChange(e, 'weight')}
+            // onInput={onInput}
+          />
+        </>
       )}
     </div>
   );
