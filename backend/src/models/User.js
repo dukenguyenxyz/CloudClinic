@@ -113,6 +113,13 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
   doctorInfo: {
+    unavailables: [
+      {
+        startTime: String,
+        endTime: String,
+        repeat: Boolean,
+      },
+    ],
     licence: {
       type: String,
       min: 6,
