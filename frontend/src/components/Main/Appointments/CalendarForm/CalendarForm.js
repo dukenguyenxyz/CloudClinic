@@ -337,10 +337,6 @@ const CalendarForm = ({
                                 />
                               )}
                             </div>
-                            {/* <div className="grid-item">
-                              <Button icon="plus" color="dark" />
-                              <Button icon="minus" color="navy" />
-                            </div> */}
                           </div>
                         </div>
                       );

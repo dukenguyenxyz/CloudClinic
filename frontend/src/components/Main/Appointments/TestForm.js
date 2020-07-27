@@ -82,7 +82,6 @@ import { RRule, RRuleSet, rrulestr } from 'rrule';
 
 const TestForm = () => {
   console.log('TestForm2 starts');
-  console.log('TestForm2 starts');
   const [formState, setFormState] = useState({
     endTime: moment([2020, 8, 27]).set({ hour: 17, minute: 0 }).toDate(),
     startTimeDate: moment([2020, 8, 27]).set({ hour: 9, minute: 0 }).toDate(),
@@ -106,9 +105,13 @@ const TestForm = () => {
 
   const weekDayGen = weekArray => {
     const newWeekArray = weekArray.map(day => {
-      return RRule[day];
+      return RRule([day]);
     });
   };
+
+  // console.log(() => weekDayGen(formState.byweekday)) [Function (anonymous)]
+
+  // byweekday: [RRule.MO, RRule.FR],
 
   const doctorSchedules = new RRuleSet();
 
@@ -121,14 +124,9 @@ const TestForm = () => {
       interval: ruleBluePrint.interval,
       byweekday: weekDayGen(ruleBluePrint.byweekday),
     });
-
-  // Add working hours rule
-  doctorSchedules.rrule(() => newRRulSet(formState));
-
-  // Exclude mah tea time
-  doctorSchedules.exrule(() => newRRulSet(lunchBreak));
-
-  console.log('TestForm2', doctorSchedules);
 };
+// Add working hours rule
+doctorSchedules.rrule(() => newRRulSet(formState));
 
-export default TestForm;
+// Exclude mah tea time
+doctorSchedules.exrule(() => newRRulSet(lunchBreak));
