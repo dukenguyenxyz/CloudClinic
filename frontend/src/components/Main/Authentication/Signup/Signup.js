@@ -461,10 +461,7 @@ const Signup = () => {
     // const developmentUrl = 'http://localhost:5000';
     // const productionUrl = 'http://cloudclinic.tech';
     // const endpoint = `${developmentUrl}/api/users/signup`;
-
     // axios.defaults.headers.post['Content-Type'] = 'application/json';
-
-    // Make axios post request to backend
 
     const sanitizedForm = formState.isDoctor
       ? sanitizedDoctorForm()
@@ -477,6 +474,7 @@ const Signup = () => {
       })
     );
 
+    // // Make axios post request to backend
     // axios
     //   .post(endpoint, /*sanitizedForm*/ mockForm2, {
     //     headers: {
