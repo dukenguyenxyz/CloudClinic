@@ -4,7 +4,7 @@ import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
 import Button from '../../../Button/Button';
 import languages from '../../Authentication/Form/languages';
-
+import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
 import axios from 'axios';
 
@@ -81,6 +81,134 @@ const UpdateProfile = () => {
       ...user,
       [key]: targetObject,
     });
+  };
+
+  //handler for submitting form
+  const handleSubmit = async () => {
+    if (
+      !user.firstName ||
+      !user.lastName ||
+      !user.title ||
+      !user.dateOfBirth ||
+      !user.phoneNumber ||
+      !user.address.number ||
+      !user.address.state ||
+      !user.address.street ||
+      !user.address.city ||
+      !user.country ||
+      !user.postcode
+    ) {
+      setUser({
+        ...user,
+        errors: ['Please fill in all the inputs'],
+      });
+    }
+
+    if (user.password !== user.confirmPassword) {
+      setUser({
+        ...user,
+        errors: ['Passwords do not match'],
+      });
+    }
+
+    if (!user.email.includes('@')) {
+      setUser({
+        ...user,
+        errors: ['Please enter a valid email'],
+      });
+    }
+
+    if (user.password !== '') {
+      setUser({
+        ...user,
+        errors: ['Please enter a valid password'],
+      });
+    }
+
+    if (!user.doctorInfo.licence && user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include a valid licence number'],
+      });
+    }
+
+    if (!user.doctorInfo.accreditations && user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include a valid accreditation'],
+      });
+    }
+
+    if (!user.doctorInfo.specialtyField && user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include a specialty field'],
+      });
+    }
+
+    if (!user.doctorInfo.education && user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include your education'],
+      });
+    }
+
+    if (!user.doctorInfo.yearsExp && user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include your years of experience'],
+      });
+    }
+
+    if (!user.doctorInfo.languagesSpoken && user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include the languages you speak'],
+      });
+    }
+
+    if (!user.clientInfo.bloodType && !user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include your blood type'],
+      });
+    }
+
+    if (!user.clientInfo.weight && !user.isDoctor) {
+      setUser({
+        ...user,
+        errors: ['Please include your weight'],
+      });
+    }
+
+    const developmentUrl = 'http://localhost:5000';
+    // const productionUrl = 'http://cloudclinic.tech';
+    const endpoint = `${developmentUrl}/api/users/profile`;
+    axios.defaults.headers.patch['Content-Type'] = 'application/json';
+
+    //if user errors is falsy, i.e. no errors, make axios patch request
+    if (!user.errors) {
+      // Make axios post request to backend
+      axios
+        .patch(endpoint, user, {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        })
+        .then(response => {
+          console.log(response.data.user);
+          const user = response.data.user;
+          setUser(user);
+          navigate('/profile');
+        })
+        .catch(error => {
+          console.log(error.response);
+          setUser({
+            ...user,
+            errors: [`${error.response.data}`, ...user.errors],
+          });
+        });
+    }
   };
 
   return (
@@ -170,7 +298,7 @@ const UpdateProfile = () => {
         isDate
         max="2020-01-01"
         min="1900-01-01"
-        onValueChange={e => onValueChange(e, 'dob')}
+        onValueChange={e => onValueChange(e, 'dateOfBirth')}
       />
       <AuthInput
         value={user.phoneNumber}
@@ -179,7 +307,7 @@ const UpdateProfile = () => {
         pattern="[0-9]{10}"
         icon="phone"
         isMobile
-        onValueChange={e => onValueChange(e, 'phone')}
+        onValueChange={e => onValueChange(e, 'phoneNumber')}
         minLength="9"
         maxLength="12"
       />
@@ -237,7 +365,6 @@ const UpdateProfile = () => {
         max="100000"
         maxLength="6"
         onValueChange={e => onNestedValueChange(e, 'address', 'postcode')}
-        // onInput={onInput}
       />
       {user.isDoctor ? (
         <>
@@ -357,7 +484,6 @@ const UpdateProfile = () => {
             onValueChange={e =>
               onNestedValueChange(e, 'doctorInfo', 'yearsExperience')
             }
-            // onInput={onInput}
           />
           {user.doctorInfo.languagesSpoken.map((val, i) => {
             return (
@@ -601,7 +727,6 @@ const UpdateProfile = () => {
                       'dosage'
                     )
                   }
-                  // onInput={onInput}
                 />
                 <AuthInput
                   name="manufacturer"
@@ -670,10 +795,15 @@ const UpdateProfile = () => {
             maxLength="3"
             icon="clipboard"
             onValueChange={e => onNestedValueChange(e, 'clientInfo', 'weight')}
-            // onInput={onInput}
           />
         </>
       )}
+      <Button
+        action="Update"
+        color="pink"
+        onClick={handleSubmit}
+        icon="check"
+      />
     </div>
   );
 };
