@@ -52,7 +52,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         options={sexOptions}
         onValueChange={e => onValueChange(e, 'sex')}
       />
-      <AuthInput
+      {/* Moved to Step Three */}
+      {/* <AuthInput
         value={formState.weight}
         placeholder="Weight (kg)"
         type="number"
@@ -63,7 +64,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         onValueChange={e => onValueChange(e, 'weight')}
         onKeyUp={onKeyUp}
         onInput={onInput}
-      />
+      /> */}
       <AuthInput
         value={formState.dob}
         placeholder="Date of Birth"

@@ -209,7 +209,7 @@ const StepThree = ({
         );
       })}
 
-      <h3>Blood Type</h3>
+      <h3>Blood Type & Weight</h3>
       <AuthSelect
         value={formState.bloodType}
         placeholder="Blood Type"
@@ -217,6 +217,18 @@ const StepThree = ({
         directive="blood"
         options={bloodTypes}
         onValueChange={e => onValueChange(e, 'bloodType')}
+      />
+      <AuthInput
+        value={formState.weight}
+        placeholder="Weight (kg)"
+        type="number"
+        min="1"
+        max="300"
+        maxLength="3"
+        icon="clipboard"
+        onValueChange={e => onValueChange(e, 'weight')}
+        // onKeyUp={onKeyUp}
+        onInput={onInput}
       />
     </>
   );
