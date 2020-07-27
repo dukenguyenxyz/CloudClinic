@@ -13,6 +13,8 @@ const UpdateProfile = () => {
 
   const sexOptions = ['male', 'female'];
   const titleOptions = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'];
+  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+  const severityOptions = [1, 2, 3, 4, 5];
 
   const onValueChange = (e, key) => {
     setUser({
@@ -42,6 +44,16 @@ const UpdateProfile = () => {
     });
   };
 
+  const onNestedArrObjValueChange = (e, key, subKey, i, objKey) => {
+    const targetObject = user[key];
+    targetObject[subKey][i][objKey] = e.target.value;
+
+    setUser({
+      ...user,
+      [key]: targetObject,
+    });
+  };
+
   const handleRemoveClick = (key, i, subKey) => {
     const targetObject = user[key];
     targetObject[subKey].splice(i, 1);
@@ -54,6 +66,16 @@ const UpdateProfile = () => {
   const handleAddClick = (key, subKey) => {
     const targetObject = user[key];
     targetObject[subKey].push('');
+
+    setUser({
+      ...user,
+      [key]: targetObject,
+    });
+  };
+
+  const handleAddMultiClick = (key, subKey, obj) => {
+    const targetObject = user[key];
+    targetObject[subKey].push(obj);
 
     setUser({
       ...user,
@@ -384,6 +406,261 @@ const UpdateProfile = () => {
       ) : (
         <>
           <h2>Medical Information</h2>
+          <h3>Existing Conditions</h3>
+          {user.clientInfo.medicalHistory.map((val, i) => {
+            return (
+              <div key={i}>
+                <AuthInput
+                  name="condition"
+                  value={val.condition}
+                  placeholder="Condition"
+                  type="text"
+                  maxLength="30"
+                  icon="condition"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'medicalHistory',
+                      i,
+                      'condition'
+                    )
+                  }
+                />
+                <AuthInput
+                  name="conditionStartDate"
+                  value={val.startDate}
+                  type="date"
+                  icon="calendar"
+                  placeholder="Start date"
+                  isDate
+                  max="2020-01-01"
+                  min="1900-01-01"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'medicalHistory',
+                      i,
+                      'startDate'
+                    )
+                  }
+                />
+                <AuthInput
+                  name="conditionComment"
+                  value={val.notes}
+                  placeholder="Comments"
+                  type="text"
+                  maxLength="100"
+                  icon="textArea"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'medicalHistory',
+                      i,
+                      'notes'
+                    )
+                  }
+                />
+                <div className="btn-box">
+                  {user.clientInfo.medicalHistory.length !== 1 && (
+                    <Button
+                      onClick={() =>
+                        handleRemoveClick('clientInfo', i, 'medicalHistory')
+                      }
+                      icon="minus"
+                      color="mid"
+                    />
+                  )}
+                  {user.clientInfo.medicalHistory.length - 1 === i && (
+                    <Button
+                      onClick={() =>
+                        user.clientInfo.medicalHistory[i] !== '' &&
+                        handleAddMultiClick('clientInfo', 'medicalHistory', {
+                          condition: '',
+                          startDate: '',
+                          notes: '',
+                        })
+                      }
+                      icon="plus"
+                      color="mid"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          <h3>Allergies</h3>
+
+          {user.clientInfo.allergies.map((val, i) => {
+            return (
+              <div key={i}>
+                <AuthInput
+                  name="allergy"
+                  value={val.name}
+                  placeholder="Allergy"
+                  type="text"
+                  maxLength="30"
+                  icon="alertCircle"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'allergies',
+                      i,
+                      'name'
+                    )
+                  }
+                />
+
+                <AuthSelect
+                  name="severity"
+                  value={val.severity}
+                  placeholder="Severity"
+                  type="text"
+                  icon="hash"
+                  directive="allergy"
+                  options={severityOptions}
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'allergies',
+                      i,
+                      'severity'
+                    )
+                  }
+                />
+                <div className="btn-box">
+                  {user.clientInfo.allergies.length !== 1 && (
+                    <Button
+                      onClick={() =>
+                        handleRemoveClick('clientInfo', i, 'allergies')
+                      }
+                      icon="minus"
+                      color="mid"
+                    />
+                  )}
+                  {user.clientInfo.allergies.length - 1 === i && (
+                    <Button
+                      onClick={() =>
+                        user.clientInfo.medicalHistory[i] !== '' &&
+                        handleAddMultiClick('clientInfo', 'allergies', {
+                          name: '',
+                          severity: '',
+                        })
+                      }
+                      icon="plus"
+                      color="mid"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          <h3>Medication</h3>
+
+          {user.clientInfo.medication.map((val, i) => {
+            return (
+              <div key={i}>
+                <AuthInput
+                  name="medication"
+                  value={val.name}
+                  placeholder="Medication"
+                  type="text"
+                  icon="medication"
+                  maxLength="30"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'medication',
+                      i,
+                      'name'
+                    )
+                  }
+                />
+                <AuthInput
+                  name="dosage"
+                  value={val.dosage}
+                  placeholder="Dosage (mg)"
+                  type="number"
+                  min="1"
+                  max="5000"
+                  maxLength="4"
+                  icon="hash"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'medication',
+                      i,
+                      'dosage'
+                    )
+                  }
+                  // onInput={onInput}
+                />
+                <AuthInput
+                  name="manufacturer"
+                  value={val.manufacturer}
+                  placeholder="Manufacturer"
+                  type="text"
+                  icon="briefcase"
+                  maxLength="30"
+                  onValueChange={e =>
+                    onNestedArrObjValueChange(
+                      e,
+                      'clientInfo',
+                      'medication',
+                      i,
+                      'manufacturer'
+                    )
+                  }
+                />
+                <div className="btn-box">
+                  {user.clientInfo.medication.length !== 1 && (
+                    <Button
+                      onClick={() =>
+                        handleRemoveClick('clientInfo', i, 'medication')
+                      }
+                      icon="minus"
+                      color="mid"
+                    />
+                  )}
+                  {user.clientInfo.medication.length - 1 === i && (
+                    <Button
+                      onClick={() =>
+                        user.clientInfo.medicalHistory[i] !== '' &&
+                        handleAddMultiClick('clientInfo', 'medication', {
+                          name: '',
+                          dosage: '',
+                          manufacturer: '',
+                        })
+                      }
+                      icon="plus"
+                      color="mid"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          <h3>Blood Type & Weight</h3>
+
+          <AuthSelect
+            value={user.clientInfo.bloodType}
+            placeholder="Blood Type"
+            icon="heart"
+            directive="blood"
+            options={bloodTypes}
+            onValueChange={e =>
+              onNestedValueChange(e, 'clientInfo', 'bloodType')
+            }
+          />
           <AuthInput
             value={user.clientInfo.weight}
             placeholder="Weight (kg)"
@@ -392,7 +669,7 @@ const UpdateProfile = () => {
             max="300"
             maxLength="3"
             icon="clipboard"
-            // onValueChange={e => onValueChange(e, 'weight')}
+            onValueChange={e => onNestedValueChange(e, 'clientInfo', 'weight')}
             // onInput={onInput}
           />
         </>
