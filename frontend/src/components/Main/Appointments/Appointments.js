@@ -67,6 +67,25 @@ const Appointments = () => {
     });
   };
 
+  const handleAddClick = (key, formFieldsObject) => {
+    setDoctorAvailability({
+      ...doctorAvailability,
+      [key]: [...doctorAvailability[key], formFieldsObject],
+    });
+  };
+
+  const handleRemoveClick = (key, i) => {
+    //spread value at the formState key into list
+    const list = [...doctorAvailability[key]];
+
+    //at index i, remove one item
+    list.splice(i, 1);
+    setDoctorAvailability({
+      ...doctorAvailability,
+      [key]: list,
+    });
+  };
+
   const handleSessionDuration = (e, duration) => {
     if (e.target.value === duration) {
       const endTime = moment(clientFormState.startTime)
@@ -89,6 +108,8 @@ const Appointments = () => {
             doctorAvailability={doctorAvailability}
             setDoctorAvailability={setDoctorAvailability}
             user={user}
+            handleAddClick={handleAddClick}
+            handleRemoveClick={handleRemoveClick}
           />
         </section>
         <MainCalendar doctorAvailability={doctorAvailability} />

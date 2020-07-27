@@ -18,6 +18,8 @@ const CalendarForm = ({
   handleSessionDuration,
   doctorAvailability,
   setDoctorAvailability,
+  handleAddClick,
+  handleRemoveClick,
   user,
 }) => {
   const doctors = ['Dr. Fizz', 'Dr. James', 'Dr. Foo', 'Dr. Bar'];
@@ -222,95 +224,127 @@ const CalendarForm = ({
                 <div>
                   <h4>Select your unavailability</h4>
                   <div className="react-datepicker-master-wrapper">
-                    <div className="start-end-time-wrapper">
-                      <div className="start-end-time-container">
-                        <h5>Start date and time</h5>
-                        <div className="lunch-time">
-                          <Calendar color="#212429" size={14} />
-                          <DatePicker
-                            selected={
-                              doctorAvailability.unavailableDateTimes[0]
-                                .startDateTime
-                            }
-                            // onChange={date =>
-                            //   setDoctorAvailability({
-                            //     ...doctorAvailability,
-                            //     lunchBreakStart: date,
-                            //   })
-                            // }
-                            showTimeSelect
-                            minTime={moment().hours(10).minutes(0)._d}
-                            maxTime={moment().hours(16).minutes(0)._d}
-                            timeIntervals={15}
-                            timeCaption="Time"
-                            dateFormat="MMMM d, h:mm aa"
-                          />
-                        </div>
-                      </div>
-                      <div className="start-end-time-container">
-                        <h5>End date and time</h5>
-                        <div className="lunch-time">
-                          <Calendar color="#212429" size={14} />
-                          <DatePicker
-                            selected={
-                              doctorAvailability.unavailableDateTimes[0]
-                                .startDateTime
-                            }
-                            // onChange={date =>
-                            //   setDoctorAvailability({
-                            //     ...doctorAvailability,
-                            //     lunchBreakEnd: date,
-                            //   })
-                            // }
-                            showTimeSelect
-                            minTime={moment().hours(10).minutes(0)._d}
-                            maxTime={moment().hours(16).minutes(0)._d}
-                            timeIntervals={15}
-                            timeCaption="Time"
-                            dateFormat="MMMM d, h:mm aa"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div id="appointment-form-button-wrapper">
-                      <div className="grid-item">
-                        <div className="radio-group">
-                          <div className="option">
-                            <input
-                              type="radio"
-                              id="allDay"
-                              name="condition"
-                              value="allDay"
-                            />
-                            <label htmlFor="allDay">All Day</label>
+                    {doctorAvailability.unavailableDateTimes.map((val, i) => {
+                      return (
+                        <div key={i}>
+                          <div className="start-end-time-wrapper">
+                            <div className="start-end-time-container">
+                              <h5>Start date and time</h5>
+                              <div className="lunch-time">
+                                <Calendar color="#212429" size={14} />
+                                <DatePicker
+                                  selected={
+                                    doctorAvailability.unavailableDateTimes[0]
+                                      .startDateTime
+                                  }
+                                  // onChange={date =>
+                                  //   setDoctorAvailability({
+                                  //     ...doctorAvailability,
+                                  //     lunchBreakStart: date,
+                                  //   })
+                                  // }
+                                  showTimeSelect
+                                  minTime={moment().hours(10).minutes(0)._d}
+                                  maxTime={moment().hours(16).minutes(0)._d}
+                                  timeIntervals={15}
+                                  timeCaption="Time"
+                                  dateFormat="MMMM d, h:mm aa"
+                                />
+                              </div>
+                            </div>
+                            <div className="start-end-time-container">
+                              <h5>End date and time</h5>
+                              <div className="lunch-time">
+                                <Calendar color="#212429" size={14} />
+                                <DatePicker
+                                  selected={
+                                    doctorAvailability.unavailableDateTimes[0]
+                                      .startDateTime
+                                  }
+                                  // onChange={date =>
+                                  //   setDoctorAvailability({
+                                  //     ...doctorAvailability,
+                                  //     lunchBreakEnd: date,
+                                  //   })
+                                  // }
+                                  showTimeSelect
+                                  minTime={moment().hours(10).minutes(0)._d}
+                                  maxTime={moment().hours(16).minutes(0)._d}
+                                  timeIntervals={15}
+                                  timeCaption="Time"
+                                  dateFormat="MMMM d, h:mm aa"
+                                />
+                              </div>
+                            </div>
                           </div>
-                          <div className="option">
-                            <input
-                              type="radio"
-                              id="everyWeek"
-                              name="condition"
-                              value="everyWeek"
-                            />
-                            <label htmlFor="female">Every Week</label>
-                          </div>
-                          <div className="option">
-                            <input
-                              type="radio"
-                              id="other"
-                              name="condition"
-                              value="daily"
-                            />
-                            <label htmlFor="other">Daily</label>
+                          <div id="appointment-form-button-wrapper">
+                            <div className="grid-item">
+                              <div className="radio-group">
+                                <div className="option">
+                                  <input
+                                    type="radio"
+                                    id="allDay"
+                                    name="condition"
+                                    value="allDay"
+                                  />
+                                  <label htmlFor="allDay">All Day</label>
+                                </div>
+                                <div className="option">
+                                  <input
+                                    type="radio"
+                                    id="everyWeek"
+                                    name="condition"
+                                    value="everyWeek"
+                                  />
+                                  <label htmlFor="female">Every Week</label>
+                                </div>
+                                <div className="option">
+                                  <input
+                                    type="radio"
+                                    id="other"
+                                    name="condition"
+                                    value="daily"
+                                  />
+                                  <label htmlFor="other">Daily</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="grid-item">
+                              {doctorAvailability.unavailableDateTimes
+                                .length !== 1 && (
+                                <Button
+                                  onClick={() =>
+                                    handleRemoveClick('unavailableDateTimes', i)
+                                  }
+                                  icon="minus"
+                                  color="mid"
+                                />
+                              )}
+                              {doctorAvailability.unavailableDateTimes.length -
+                                1 ===
+                                i && (
+                                <Button
+                                  onClick={() =>
+                                    doctorAvailability.unavailableDateTimes[i]
+                                      .startDateTime !== '' &&
+                                    handleAddClick('unavailableDateTimes', {
+                                      startDateTime: moment().toDate(),
+                                      endDateTime: moment().toDate(),
+                                    })
+                                  }
+                                  icon="plus"
+                                  color="mid"
+                                />
+                              )}
+                            </div>
+                            {/* <div className="grid-item">
+                              <Button icon="plus" color="dark" />
+                              <Button icon="minus" color="navy" />
+                            </div> */}
                           </div>
                         </div>
-
-                        {/* <Button action="Custom" color="mid" icon="" /> */}
-                      </div>
-                      <div className="grid-item">
-                        <Button icon="plus" color="dark" />
-                        <Button icon="minus" color="navy" />
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="auth-error-wrapper">
