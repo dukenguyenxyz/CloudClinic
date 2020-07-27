@@ -6,6 +6,8 @@ import { AuthContext } from '../../../globalState/index';
 import axios from 'axios';
 import moment from 'moment';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { v4 as uuidv4 } from 'uuid';
+import { viewSessions } from '../../AxiosTest/config';
 
 const Appointments = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -196,43 +198,57 @@ const Appointments = () => {
     // const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
     //   unavailability => {
     //     if (unavailability.modifier === 'allDay') {
-    //       const startClone = moment
-    //         .utc(unavailability.startDateTime)
-    //         .set(0, 'hour')
-    //         .toDate();
-    //       const endClone = moment
-    //         .utc(unavailability.endDateTime)
-    //         .set(24, 'hour')
-    //         .toDate();
     //       return {
-    //         startDate: startClone,
-    //         endDate: endClone,
+    //         startDate: moment(unavailability.startDateTime)
+    //           .startOf('day')
+    //           .toDate(),
+    //         endDate: moment(unavailability.startDateTime).endOf('day').toDate(),
     //       };
     //     }
     //   }
     // );
+
+    const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
+      unavailability => {
+        if (unavailability.modifier === 'allDay') {
+          return {
+            startDate: moment(unavailability.startDateTime)
+              .startOf('day')
+              .toDate(),
+            endDate: moment(unavailability.startDateTime).endOf('day').toDate(),
+          };
+        }
+      }
+    );
 
     const convertUTC = date => {
       return moment.utc(date).toDate(); // '2020-07-01 09:00'
     };
 
     const newRRulSet = ruleBluePrint => {
-      return new RRule({
-        freq: parseInt(ruleBluePrint.frequency, 10), // RRule.MONTHLY, (NUMERIC VALUE)
+      const newRRule = new RRule({
         dtstart: convertUTC(ruleBluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
         until: convertUTC(moment(ruleBluePrint.startDateTime).add(6, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
       });
+
+      if (ruleBluePrint.modifier) {
+        newRRule.freq = parseInt(ruleBluePrint.modifier, 10); // RRule.MONTHLY, (NUMERIC VALUE)
+      }
+
+      return newRRule;
     };
 
     const unavailabilities = doctorAvailability.unavailableDateTimes.map(
       unavailability => {
         return {
           include: false,
-          ruleInstruction: newRRulSet(unavailability),
+          ruleInstruction: newRRulSet(unavailability).toString(),
           endDateTime: convertUTC(unavailability.endDateTime),
         };
       }
     );
+
+    return unavailabilities;
   };
 
   const handleDoctorAvailabilitySubmit = () => {
@@ -299,41 +315,11 @@ const Appointments = () => {
         errors: ['Please select a valid lunch break end time'],
       });
     }
-
-    const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
-      unavailability => {
-        if (unavailability.modifier === 'allDay') {
-          // const shallowClone =
-          const startClone = moment(unavailability.startDateTime).set({
-            hour: 0,
-            minute: 0,
-            second: 0,
-            millisecond: 0,
-          });
-          console.log(startClone, 'start clone');
-          const endClone = moment(unavailability.endDateTime).set({
-            hour: 24,
-            minute: 0,
-            second: 0,
-            millisecond: 0,
-          });
-          console.log(endClone, 'end clone');
-
-          return {
-            startDate: startClone,
-            endDate: endClone,
-          };
-        }
-      }
-    );
-
-    console.log(allDayUnavailability);
-
     // console.log('no errors');
 
-    // const unavailabilities = aggregateUnavailability();
+    const unavailabilities = aggregateUnavailability();
 
-    // console.log(unavailabilities);
+    console.log(unavailabilities);
   };
 
   const doctorAppointments = () => {

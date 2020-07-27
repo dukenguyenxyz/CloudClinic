@@ -1,0 +1,11 @@
+.messaging-input-wrapper {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0px 12px;
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--light-grey);
+  }
+}

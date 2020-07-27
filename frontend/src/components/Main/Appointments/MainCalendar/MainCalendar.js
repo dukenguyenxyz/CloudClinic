@@ -1,21 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import events from './events';
+// import events from './events';
+import { sampleArr as mockAPISessions } from './events';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { viewSessions } from '../../../AxiosTest/sessionRoutes';
 
 const localizer = momentLocalizer(moment);
 
 const MainCalendar = ({ formState }) => {
-  const [state, setState] = useState({
-    name: 'React',
-    events,
-  });
+  // const [calendarState, setCalendarState] = useState([
+  //   {
+  //     id: 15,
+  //     title: 'Point in Time Event',
+  //     start: moment().toDate(),
+  //     end: moment().toDate(),
+  //   },
+  // ]);
+  const [calendarState, setCalendarState] = useState([]);
 
   useEffect(() => {
-    // make axios call for events
-    // await response
-    // setState with data
+    async function getSessions() {
+      const response = await viewSessions(() => {}, mockAPISessions);
+      setCalendarState(response);
+    }
+    getSessions();
   }, []);
 
   return (
@@ -26,7 +35,7 @@ const MainCalendar = ({ formState }) => {
         }}
       >
         <Calendar
-          events={state.events}
+          events={calendarState}
           startAccessor="start"
           endAccessor="end"
           defaultDate={moment().toDate()}

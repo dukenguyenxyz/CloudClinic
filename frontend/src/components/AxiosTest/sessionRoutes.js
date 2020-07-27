@@ -1,5 +1,8 @@
 import axios from 'axios';
 import faker from 'faker';
+import { v4 as uuidv4 } from 'uuid';
+import { RRule, RRuleSet, rrulestr } from 'rrule';
+import moment from 'moment';
 import {
   url,
   request,
@@ -11,11 +14,68 @@ import {
 
 // Session Routes
 
-export const viewSessions = async () => {
+// export const viewSessions = async () => {
+//   await request
+//     .get('sessions', {})
+//     .then(res => {
+//       console.log(res.data);
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// };
+
+// useEffect(async () => {
+//   const result = await axios(
+//     'https://hn.algolia.com/api/v1/search?query=redux',
+//   );
+
+// cosnt convertedData = convertAPIDATAtoJS(result)
+
+// setCalendar(convertedData)
+//   setData(result.data);
+// });
+
+//remove data for actual call
+export const viewSessions = async (callback, data) => {
+  const convertAPIdataToJS = array => {
+    return data.map(session => {
+      const rruleObject = RRule.fromString(session.ruleInstruction);
+      const start = moment(rruleObject.dtstart);
+
+      const difference = moment(session.endDateTime).diff(start);
+      // const duration = moment.duration(moment(session.endDateTime).diff(start));
+      const clone = start.clone();
+
+      const end = clone.add(difference, 'minutes');
+
+      // console.log('Session object', session);
+      // console.log('session end date time', session.endDateTime);
+      // console.log('Duration:', duration);
+      // console.log('Start:', start.toDate());
+      // console.log('End:', end.toDate());
+
+      return {
+        id: uuidv4(),
+        start: start.toDate(),
+        end: end.toDate(),
+      };
+    });
+  };
+
+  const convertedData = convertAPIdataToJS();
+
+  // callback(convertedAPI);
+
+  // console.log(convertedData);
+  return convertedData;
+
   await request
     .get('sessions', {})
     .then(res => {
-      console.log(res.data);
+      const convertedAPI = convertAPIdataToJS(res.data);
+      // console.log(res.data);
+      callback(convertedAPI);
     })
     .catch(err => {
       console.log(err);

@@ -1,0 +1,44 @@
+.consultation-wrapper {
+  padding: 24px;
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .user-details-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 24px 8px;
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 24px;
+      &:last-child {
+        padding-bottom: 0px;
+      }
+      span:first-child {
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--mid-grey);
+        letter-spacing: 1px;
+        padding-bottom: 4px;
+      }
+    }
+
+    .grid-item {
+      align-self: end;
+      button {
+        padding: 8px 12px;
+      }
+    }
+
+    @media all and (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+
+    @media all and (max-width: 786px) {
+      grid-template-columns: repeat(auto-fit, minmax(192px, 1fr));
+    }
+  }
+}

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from 'react';
+// import axios from 'axios';
 import Button from '../Button/Button';
-import { v4 as uuidv4 } from 'uuid';
-import faker from 'faker';
+// import { v4 as uuidv4 } from 'uuid';
+// import faker from 'faker';
 import { AuthContext } from '../../globalState/index';
 import './AxiosTest.scss';
 import {
@@ -40,7 +40,7 @@ const AxiosTest = () => {
   const sessions = [];
   const updateSessionParams = {};
 
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
 
   return (
     <div>

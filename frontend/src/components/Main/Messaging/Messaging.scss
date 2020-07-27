@@ -1,0 +1,10 @@
+.messaging-wrapper {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  gap: 24px;
+  padding: 24px;
+
+  @media all and (max-width: 786px) {
+    grid-template-columns: 1fr;
+  }
+}

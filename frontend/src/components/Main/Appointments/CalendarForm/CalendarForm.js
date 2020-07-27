@@ -260,8 +260,11 @@ const CalendarForm = ({
                                   showTimeSelect
                                   minDate={moment().toDate()}
                                   maxDate={moment().add(3, 'year').toDate()}
-                                  minTime={moment().hours(10).minutes(0)._d}
-                                  maxTime={moment().hours(16).minutes(0)._d}
+                                  minTime={doctorAvailability.openningTime}
+                                  maxTime={moment()
+                                    .hours(23)
+                                    .minutes(0)
+                                    .toDate()}
                                   timeIntervals={15}
                                   timeCaption="Time"
                                   dateFormat="MMMM d, h:mm aa"
@@ -289,8 +292,11 @@ const CalendarForm = ({
                                   showTimeSelect
                                   minDate={moment().toDate()}
                                   maxDate={moment().add(3, 'year').toDate()}
-                                  minTime={moment().hours(10).minutes(0)._d}
-                                  maxTime={moment().hours(16).minutes(0)._d}
+                                  minTime={doctorAvailability.openningTime}
+                                  maxTime={moment()
+                                    .hours(23)
+                                    .minutes(0)
+                                    .toDate()}
                                   timeIntervals={15}
                                   timeCaption="Time"
                                   dateFormat="MMMM d, h:mm aa"
