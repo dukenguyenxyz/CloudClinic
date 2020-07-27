@@ -16,7 +16,7 @@ export const AuthContextProvider = ({ children }) => {
       postcode: 76960,
     },
     doctorInfo: {
-      accreditations: [],
+      accreditations: ['Doctor of Medicine'],
       education: ['Australian National University'],
       tags: [],
       languagesSpoken: ['Portuguese'],

@@ -188,7 +188,7 @@ const Signup = () => {
       !formState.firstName ||
       !formState.lastName ||
       !formState.title ||
-      !formState.weight ||
+      // !formState.weight ||
       !formState.dob ||
       !formState.phone ||
       !formState.addressNumber ||
@@ -448,6 +448,13 @@ const Signup = () => {
       setFormState({
         ...formState,
         errors: ['Please include your blood type'],
+      });
+    }
+
+    if (!formState.weight && !formState.isDoctor) {
+      setFormState({
+        ...formState,
+        errors: ['Please include your weight'],
       });
     }
 

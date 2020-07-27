@@ -3,7 +3,6 @@ import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 
 const StepOne = ({ formState, onValueChange, onKeyUp }) => {
-  const isDoctor = false;
   const clientSignup = (
     <>
       <AuthInput
