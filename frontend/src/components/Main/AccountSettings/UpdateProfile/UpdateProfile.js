@@ -3,6 +3,7 @@ import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
 import Button from '../../../Button/Button';
+import languages from '../../Authentication/Form/languages';
 
 import { AuthContext } from '../../../../globalState/index';
 import axios from 'axios';
@@ -27,7 +28,35 @@ const UpdateProfile = () => {
 
     setUser({
       ...user,
-      // user.address: e.target.value;
+      [key]: targetObject,
+    });
+  };
+
+  const onNestedArrValueChange = (e, key, i, subKey) => {
+    const targetObject = user[key];
+    targetObject[subKey][i] = e.target.value;
+
+    setUser({
+      ...user,
+      [key]: targetObject,
+    });
+  };
+
+  const handleRemoveClick = (key, i, subKey) => {
+    const targetObject = user[key];
+    targetObject[subKey].splice(i, 1);
+    setUser({
+      ...user,
+      [key]: targetObject,
+    });
+  };
+
+  const handleAddClick = (key, subKey) => {
+    const targetObject = user[key];
+    targetObject[subKey].push('');
+
+    setUser({
+      ...user,
       [key]: targetObject,
     });
   };
@@ -206,32 +235,143 @@ const UpdateProfile = () => {
               <div key={i} className="auth-multi">
                 <AuthInput
                   name="accreditation"
-                  // value={val.accreditation}
                   value={val}
                   placeholder="Accreditation"
                   type="text"
                   maxLength="30"
                   icon="briefcase"
-                  // onValueChange={e =>
-                  //   onArrValueChange(e, 'accreditations', i, 'accreditation')
-                  // }
+                  onValueChange={e =>
+                    onNestedArrValueChange(e, 'doctorInfo', i, 'accreditations')
+                  }
                 />
                 <div className="btn-box">
                   {user.doctorInfo.accreditations.length !== 1 && (
                     <Button
-                      // onClick={() => handleRemoveClick('accreditations', i)}
+                      onClick={() =>
+                        handleRemoveClick('doctorInfo', i, 'accreditations')
+                      }
                       icon="minus"
                       color="mid"
                     />
                   )}
                   {user.doctorInfo.accreditations.length - 1 === i && (
                     <Button
-                      // onClick={() =>
-                      //   user.doctorInfo.accreditations[i] !== '' &&
-                      //   handleAddClick('accreditations', {
-                      //     accreditation: '',
-                      //   })
-                      // }
+                      onClick={() =>
+                        user.doctorInfo.accreditations[i] !== '' &&
+                        handleAddClick('doctorInfo', 'accreditations')
+                      }
+                      icon="plus"
+                      color="mid"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+          <AuthInput
+            value={user.doctorInfo.specialtyField}
+            placeholder="Specialty Field"
+            type="text"
+            maxLength="30"
+            icon="fileText"
+            onValueChange={e =>
+              onNestedValueChange(e, 'doctorInfo', 'specialtyField')
+            }
+          />
+          <AuthInput
+            value={user.doctorInfo.subSpecialtyField}
+            placeholder="Sub Specialty Field"
+            type="text"
+            maxLength="30"
+            icon="fileText"
+            onValueChange={e =>
+              onNestedValueChange(e, 'doctorInfo', 'subSpecialtyField')
+            }
+          />
+          {user.doctorInfo.education.map((val, i) => {
+            return (
+              <div key={i} className="auth-multi">
+                <AuthInput
+                  name="education"
+                  value={val}
+                  placeholder="Education"
+                  type="text"
+                  maxLength="30"
+                  icon="briefcase"
+                  onValueChange={e =>
+                    onNestedArrValueChange(e, 'doctorInfo', i, 'education')
+                  }
+                />
+                <div className="btn-box">
+                  {user.doctorInfo.education.length !== 1 && (
+                    <Button
+                      onClick={() =>
+                        handleRemoveClick('doctorInfo', i, 'education')
+                      }
+                      icon="minus"
+                      color="mid"
+                    />
+                  )}
+                  {user.doctorInfo.education.length - 1 === i && (
+                    <Button
+                      onClick={() =>
+                        user.doctorInfo.education[i] !== '' &&
+                        handleAddClick('doctorInfo', 'education')
+                      }
+                      icon="plus"
+                      color="mid"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+          <AuthInput
+            value={user.doctorInfo.yearsExperience}
+            placeholder="Years of Experience"
+            type="number"
+            icon="hash"
+            maxLength="2"
+            onValueChange={e =>
+              onNestedValueChange(e, 'doctorInfo', 'yearsExperience')
+            }
+            // onInput={onInput}
+          />
+          {user.doctorInfo.languagesSpoken.map((val, i) => {
+            return (
+              <div key={i} className="auth-multi">
+                <AuthSelect
+                  value={val}
+                  placeholder="Language"
+                  type="text"
+                  directive="language"
+                  icon="language"
+                  options={languages}
+                  onValueChange={e =>
+                    onNestedArrValueChange(
+                      e,
+                      'doctorInfo',
+                      i,
+                      'languagesSpoken'
+                    )
+                  }
+                />
+                <div className="btn-box">
+                  {user.doctorInfo.languagesSpoken.length !== 1 && (
+                    <Button
+                      onClick={() =>
+                        handleRemoveClick('doctorInfo', i, 'languagesSpoken')
+                      }
+                      icon="minus"
+                      color="mid"
+                    />
+                  )}
+                  {user.doctorInfo.languagesSpoken.length - 1 === i && (
+                    <Button
+                      onClick={() =>
+                        user.doctorInfo.languagesSpoken[i] !== '' &&
+                        handleAddClick('doctorInfo', 'languagesSpoken')
+                      }
                       icon="plus"
                       color="mid"
                     />
