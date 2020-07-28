@@ -3,6 +3,7 @@ import PatientListItem from '../PatientListItem/PatientListItem';
 import Card from '../../../Card/Card';
 import './PatientList.scss';
 import { viewClients } from '../../../AxiosTest/userRoutes';
+import { v4 as uuidv4 } from 'uuid';
 
 const PatientList = () => {
   const [patients, setPatients] = useState([]);
@@ -11,7 +12,6 @@ const PatientList = () => {
     const fetchData = async () => {
       try {
         const response = await viewClients();
-        // console.log(response);
         setPatients(response.data);
       } catch (err) {
         console.log(err);
@@ -26,7 +26,14 @@ const PatientList = () => {
       <Card>
         <ul>
           {patients.map(user => (
-            <PatientListItem key={user.name} name={user.name} id={user.id} />
+            <li key={uuidv4()}>
+              <PatientListItem
+                name={`${user.firstName} ${user.lastName}`}
+                id={user._id}
+                state={user}
+                image={''}
+              />
+            </li>
           ))}
         </ul>
       </Card>

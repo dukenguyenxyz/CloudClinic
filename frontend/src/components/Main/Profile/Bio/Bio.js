@@ -3,16 +3,7 @@ import Card from '../../../Card/Card';
 import moment from 'moment';
 
 const Bio = ({ user }) => {
-  //helper function for calculating age from DOB
-  const getAge = dateString => {
-    const milliSecInYear = 1000 * 60 * 60 * 24 * 365.25;
-    const today = new Date();
-    const birthDate = new Date(dateString);
-    //difference in milliseconds
-    const diff = today - birthDate;
-    const age = Math.floor(diff / milliSecInYear);
-    return age;
-  };
+  const age = moment().diff(moment(user.dateOfBirth), 'years');
 
   return (
     <Card>
@@ -41,7 +32,7 @@ const Bio = ({ user }) => {
           <div className="grid-item">
             <div className="user-info">
               <span>Age</span>
-              <span>{getAge(user.dateOfBirth)}</span>
+              <span>{age}</span>
             </div>
           </div>
           <div className="grid-item">

@@ -22,6 +22,7 @@ import UserProfile from './components/Main/Profile/UserProfile/UserProfile';
 import PatientList from './components/Main/Patients/PatientList/PatientList';
 import ViewNavigation from './components/ViewNavigation/ViewNavigation';
 import MotionContainer from './components/MotionContainer/MotionContainer';
+import PatientProfile from './components/Main/Patients/PatientProfile/PatientProfile';
 
 function App() {
   const routeVariants = {
@@ -95,7 +96,7 @@ function App() {
                       <PrivateRoute as={Profile} path="/profile" />
                       <PrivateDoctorRoute as={Patients} path="/patients">
                         <PatientList path="/" />
-                        <UserProfile path=":id" />
+                        <PatientProfile path=":id" />
                       </PrivateDoctorRoute>
                       <PrivateRoute as={Messaging} path="/messaging" />
                       <PrivateRoute as={Appointments} path="/appointments" />
