@@ -4,7 +4,7 @@ import { Link } from '@reach/router';
 const PatientListItem = ({ name, id }) => {
   return (
     <Link to={`${id}`}>
-      <li className="patient-list-item-wrapper">
+      <li className="patient-list-item-wrapper" key={name}>
         <div className="patient-list-item-container">
           <div className="profile">
             <div className="avatar"></div>

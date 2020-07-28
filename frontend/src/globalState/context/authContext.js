@@ -35,14 +35,12 @@ export const AuthContextProvider = ({ children }) => {
     email: 'Vivian36@gmail.com',
     title: 'Dr',
     isDoctor: true,
-    createdAt: '2020-07-26T02:07:22.335Z',
-    __v: 1,
   });
 
-  // localStorage.setItem(
-  //   'jwt',
-  //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjFjZTU1OTZiZTk5YzVhMTlkNTY0NjEiLCJpYXQiOjE1OTU3MjkzMDZ9.lFfagdvCoeHtM-TMZvPvYdSN7-2b49n4biJdyOK82lk'
-  // );
+  localStorage.setItem(
+    'cloudclinicJWT',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjFjZTU1OTZiZTk5YzVhMTlkNTY0NjEiLCJpYXQiOjE1OTU3MjkzMDZ9.lFfagdvCoeHtM-TMZvPvYdSN7-2b49n4biJdyOK82lk'
+  );
 
   // ***** SUPER USER CLIENT ****** //
   // const [user, setUser] = useState({
@@ -95,13 +93,9 @@ export const AuthContextProvider = ({ children }) => {
   // });
 
   // localStorage.setItem(
-  //   'jwt',
+  //   'cloudclinicJWT',
   //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjFjZTU1OTZiZTk5YzVhMTlkNTY0NDQiLCJpYXQiOjE1OTU3MjkzNDZ9.uUyropLCHhA61YxS0utt1l59Rf6vMr4VUWMQhA_nitE'
   // );
-
-  // const checkIfUserExists = () => {
-  //   const jwt = localStorage.get
-  // }
 
   const authState = {
     user,

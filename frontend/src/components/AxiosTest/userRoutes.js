@@ -159,14 +159,16 @@ export const deleteProfile = async setUserCallback => {
 };
 
 export const viewClients = async () => {
-  await request
-    .get('users/clients', {})
-    .then(res => {
-      console.log(res);
-    })
+  const response = await request
+    .get('users/clients')
+    // .then(res => {
+    //   console.log(res);
+    // })
     .catch(err => {
       console.log(err);
     });
+
+  return response;
 };
 
 export const viewClient = async clientID => {
