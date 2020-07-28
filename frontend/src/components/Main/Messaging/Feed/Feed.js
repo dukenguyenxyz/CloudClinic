@@ -27,65 +27,6 @@ const Feed = () => {
     alignSelf: 'end',
   };
 
-  const senderStyles = {
-    messageWrapper: {
-      display: 'grid',
-      gridTemplateColumns: '50px auto',
-      gap: '8px',
-      marginBottom: '24px',
-    },
-  };
-
-  const receiverStyles = {
-    messageWrapper: {
-      display: 'grid',
-      gridTemplateColumns: 'auto 50px',
-      gap: '8px',
-      marginBottom: '24px',
-    },
-  };
-
-  // .message-wrapper {
-  //   display: grid;
-  //   grid-template-columns: 50px auto;
-  //   gap: 8px;
-  //   margin-bottom: 24px;
-
-  //   .user-avatar {
-  //     align-content: end;
-  //   }
-
-  //   .message-container {
-  //     display: grid;
-  //     .time-stamp {
-  //       font-size: 10px;
-  //       color: var(--mid-grey);
-  //       justify-self: center;
-  //       margin-bottom: 8px;
-  //     }
-  //   }
-
-  //   .message {
-  //     background-color: var(--light-blue);
-  //     padding: 24px;
-  //     border-top-left-radius: var(--border-radius);
-  //     border-top-right-radius: var(--border-radius);
-  //     border-bottom-right-radius: var(--border-radius);
-
-  //     p {
-  //       font-size: 14px;
-
-  //       @media all and (max-width: 550px) {
-  //         font-size: 12px;
-  //       }
-  //     }
-
-  //     @media all and (max-width: 550px) {
-  //       padding: 12px;
-  //     }
-  //   }
-  // }
-
   return (
     <div className="feed-wrapper">
       <div className="trim" />
