@@ -274,35 +274,6 @@ const Appointments = () => {
     // 6AM ... < 6AM is unavailable
     // 7PM ... > 7PM is unavailabile
 
-    // docotr.avaiaiblity.unavaialbledatetimes =     unavailableDateTimes: [
-    //   {
-    //     startDateTime: round(
-    //       moment(),
-    //       moment.duration(15, 'minutes'),
-    //       'ceil'
-    //     ).toDate(),
-    //     endDateTime: round(
-    //       moment(),
-    //       moment.duration(15, 'minutes'),
-    //       'ceil'
-    //     ).toDate(),
-    //     modifier: '',
-    //   },
-    // ],
-
-    // const sampleArr = [
-    //   {
-    //     duration: 15, // integer, enum [15, 30, 60]
-    //     include: false,
-    //     ruleInstruction: ruleStringified1,
-    //   },
-    //   {
-    //     duration: 30,
-    //     include: false,
-    //     ruleInstruction: ruleStringified2,
-    //   },
-    // ];
-
     const unavailabilities = doctorAvailability.unavailableDateTimes.map(
       unavailability => {
         return {
@@ -315,16 +286,7 @@ const Appointments = () => {
         };
       }
     );
-    console.log(unavailabilities);
-
-    const result = convertAPIdataToJS(unavailabilities);
-    console.log(result);
-    return result;
-
-    // console.log(_.flattenDeep([unavailabilities]));
-
-    // setUnavailabilities(_.flattenDeep([unavailabilities]));
-    // return _.flattenDeep([unavailabilities]);
+    return convertAPIdataToJS(unavailabilities);
   };
 
   // Make API Call
@@ -392,11 +354,8 @@ const Appointments = () => {
         errors: ['Please select a valid lunch break end time'],
       });
     }
-    // console.log('no errors');
 
-    // const unavailabilities = aggregateUnavailability();
-
-    // console.log(unavailabilities);
+    // make POST request here
   };
 
   const doctorAppointments = () => {

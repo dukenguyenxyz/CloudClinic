@@ -1,18 +1,18 @@
-// import { v4 } from 'uuid';
-// import { RRule, RRuleSet, rrulestr } from 'rrule';
-// import moment from 'moment';
-// import _ from 'lodash';
+import { v4 } from 'uuid';
+import { RRule, RRuleSet, rrulestr } from 'rrule';
+import moment from 'moment';
+import _ from 'lodash';
 
-const { v4 } = require('uuid');
-const { RRule, RRuleSet, rrulestr } = require('rrule');
-const moment = require('moment');
-const _ = require('lodash');
+// const { v4 } = require('uuid');
+// const { RRule, RRuleSet, rrulestr } = require('rrule');
+// const moment = require('moment');
+// const _ = require('lodash');
 
-const add = require('date-fns/add');
-const now = new Date();
+// const add = require('date-fns/add');
+// const now = new Date();
 
-// export const dateOneStart = moment.utc().toDate();
-const dateOneStart = moment.utc().toDate();
+export const dateOneStart = moment.utc().toDate();
+// const dateOneStart = moment.utc().toDate();
 
 const dateOneUntil = moment.utc().add({ days: 7, hours: 5 }).toDate();
 
@@ -34,8 +34,8 @@ const ruleTwo = new RRule({
 const ruleStringified1 = ruleOne.toString();
 const ruleStringified2 = ruleTwo.toString();
 
-// export const sampleArr = [
-const sampleArr = [
+export const sampleArr = [
+  // const sampleArr = [
   {
     duration: 15, // integer, enum [15, 30, 60]
     include: false,
@@ -90,8 +90,8 @@ const sampleArr3 = [
 
 //
 
-// export const convertAPIdataToJS = array => {
-const convertAPIdataToJS = array => {
+export const convertAPIdataToJS = array => {
+  // const convertAPIdataToJS = array => {
   //BUG IS HERE
   const convertedData = array.map(arrayItem => {
     const rruleObject = RRule.fromString(arrayItem.ruleInstruction);
@@ -118,9 +118,8 @@ const convertAPIdataToJS = array => {
   return _.flattenDeep(convertedData);
 };
 
-//bug vvvvv
-const newArr = convertAPIdataToJS(sampleArr3);
-console.log(newArr);
+// const newArr = convertAPIdataToJS(sampleArr2);
+// console.log(newArr);
 
 {
   // export default [

@@ -32,8 +32,8 @@ export const AuthContextProvider = ({ children }) => {
   //
   useEffect(() => {
     const generateUser = async () => {
-      await signUpClient(setUser);
-      // await signUpDoctor(setUser);
+      // await signUpClient(setUser);
+      await signUpDoctor(setUser);
     };
     generateUser();
   }, []);
