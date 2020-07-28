@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { viewDoctors } from '../../AxiosTest/userRoutes';
 import { v4 as uuidv4 } from 'uuid';
-import { Link } from '@reach/router';
+import Card from '../../Card/Card';
+import DoctorListItem from '../DoctorListItem/DoctorListItem';
 
 const SearchDoctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -21,16 +22,21 @@ const SearchDoctors = () => {
   }, []);
 
   return (
-    <div>
-      <ul>
-        {doctors.map(doctor => {
-          return (
-            <Link to={`/${doctor._id}`} key={doctor._id} state={doctor}>
-              <li>{`${doctor.firstName} ${doctor.lastName}`}</li>
-            </Link>
-          );
-        })}
-      </ul>
+    <div className="doctor-list-wrapper">
+      <Card>
+        <ul>
+          {doctors.map(doctor => (
+            <li key={uuidv4()}>
+              <DoctorListItem
+                name={`${doctor.firstName} ${doctor.lastName}`}
+                id={doctor._id}
+                state={doctor}
+                image={''}
+              />
+            </li>
+          ))}
+        </ul>
+      </Card>
     </div>
   );
 };
