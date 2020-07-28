@@ -23,6 +23,7 @@ exports.viewSessions = async (req, res) => {
   }
 };
 
+// Deprecated
 // Create available session
 exports.createSession = async (req, res) => {
   try {
@@ -55,6 +56,50 @@ exports.createSessions = async (req, res) => {
     res.status(201).send(sessions);
   } catch (e) {
     res.status(500).send();
+  }
+};
+
+// Accept session
+exports.acceptBooking = async (req, res) => {
+  try {
+    // Check if creator is a doctor
+    isDoctorValidation(req, true);
+
+    const session = await sessionExists(req);
+
+    // Check if session has no booking
+    if (session.status === 'declined') {
+      res.status(409).send({ error: 'booking is no longer available' });
+    }
+
+    session.status = 'accepted';
+    session.save();
+
+    res.status(200).send(session);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+// Decline session
+exports.declineBooking = async (req, res) => {
+  try {
+    // Check if creator is a doctor
+    isDoctorValidation(req, true);
+
+    const session = await sessionExists(req);
+
+    // Check if session has no booking
+    if (session.status === 'accepted') {
+      res.status(409).send({ error: 'booking is no longer available' });
+    }
+
+    session.status = 'declined';
+    session.save();
+
+    res.status(200).send(session);
+  } catch (e) {
+    res.status(400).send(e);
   }
 };
 
@@ -108,7 +153,30 @@ exports.bookSession = async (req, res) => {
 
     res.status(200).send(session);
   } catch (e) {
-    res.status(500).send(e);
+    res.status(400).send(e);
+  }
+};
+
+// Create a booking: NEW ACTION
+exports.createBooking = async (req, res) => {
+  try {
+    // Check if creator is client
+    isDoctorValidation(req, false);
+
+    const { startTime, endTime } = await sessionValidation(req, req.body, true);
+
+    const session = new Session({
+      startTime,
+      endTime,
+      doctor: req.params.id,
+      client: req.user.id,
+      status: 'pending',
+    });
+
+    await session.save();
+    res.send(session);
+  } catch (e) {
+    res.status(400).send(e);
   }
 };
 
