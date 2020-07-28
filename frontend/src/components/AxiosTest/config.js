@@ -39,7 +39,6 @@ export const newUserClient = {
   lastName: 'Doctorson',
   title: 'Sir',
   sex: 'male',
-  weight: '55',
   dateOfBirth: '05/11/1999',
   phoneNumber: '04104820594',
   email: newEmailClient,
@@ -65,6 +64,7 @@ export const newUserClient = {
     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
   },
   clientInfo: {
+    weight: '55',
     medicalHistory: [
       {
         startDate: '03/05/2005',
@@ -106,15 +106,14 @@ export const newUserClient = {
 export const newUserDoctor = {
   firstName: 'Lisa',
   lastName: 'asdfsdf',
-  title: 'Ms',
+  title: 'Dr',
   sex: 'female',
-  weight: '55',
   dateOfBirth: '05/11/1999',
   phoneNumber: '0410734821',
   email: newEmailDoctor,
   password: '123456789',
   confirmPassword: '123456789',
-  isDoctor: 'true',
+  isDoctor: true,
   address: {
     number: '4',
     street: 'Beamish Street',
