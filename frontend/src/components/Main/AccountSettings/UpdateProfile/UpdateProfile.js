@@ -57,7 +57,7 @@ const UpdateProfile = () => {
   const sanitizeForm = () => {
     const formFormRequest = Object.assign({}, user);
 
-    if (formFormRequest.doctorInfo.rating) {
+    if (formFormRequest.doctorInfo && formFormRequest.doctorInfo.rating) {
       delete formFormRequest.doctorInfo.rating;
     }
 
