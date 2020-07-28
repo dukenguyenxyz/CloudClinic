@@ -1,3 +1,9 @@
 .account-settings-wrapper {
   margin: 24px;
+
+  .account-control {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin-bottom: 24px;
+  }
 }

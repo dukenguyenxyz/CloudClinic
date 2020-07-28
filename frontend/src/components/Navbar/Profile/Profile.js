@@ -2,8 +2,9 @@ import React from 'react';
 import './Profile.scss';
 import { LogOut } from 'react-feather';
 import { motion } from 'framer-motion';
+import { signOut } from '../../AxiosTest/userRoutes';
 
-const Profile = ({ isOpen, user }) => {
+const Profile = ({ isOpen, user, setUser }) => {
   const name = {
     hidden: { opacity: 0, x: '50%', transition: { ease: 'easeInOut' } },
     show: {
@@ -20,6 +21,18 @@ const Profile = ({ isOpen, user }) => {
       transition: { ease: 'easeInOut', delay: 0.75 },
     },
   };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(setUser, '/');
+    } catch (error) {
+      console.log(error);
+      setUser({
+        ...user,
+      });
+    }
+  };
+
   return (
     <div className="navbar-profile-wrapper">
       <div className="profile">
@@ -39,7 +52,9 @@ const Profile = ({ isOpen, user }) => {
         initial="hidden"
         animate={isOpen ? 'show' : 'hidden'}
       >
-        {user && <LogOut />}
+        <div className="logoout" onClick={() => handleSignOut()}>
+          {user && <LogOut />}
+        </div>
       </motion.div>
     </div>
   );

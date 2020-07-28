@@ -10,7 +10,7 @@ import Hamburger from './Hamburger/Hamburger';
 const Navbar = ({ location }) => {
   const [isMobile, setIsMobile] = useState(false);
   const { isOpen, setIsOpen } = useContext(NavbarContext);
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [animateMenu, cycleMenu] = useCycle(
     { width: '70px' },
     { width: '208px' }
@@ -55,7 +55,7 @@ const Navbar = ({ location }) => {
           <Menu isOpen={isOpen} user={user} location={location} />
           <div>
             <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
-            <Profile isOpen={isOpen} user={user} />
+            <Profile isOpen={isOpen} user={user} setUser={setUser} />
           </div>
         </nav>
       </div>

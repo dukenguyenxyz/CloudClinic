@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.scss';
 import { Router, Location } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
@@ -23,6 +23,9 @@ import PatientList from './components/Main/Patients/PatientList/PatientList';
 import ViewNavigation from './components/ViewNavigation/ViewNavigation';
 import MotionContainer from './components/MotionContainer/MotionContainer';
 import PatientProfile from './components/Main/Patients/PatientProfile/PatientProfile';
+import SearchDoctors from './components/Home/SearchDoctors/SearchDoctors';
+import Public from './components/Home/Public/Public';
+import ViewDoctor from './components/Home/ViewDoctor/ViewDoctor';
 
 function App() {
   const routeVariants = {
@@ -61,6 +64,11 @@ function App() {
     ease: 'easeInOut',
   };
 
+  // if user is null & there's a valid jwt in local storage
+  // grab the JWT and make a get request for the user that matches that jwt
+  // show a loading spinner while we wait from response
+  // call the setUser callback to set user in auth context
+
   return (
     <ContextProvider>
       <div className="App">
@@ -92,7 +100,11 @@ function App() {
                   >
                     <ViewNavigation location={location} />
                     <Router location={location}>
-                      <Home path="/" />
+                      <Public path="/">
+                        <Home path="home" />
+                        <SearchDoctors path="search" />
+                        <ViewDoctor path=":id" />
+                      </Public>
                       <PrivateRoute as={Profile} path="/profile" />
                       <PrivateDoctorRoute as={Patients} path="/patients">
                         <PatientList path="/" />

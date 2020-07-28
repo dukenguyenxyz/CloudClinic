@@ -143,7 +143,7 @@
     background-color: var(--dark-blue);
     border: var(--black);
     box-shadow: var(--box-shadow);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .rbc-allday-cell {
@@ -236,7 +236,7 @@
 
       span {
         margin-left: 16px;
-        font-size: 14px;
+        font-size: 0.875rem;
         display: flex;
         line-height: 1;
         margin-top: 2px;
@@ -293,7 +293,7 @@
   position: relative;
   .date-label {
     position: absolute;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--mid-grey);
     transform: scale(0.8) translateY(-12px);
     padding: 0 4px;
@@ -381,7 +381,7 @@
 
   .grid-item {
     display: flex;
-    font-size: 14px;
+    font-size: 0.875rem;
     & > :first-child {
       margin-right: 12px;
     }

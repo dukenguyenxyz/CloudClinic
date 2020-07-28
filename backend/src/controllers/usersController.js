@@ -73,7 +73,7 @@ exports.signOut = async (req, res) => {
 
     res.send();
   } catch (e) {
-    res.status(500).send();
+    res.status(400).send(e);
   }
 };
 

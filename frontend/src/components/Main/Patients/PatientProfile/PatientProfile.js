@@ -11,6 +11,8 @@ import Bio from '../../Profile/Bio/Bio';
 const PatientProfile = props => {
   //user object passed from reach router link
   const user = props.location.state;
+
+  console.log(user);
   return (
     <div className="user-profile-wrapper">
       <div className="panel-left">
