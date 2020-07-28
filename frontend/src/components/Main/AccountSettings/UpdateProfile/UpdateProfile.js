@@ -7,20 +7,91 @@ import languages from '../../Authentication/Form/languages';
 import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
 import axios from 'axios';
-import { updateProfile } from '../../../AxiosTest/userRoutes';
+import {
+  updateProfile,
+  updateProfileTesting,
+} from '../../../AxiosTest/userRoutes';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 
 const UpdateProfile = () => {
   const { user, setUser } = useContext(AuthContext);
-
   const sexOptions = ['male', 'female'];
   const titleOptions = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'];
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
 
+  const mockPatchUser = {
+    firstName: 'Lisa',
+    lastName: 'Nguyen',
+    title: 'sadfasdfsadf',
+    sex: 'male',
+    weight: '55',
+    dateOfBirth: '05/11/1999',
+    phoneNumber: '04104820594',
+    email: 'lisahuang@gmail.com',
+    password: '123456789',
+    isDoctor: 'true',
+    address: {
+      number: '4',
+      street: 'Beamish Street',
+      city: 'Sydney',
+      state: 'New South Wales',
+      country: 'Australia',
+      postcode: '2149',
+    },
+    doctorInfo: {
+      licence: 'MIT',
+      accreditations: ['USyd', 'UNSW'],
+      specialtyField: 'Dentistry',
+      subSpecialtyField: 'Prosthodontics',
+      education: ['ANU', 'Macquarie University'],
+      yearsExperience: '10',
+      tags: ['Orthodontics', 'Prosthodontics'],
+      languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+    },
+  };
+
+  const dob = moment(user.dateOfBirth).format('YYYY-MM-DD');
+
+  const sanitizeForm = () => {
+    const formFormRequest = Object.assign({}, user);
+
+    if (formFormRequest.doctorInfo.rating) {
+      delete formFormRequest.doctorInfo.rating;
+    }
+
+    if (formFormRequest.email) {
+      delete formFormRequest.email;
+    }
+
+    if (formFormRequest.isDoctor) {
+      delete formFormRequest.isDoctor;
+    }
+
+    if (formFormRequest._id) {
+      delete formFormRequest._id;
+    }
+
+    if (formFormRequest.errors) {
+      delete formFormRequest.errors;
+    }
+
+    if (formFormRequest.createdAt) {
+      delete formFormRequest.createdAt;
+    }
+
+    if (formFormRequest.__v) {
+      delete formFormRequest.__v;
+    }
+
+    return formFormRequest;
+  };
+
   const onValueChange = (e, key) => {
     setUser({
       ...user,
-      // errors: [],
+      errors: [],
       [key]: e.target.value,
     });
   };
@@ -31,6 +102,7 @@ const UpdateProfile = () => {
 
     setUser({
       ...user,
+      errors: [],
       [key]: targetObject,
     });
   };
@@ -92,7 +164,7 @@ const UpdateProfile = () => {
         if (!inputValues[i]) {
           setUser({
             ...user,
-            ['errors']: [...user['errors'], 'Please fill in all fields'],
+            errors: ['Please enter all fields'],
           });
         }
       }
@@ -100,7 +172,7 @@ const UpdateProfile = () => {
   };
 
   //handler for submitting form
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (
       !user.firstName ||
       !user.lastName ||
@@ -111,33 +183,27 @@ const UpdateProfile = () => {
       !user.address.state ||
       !user.address.street ||
       !user.address.city ||
-      !user.country ||
-      !user.postcode
+      !user.address.country ||
+      !user.address.postcode ||
+      !user.password
     ) {
       setUser({
         ...user,
-        ['errors']: [...user['errors'], 'Please fill in all the inputs'],
+        errors: ['Please fill in all the inputs'],
       });
     }
 
     if (user.password !== user.confirmPassword) {
       setUser({
         ...user,
-        ['errors']: [...user['errors'], 'Passwords do not match'],
+        errors: ['Passwords do not match'],
       });
     }
 
     if (!user.email.includes('@')) {
       setUser({
         ...user,
-        ['errors']: [...user['errors'], 'Please enter a valid email'],
-      });
-    }
-
-    if (user.password !== '') {
-      setUser({
-        ...user,
-        ['errors']: [...user['errors'], 'Please enter a valid password'],
+        errors: ['Please enter a valid email'],
       });
     }
 
@@ -145,54 +211,42 @@ const UpdateProfile = () => {
       if (!user.doctorInfo.licence && user.isDoctor) {
         setUser({
           ...user,
-          ['errors']: [
-            ...user['errors'],
-            'Please include a valid licence number',
-          ],
+          errors: ['Please enter a valid doctor licence'],
         });
       }
 
       if (!user.doctorInfo.accreditations && user.isDoctor) {
         setUser({
           ...user,
-          ['errors']: [
-            ...user['errors'],
-            'Please include a valid accreditation',
-          ],
+          errors: ['Please enter your accreditations'],
         });
       }
 
       if (!user.doctorInfo.specialtyField && user.isDoctor) {
         setUser({
           ...user,
-          ['errors']: [...user['errors'], 'Please include a specialty field'],
+          errors: ['Please enter your sepciality field'],
         });
       }
 
       if (!user.doctorInfo.education && user.isDoctor) {
         setUser({
           ...user,
-          ['errors']: [...user['errors'], 'Please include your education'],
+          errors: ['Please include your education'],
         });
       }
 
-      if (!user.doctorInfo.yearsExp && user.isDoctor) {
+      if (!user.doctorInfo.yearsExperience && user.isDoctor) {
         setUser({
           ...user,
-          ['errors']: [
-            ...user['errors'],
-            'Please include your years of experience',
-          ],
+          errors: ['Please enter your years of experience'],
         });
       }
 
       if (!user.doctorInfo.languagesSpoken && user.isDoctor) {
         setUser({
           ...user,
-          ['errors']: [
-            ...user['errors'],
-            'Please include the languages you speak',
-          ],
+          errors: ['Please enter the languages you speak'],
         });
       }
     }
@@ -202,105 +256,52 @@ const UpdateProfile = () => {
       checkEmptyInputFields('allergies');
       checkEmptyInputFields('medication');
 
-      if (!user.clientInfo.bloodType && !user.isDoctor) {
+      if (!user.clientInfo.bloodType) {
         setUser({
           ...user,
-          ['errors']: [...user['errors'], 'Please include your blood type'],
+          errors: ['Please enter your blood type'],
         });
       }
 
-      if (!user.clientInfo.weight && !user.isDoctor) {
+      if (!user.clientInfo.weight) {
         setUser({
           ...user,
-          ['errors']: [...user['errors'], 'Please include your weight'],
+          errors: ['Please enter your weight'],
         });
       }
     }
 
-    // const developmentUrl = 'http://localhost:5000';
-    // const productionUrl = 'http://cloudclinic.tech';
-    // const endpoint = `${developmentUrl}/api/users/profile`;
-    // axios.defaults.headers.patch['Content-Type'] = 'application/json';
-    // const jwt = localStorage.getItem('jwt');
-
-    // Make axios post request to backend
-    // axios
-    //   .patch(endpoint, user, {
-    //     headers: {
-    //       Authorization: jwt,
-    //       'Content-Type': 'application/json; charset=utf-8',
-    //     },
-    //   })
-    //   .then(response => {
-    //     console.log(response.data.user);
-    //     const user = response.data.user;
-    //     setUser(user);
-    //     navigate('/profile');
-    //   })
-    //   .catch(error => {
-    //     console.log(error.response);
-    //     {
-    //       user.errors
-    //         ? setUser({
-    //             ...user,
-    //             errors: [...user.errors, `${error.response.data}`],
-    //           })
-    //         : setUser({
-    //             ...user,
-    //             errors: [`${error.response.data}`],
-    //           });
-    //     }
-    //   });
-
-    //if user errors is falsy, i.e. no errors, make axios patch request
-    if (user.errors) {
-      console.log(user.errors);
-    } else {
+    if (user.errors.length === 0) {
+      console.log('here');
       const updateData = async () => {
+        const cloneForm = sanitizeForm();
         try {
-          const response = await updateProfile(setUser, user);
+          const response = await updateProfile(cloneForm);
           console.log(response);
-          // setUser(response.data);
-          navigate('/profile');
+          setUser(response.data);
+          // navigate('/profile');
         } catch (err) {
           console.log(err);
           setUser({
             ...user,
-            ['errors']: [
-              ...user['errors'],
-              'Something went wrong, bad request',
-            ],
+            errors: ['network error'],
           });
         }
       };
       updateData();
     }
+    // console.log(user.errors);
   };
 
+  // console.log('user', user);
+  // console.log('mock', mockPatchUser);
+  console.log(user);
   return (
     <div className="update-profile-wrapper">
       <h1>Update Profile</h1>
       <h2>Login Details</h2>
       <AuthInput
-        value={user.username}
-        placeholder="Username"
-        type="text"
-        icon="username"
-        minLength="3"
-        maxLength="20"
-        onValueChange={e => onValueChange(e, 'username')}
-      />
-      <AuthInput
-        value={user.email}
-        placeholder="Email"
-        type="email"
-        icon="email"
-        maxLength="255"
-        minLength="3"
-        onValueChange={e => onValueChange(e, 'email')}
-      />
-      <AuthInput
-        value={user.password}
+        value={user.password || ''}
         placeholder="Password"
         type="password"
         icon="password"
@@ -309,7 +310,7 @@ const UpdateProfile = () => {
         // validationIcon={formState.validationIcon}
       />
       <AuthInput
-        value={user.confirmPassword}
+        value={user.confirmPassword || ''}
         placeholder="Confirm"
         type="password"
         icon="password"
@@ -357,7 +358,7 @@ const UpdateProfile = () => {
         onValueChange={e => onValueChange(e, 'sex')}
       />
       <AuthInput
-        value={user.dateOfBirth}
+        value={dob}
         placeholder="Date of Birth"
         type="date"
         icon="calendar"
@@ -437,7 +438,7 @@ const UpdateProfile = () => {
           <h2>Medical Licencing & Accreditation</h2>
           {/* {console.log('Medical licence')} */}
           <AuthInput
-            value={user.licence}
+            value={user.doctorInfo.licence}
             placeholder="Licence"
             type="text"
             maxLength="30"
@@ -863,6 +864,17 @@ const UpdateProfile = () => {
             onValueChange={e => onNestedValueChange(e, 'clientInfo', 'weight')}
           />
         </>
+      )}
+      {user.errors && (
+        <div className="auth-error-wrapper">
+          <ul>
+            {user.errors.map(errorMessage => (
+              <li key={uuidv4()} className="auth-error-message">
+                {errorMessage}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       <Button
         action="Update"

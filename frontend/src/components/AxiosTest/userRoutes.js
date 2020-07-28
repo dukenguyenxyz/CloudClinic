@@ -133,12 +133,26 @@ export const viewProfile = async () => {
     });
 };
 
-export const updateProfile = async (setUserCallback, updateParamsObj) => {
+export const updateProfile = async updateParamsObj => {
+  const response = await request
+    .patch('users/profile', updateParamsObj)
+    // .then(res => {
+    //   console.log(res);
+    //   setUserCallback(res.data);
+    // })
+    .catch(err => {
+      console.log(err);
+    });
+
+  return response;
+};
+
+//test update
+export const updateProfileTesting = async (callback, updateParamsObj) => {
   await request
     .patch('users/profile', updateParamsObj)
     .then(res => {
-      console.log(res);
-      setUserCallback(res.data);
+      callback(res.data);
     })
     .catch(err => {
       console.log(err);

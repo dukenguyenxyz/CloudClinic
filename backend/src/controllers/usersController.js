@@ -130,7 +130,7 @@ exports.updateProfile = async (req, res) => {
 
     res.status(201).send(req.user);
   } catch (e) {
-    res.status(500).send();
+    res.status(400).send(e);
   }
 };
 

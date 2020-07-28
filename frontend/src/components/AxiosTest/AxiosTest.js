@@ -19,6 +19,7 @@ import {
   viewClients,
   viewDoctors,
   viewDoctor,
+  updateProfileTesting,
 } from './userRoutes';
 
 import {
@@ -95,7 +96,7 @@ const AxiosTest = () => {
           />
           <Button
             action="update profile"
-            onClick={() => updateProfile(setUser, { firstName: 'Duke' })}
+            onClick={() => updateProfileTesting(setUser, { firstName: 'Duke' })}
             color="pink"
             icon="check"
           />
