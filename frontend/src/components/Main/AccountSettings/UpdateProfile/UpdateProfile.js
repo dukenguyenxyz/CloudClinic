@@ -4,7 +4,7 @@ import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
 import Button from '../../../Button/Button';
 import languages from '../../Authentication/Form/languages';
-// import { navigate } from '@reach/router';
+import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
 import axios from 'axios';
 import { updateProfile } from '../../../AxiosTest/userRoutes';
@@ -92,7 +92,7 @@ const UpdateProfile = () => {
         if (!inputValues[i]) {
           setUser({
             ...user,
-            errors: ['Please fill in all fields'],
+            ['errors']: [...user['errors'], 'Please fill in all fields'],
           });
         }
       }
@@ -116,28 +116,28 @@ const UpdateProfile = () => {
     ) {
       setUser({
         ...user,
-        errors: ['Please fill in all the inputs'],
+        ['errors']: [...user['errors'], 'Please fill in all the inputs'],
       });
     }
 
     if (user.password !== user.confirmPassword) {
       setUser({
         ...user,
-        errors: ['Passwords do not match'],
+        ['errors']: [...user['errors'], 'Passwords do not match'],
       });
     }
 
     if (!user.email.includes('@')) {
       setUser({
         ...user,
-        errors: ['Please enter a valid email'],
+        ['errors']: [...user['errors'], 'Please enter a valid email'],
       });
     }
 
     if (user.password !== '') {
       setUser({
         ...user,
-        errors: ['Please enter a valid password'],
+        ['errors']: [...user['errors'], 'Please enter a valid password'],
       });
     }
 
@@ -145,42 +145,54 @@ const UpdateProfile = () => {
       if (!user.doctorInfo.licence && user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include a valid licence number'],
+          ['errors']: [
+            ...user['errors'],
+            'Please include a valid licence number',
+          ],
         });
       }
 
       if (!user.doctorInfo.accreditations && user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include a valid accreditation'],
+          ['errors']: [
+            ...user['errors'],
+            'Please include a valid accreditation',
+          ],
         });
       }
 
       if (!user.doctorInfo.specialtyField && user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include a specialty field'],
+          ['errors']: [...user['errors'], 'Please include a specialty field'],
         });
       }
 
       if (!user.doctorInfo.education && user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include your education'],
+          ['errors']: [...user['errors'], 'Please include your education'],
         });
       }
 
       if (!user.doctorInfo.yearsExp && user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include your years of experience'],
+          ['errors']: [
+            ...user['errors'],
+            'Please include your years of experience',
+          ],
         });
       }
 
       if (!user.doctorInfo.languagesSpoken && user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include the languages you speak'],
+          ['errors']: [
+            ...user['errors'],
+            'Please include the languages you speak',
+          ],
         });
       }
     }
@@ -193,54 +205,75 @@ const UpdateProfile = () => {
       if (!user.clientInfo.bloodType && !user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include your blood type'],
+          ['errors']: [...user['errors'], 'Please include your blood type'],
         });
       }
 
       if (!user.clientInfo.weight && !user.isDoctor) {
         setUser({
           ...user,
-          errors: ['Please include your weight'],
+          ['errors']: [...user['errors'], 'Please include your weight'],
         });
       }
     }
 
-    const developmentUrl = 'http://localhost:5000';
+    // const developmentUrl = 'http://localhost:5000';
     // const productionUrl = 'http://cloudclinic.tech';
-    const endpoint = `${developmentUrl}/api/users/profile`;
-    axios.defaults.headers.patch['Content-Type'] = 'application/json';
-    const jwt = localStorage.getItem('jwt');
+    // const endpoint = `${developmentUrl}/api/users/profile`;
+    // axios.defaults.headers.patch['Content-Type'] = 'application/json';
+    // const jwt = localStorage.getItem('jwt');
+
+    // Make axios post request to backend
+    // axios
+    //   .patch(endpoint, user, {
+    //     headers: {
+    //       Authorization: jwt,
+    //       'Content-Type': 'application/json; charset=utf-8',
+    //     },
+    //   })
+    //   .then(response => {
+    //     console.log(response.data.user);
+    //     const user = response.data.user;
+    //     setUser(user);
+    //     navigate('/profile');
+    //   })
+    //   .catch(error => {
+    //     console.log(error.response);
+    //     {
+    //       user.errors
+    //         ? setUser({
+    //             ...user,
+    //             errors: [...user.errors, `${error.response.data}`],
+    //           })
+    //         : setUser({
+    //             ...user,
+    //             errors: [`${error.response.data}`],
+    //           });
+    //     }
+    //   });
 
     //if user errors is falsy, i.e. no errors, make axios patch request
-    if (!user.errors) {
-      // Make axios post request to backend
-      // axios
-      //   .patch(endpoint, user, {
-      //     headers: {
-      //       Authorization: jwt,
-      //       'Content-Type': 'application/json; charset=utf-8',
-      //     },
-      //   })
-      //   .then(response => {
-      //     console.log(response.data.user);
-      //     const user = response.data.user;
-      //     setUser(user);
-      //     navigate('/profile');
-      //   })
-      //   .catch(error => {
-      //     console.log(error.response);
-      //     {
-      //       user.errors
-      //         ? setUser({
-      //             ...user,
-      //             errors: [...user.errors, `${error.response.data}`],
-      //           })
-      //         : setUser({
-      //             ...user,
-      //             errors: [`${error.response.data}`],
-      //           });
-      //     }
-      //   });
+    if (user.errors) {
+      console.log(user.errors);
+    } else {
+      const updateData = async () => {
+        try {
+          const response = await updateProfile(setUser, user);
+          console.log(response);
+          // setUser(response.data);
+          navigate('/profile');
+        } catch (err) {
+          console.log(err);
+          setUser({
+            ...user,
+            ['errors']: [
+              ...user['errors'],
+              'Something went wrong, bad request',
+            ],
+          });
+        }
+      };
+      updateData();
     }
   };
 
@@ -402,7 +435,7 @@ const UpdateProfile = () => {
       {user.isDoctor ? (
         <>
           <h2>Medical Licencing & Accreditation</h2>
-          {console.log('Medical licence')}
+          {/* {console.log('Medical licence')} */}
           <AuthInput
             value={user.licence}
             placeholder="Licence"
@@ -412,7 +445,7 @@ const UpdateProfile = () => {
             onValueChange={e => onValueChange(e, 'licence')}
           />
           {user.doctorInfo.accreditations.map((val, i) => {
-            console.log('Mapping of accreditations');
+            // console.log('Mapping of accreditations');
             return (
               <div key={i} className="auth-multi">
                 <AuthInput

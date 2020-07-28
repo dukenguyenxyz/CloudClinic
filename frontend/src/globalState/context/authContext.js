@@ -35,6 +35,7 @@ export const AuthContextProvider = ({ children }) => {
     email: 'Vivian36@gmail.com',
     title: 'Dr',
     isDoctor: true,
+    errors: [],
   });
 
   localStorage.setItem(
@@ -88,6 +89,7 @@ export const AuthContextProvider = ({ children }) => {
   //   email: 'Wyatt14@hotmail.com',
   //   title: 'Rev',
   //   isDoctor: false,
+  //   errors: [],
   //   createdAt: '2020-07-26T02:07:22.294Z',
   //   __v: 1,
   // });
