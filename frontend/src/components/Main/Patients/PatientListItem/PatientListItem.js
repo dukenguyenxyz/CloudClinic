@@ -1,17 +1,17 @@
 import React from 'react';
 import './PatientListItem.scss';
 import { Link } from '@reach/router';
-const PatientListItem = ({ name, id }) => {
+const PatientListItem = ({ name, id, state }) => {
   return (
-    <Link to={`${id}`}>
-      <li className="patient-list-item-wrapper" key={name}>
+    <Link to={`${id}`} state={state}>
+      <div className="patient-list-item-wrapper">
         <div className="patient-list-item-container">
           <div className="profile">
-            <div className="avatar"></div>
+            <div className="avatar" />
             <div>{name}</div>
           </div>
         </div>
-      </li>
+      </div>
     </Link>
   );
 };

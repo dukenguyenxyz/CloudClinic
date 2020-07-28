@@ -53,9 +53,10 @@ const UserProfile = props => {
             <Address user={user} />
           </div>
         </div>
-
-        <MedicalHistory user={user} />
-        <SessionHistory user={user} />
+        <div>
+          <MedicalHistory user={user} />
+          <SessionHistory user={user} />
+        </div>
       </div>
     );
   };
