@@ -19,7 +19,7 @@ exports.viewSessions = async (req, res) => {
 
     res.send(sessions);
   } catch (e) {
-    res.status(500).send(e);
+    res.status(400).send(e);
   }
 };
 

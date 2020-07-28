@@ -7,7 +7,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { v4 as uuidv4 } from 'uuid';
-import { viewSessions } from '../../AxiosTest/config';
+import { viewSessions } from '../../AxiosTest/sessionRoutes';
 
 const Appointments = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -50,30 +50,34 @@ const Appointments = () => {
   });
 
   useEffect(() => {
-    getDoctorSessions();
+    const getSessions = async () => {
+      const response = await viewSessions();
+    };
+
+    // getDoctorSessions();
   }, []);
 
-  const getDoctorSessions = async () => {
-    const URL = 'http://localhost:5000';
-    // const URL = 'cloudclinic00.herokuapp.com';
-    const endpoint = `${URL}/api/sessions/`;
+  // const getDoctorSessions = async () => {
+  //   const URL = 'http://localhost:5000';
+  //   // const URL = 'cloudclinic00.herokuapp.com';
+  //   const endpoint = `${URL}/api/sessions/`;
 
-    const jwt = localStorage.getItem('jwt');
-    // console.log(jwt);
-    await axios
-      .get(endpoint, {
-        headers: {
-          Authorization: `${jwt}`,
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-      })
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  //   const jwt = localStorage.getItem('jwt');
+  //   // console.log(jwt);
+  //   await axios
+  //     .get(endpoint, {
+  //       headers: {
+  //         Authorization: `${jwt}`,
+  //         'Content-Type': 'application/json; charset=utf-8',
+  //       },
+  //     })
+  //     .then(res => {
+  //       console.log(res.data);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 
   const handleSelect = (e, key) => {
     setClientFormState({

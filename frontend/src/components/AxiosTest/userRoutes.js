@@ -96,26 +96,28 @@ export const signInDoctor = async setUserCallback => {
 };
 // Hardcoded ? -- END
 
-export const signOut = async setUserCallback => {
+export const signOut = async (setUserCallback, redirect) => {
   await request
     .patch('users/signout')
     .then(res => {
       console.log(res);
       localStorage.removeItem('cloudclinicJWT');
       setUserCallback(null);
+      navigate(redirect);
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-export const signOutAll = async setUserCallback => {
+export const signOutAll = async (setUserCallback, redirect) => {
   await request
     .patch('users/signoutall')
     .then(res => {
       console.log(res);
       localStorage.removeItem('cloudclinicJWT');
       setUserCallback(null);
+      navigate(redirect);
     })
     .catch(err => {
       console.log(err);
@@ -123,14 +125,16 @@ export const signOutAll = async setUserCallback => {
 };
 
 export const viewProfile = async () => {
-  await request
+  const response = await request
     .get('users/profile')
-    .then(res => {
-      console.log(res);
-    })
+    // .then(res => {
+    //   console.log(res);
+    // })
     .catch(err => {
       console.log(err);
     });
+
+  return response;
 };
 
 export const updateProfile = async updateParamsObj => {
@@ -159,13 +163,14 @@ export const updateProfileTesting = async (callback, updateParamsObj) => {
     });
 };
 
-export const deleteProfile = async setUserCallback => {
+export const deleteProfile = async (setUserCallback, redirect) => {
   await request
     .delete('users/profile')
     .then(res => {
       console.log(res);
       localStorage.removeItem('cloudclinicJWT');
       setUserCallback(null);
+      navigate(redirect);
     })
     .catch(err => {
       console.log(err);
@@ -197,14 +202,16 @@ export const viewClient = async clientID => {
 };
 
 export const viewDoctors = async () => {
-  await request
-    .get('users', {})
-    .then(res => {
-      console.log(res);
-    })
+  const response = await request
+    .get('users')
+    // .then(res => {
+    //   console.log(res);
+    // })
     .catch(err => {
       console.log(err);
     });
+
+  return response;
 };
 
 export const viewDoctor = async doctorID => {

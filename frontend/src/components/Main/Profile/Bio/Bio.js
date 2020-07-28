@@ -55,12 +55,14 @@ const Bio = ({ user }) => {
                   <span>{user.clientInfo.weight} kg</span>
                 </div>
               </div>
-              <div className="grid-item">
-                <div className="user-info">
-                  <span>Blood Type</span>
-                  <span>{user.clientInfo.bloodType}</span>
+              {user.clientInfo.bloodType && (
+                <div className="grid-item">
+                  <div className="user-info">
+                    <span>Blood Type</span>
+                    <span>{user.clientInfo.bloodType}</span>
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           ) : (
             <div></div>

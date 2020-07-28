@@ -9,22 +9,22 @@ import { viewSessions } from '../../../AxiosTest/sessionRoutes';
 const localizer = momentLocalizer(moment);
 
 const MainCalendar = ({ formState }) => {
-  // const [calendarState, setCalendarState] = useState([
-  //   {
-  //     id: 15,
-  //     title: 'Point in Time Event',
-  //     start: moment().toDate(),
-  //     end: moment().toDate(),
-  //   },
-  // ]);
-  const [calendarState, setCalendarState] = useState([]);
+  const [calendarState, setCalendarState] = useState([
+    {
+      id: 15,
+      title: 'Point in Time Event',
+      start: moment().toDate(),
+      end: moment().toDate(),
+    },
+  ]);
+  // const [calendarState, setCalendarState] = useState([]);
 
   useEffect(() => {
-    async function getSessions() {
-      const response = await viewSessions(() => {}, mockAPISessions);
-      setCalendarState(response);
-    }
-    getSessions();
+    // async function getSessions() {
+    //   const response = await viewSessions(() => {}, mockAPISessions);
+    //   setCalendarState(response);
+    // }
+    // getSessions();
   }, []);
 
   return (
