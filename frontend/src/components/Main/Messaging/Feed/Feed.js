@@ -12,8 +12,8 @@ const Feed = () => {
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    width: '50px',
-    height: '50px',
+    // width: '50px',
+    // height: '50px',
     alignSelf: 'end',
   };
 
@@ -22,8 +22,8 @@ const Feed = () => {
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    width: '50px',
-    height: '50px',
+    // width: '50px',
+    // height: '50px',
     alignSelf: 'end',
   };
 

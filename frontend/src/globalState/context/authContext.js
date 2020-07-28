@@ -5,6 +5,7 @@ import {
   signUpClient,
   signUpDoctor,
 } from '../../components/AxiosTest/userRoutes';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -44,7 +45,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={authState}>
-      {user ? children : <h1>loading...</h1>}
+      {user ? children : <LoadingSpinner />}
     </AuthContext.Provider>
   );
 };

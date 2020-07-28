@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { viewDoctors } from '../../AxiosTest/userRoutes';
 import { v4 as uuidv4 } from 'uuid';
 import { Link } from '@reach/router';
+import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 
 const SearchDoctors = () => {
   const [doctors, setDoctors] = useState([]);

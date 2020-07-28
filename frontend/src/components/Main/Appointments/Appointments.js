@@ -5,14 +5,17 @@ import CalendarForm from './CalendarForm/CalendarForm';
 import { AuthContext } from '../../../globalState/index';
 import axios from 'axios';
 import moment from 'moment';
+import _ from 'lodash';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { v4 as uuidv4 } from 'uuid';
 import { viewSessions } from '../../AxiosTest/sessionRoutes';
+import { convertAPIdataToJS } from './MainCalendar/events';
 
 const Appointments = () => {
   const { user, setUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [doctorSessions, setDoctorSessions] = useState([]);
+  const [unavailabilities, setUnavailabilities] = useState([]);
 
   function round(date, duration, method) {
     return moment(Math[method](+date / +duration) * +duration);
@@ -50,34 +53,10 @@ const Appointments = () => {
   });
 
   useEffect(() => {
-    const getSessions = async () => {
-      const response = await viewSessions();
-    };
-
-    // getDoctorSessions();
-  }, []);
-
-  // const getDoctorSessions = async () => {
-  //   const URL = 'http://localhost:5000';
-  //   // const URL = 'cloudclinic00.herokuapp.com';
-  //   const endpoint = `${URL}/api/sessions/`;
-
-  //   const jwt = localStorage.getItem('jwt');
-  //   // console.log(jwt);
-  //   await axios
-  //     .get(endpoint, {
-  //       headers: {
-  //         Authorization: `${jwt}`,
-  //         'Content-Type': 'application/json; charset=utf-8',
-  //       },
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
+    const sanitizedSessions = sanitizeDoctorSessions();
+    // console.log(sanitizedSessions);
+    setUnavailabilities(sanitizedSessions);
+  }, [doctorAvailability]);
 
   const handleSelect = (e, key) => {
     setClientFormState({
@@ -190,15 +169,25 @@ const Appointments = () => {
     });
   };
 
+  /// OLD
   const aggregateUnavailability = () => {
-    // RRULES
-
-    // doctorAvailability.openningTime
-    // doctorAvailability.closingTime
-
-    // doctorAvailability.lunchBreakStart
-    // doctorAvailability.lunchBreakEnd
-
+    // // RRULES
+    // // doctorAvailability.openningTime
+    // // doctorAvailability.closingTime
+    // // doctorAvailability.lunchBreakStart
+    // // doctorAvailability.lunchBreakEnd
+    // // const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
+    // //   unavailability => {
+    // //     if (unavailability.modifier === 'allDay') {
+    // //       return {
+    // //         startDate: moment(unavailability.startDateTime)
+    // //           .startOf('day')
+    // //           .toDate(),
+    // //         endDate: moment(unavailability.startDateTime).endOf('day').toDate(),
+    // //       };
+    // //     }
+    // //   }
+    // // );
     // const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
     //   unavailability => {
     //     if (unavailability.modifier === 'allDay') {
@@ -211,50 +200,134 @@ const Appointments = () => {
     //     }
     //   }
     // );
+    // const convertUTC = date => {
+    //   return moment.utc(date).toDate(); // '2020-07-01 09:00'
+    // };
+    // const newRRulSet = ruleBluePrint => {
+    //   const newRRule = new RRule({
+    //     dtstart: convertUTC(ruleBluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
+    //     until: convertUTC(moment(ruleBluePrint.startDateTime).add(6, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
+    //   });
+    //   if (ruleBluePrint.modifier) {
+    //     newRRule.freq = parseInt(ruleBluePrint.modifier, 10); // RRule.MONTHLY, (NUMERIC VALUE)
+    //   }
+    //   return newRRule;
+    // };
+    // const unavailabilities = doctorAvailability.unavailableDateTimes.map(
+    //   unavailability => {
+    //     return {
+    //       include: false,
+    //       ruleInstruction: newRRulSet(unavailability).toString(),
+    //       endDateTime: convertUTC(unavailability.endDateTime),
+    //     };
+    //   }
+    // );
+    // return unavailabilities;
+  };
 
-    const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
-      unavailability => {
-        if (unavailability.modifier === 'allDay') {
-          return {
-            startDate: moment(unavailability.startDateTime)
-              .startOf('day')
-              .toDate(),
-            endDate: moment(unavailability.startDateTime).endOf('day').toDate(),
-          };
-        }
-      }
-    );
-
+  const sanitizeDoctorSessions = () => {
     const convertUTC = date => {
       return moment.utc(date).toDate(); // '2020-07-01 09:00'
     };
 
-    const newRRulSet = ruleBluePrint => {
+    const newRRulSet = bluePrint => {
       const newRRule = new RRule({
-        dtstart: convertUTC(ruleBluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
-        until: convertUTC(moment(ruleBluePrint.startDateTime).add(6, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
+        dtstart: convertUTC(bluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
+        until: convertUTC(moment(bluePrint.startDateTime).add(6, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
       });
 
-      if (ruleBluePrint.modifier) {
-        newRRule.freq = parseInt(ruleBluePrint.modifier, 10); // RRule.MONTHLY, (NUMERIC VALUE)
+      if (bluePrint.modifier) {
+        newRRule.freq = parseInt(bluePrint.modifier, 10); // RRule.MONTHLY, (NUMERIC VALUE)
       }
 
       return newRRule;
     };
 
+    // Sanitize the available hours
+    const morningHours = {
+      startDateTime: doctorAvailability.openningTime,
+      endDateTime: doctorAvailability.lunchBreakStart,
+      modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+    };
+
+    const afternoonHours = {
+      startDateTime: doctorAvailability.lunchBreakEnd,
+      endDateTime: doctorAvailability.closingTime,
+      modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+    };
+
+    const workingHours = [morningHours, afternoonHours];
+
+    //Available Times
+    const workingHoursSchedules = workingHours.map(period => {
+      return {
+        duration: moment(period.endDateTime).diff(
+          period.startDateTime,
+          'minutes'
+        ),
+        include: true,
+        ruleInstruction: newRRulSet(period).toString(),
+      };
+    });
+    // Sanitize the unavailable hours
+
+    // 6AM ... < 6AM is unavailable
+    // 7PM ... > 7PM is unavailabile
+
+    // docotr.avaiaiblity.unavaialbledatetimes =     unavailableDateTimes: [
+    //   {
+    //     startDateTime: round(
+    //       moment(),
+    //       moment.duration(15, 'minutes'),
+    //       'ceil'
+    //     ).toDate(),
+    //     endDateTime: round(
+    //       moment(),
+    //       moment.duration(15, 'minutes'),
+    //       'ceil'
+    //     ).toDate(),
+    //     modifier: '',
+    //   },
+    // ],
+
+    // const sampleArr = [
+    //   {
+    //     duration: 15, // integer, enum [15, 30, 60]
+    //     include: false,
+    //     ruleInstruction: ruleStringified1,
+    //   },
+    //   {
+    //     duration: 30,
+    //     include: false,
+    //     ruleInstruction: ruleStringified2,
+    //   },
+    // ];
+
     const unavailabilities = doctorAvailability.unavailableDateTimes.map(
       unavailability => {
         return {
+          duration: moment(unavailability.endDateTime).diff(
+            unavailability.startDateTime,
+            'minutes'
+          ),
           include: false,
           ruleInstruction: newRRulSet(unavailability).toString(),
-          endDateTime: convertUTC(unavailability.endDateTime),
         };
       }
     );
+    console.log(unavailabilities);
 
-    return unavailabilities;
+    const result = convertAPIdataToJS(unavailabilities);
+    console.log(result);
+    return result;
+
+    // console.log(_.flattenDeep([unavailabilities]));
+
+    // setUnavailabilities(_.flattenDeep([unavailabilities]));
+    // return _.flattenDeep([unavailabilities]);
   };
 
+  // Make API Call
   const handleDoctorAvailabilitySubmit = () => {
     //validations - no empty or dodgy fields
 
@@ -321,9 +394,9 @@ const Appointments = () => {
     }
     // console.log('no errors');
 
-    const unavailabilities = aggregateUnavailability();
+    // const unavailabilities = aggregateUnavailability();
 
-    console.log(unavailabilities);
+    // console.log(unavailabilities);
   };
 
   const doctorAppointments = () => {
@@ -342,7 +415,10 @@ const Appointments = () => {
             handleDoctorAvailabilitySubmit={handleDoctorAvailabilitySubmit}
           />
         </section>
-        <MainCalendar doctorAvailability={doctorAvailability} />
+        <MainCalendar
+          doctorAvailability={doctorAvailability}
+          unavailabilities={unavailabilities}
+        />
       </div>
     );
   };

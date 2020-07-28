@@ -10,6 +10,7 @@ import moment from 'moment';
 import { setHours, setMinutes } from 'date-fns';
 import axios from 'axios';
 import Schedule from '../Schedule/Schedule';
+import { RRule, RRuleSet, rrulestr } from 'rrule';
 
 const CalendarForm = ({
   clientFormState,
@@ -43,39 +44,7 @@ const CalendarForm = ({
     // console.log(moment().add(1, 'hour').toDate());
   }, []);
 
-  const handleSubmit = () => {
-    const developmentUrl = 'http://localhost:5000';
-    // const productionUrl = 'http://cloudclinic.tech';
-    const endpoint = `${developmentUrl}/api/sessions/`;
-
-    // maybe we should set jwt in authcontext state when user first loads application?
-    const jwt = localStorage.getItem('jwt');
-
-    axios
-      .patch(
-        endpoint,
-        {},
-        {
-          headers: {
-            Authorization: `${jwt}`,
-            'Content-Type': 'application/json; charset=utf-8',
-          },
-        }
-      )
-      .then(response => {
-        console.log(response.data);
-        // navigate('/<some path>');
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  };
-
-  const santizeDoctorSessions = () => {
-    // loop over doctorSessions array
-    // forEach session use moment to conver it into format for datetime picker
-    // return a new array with the formatted date/times
-  };
+  const handleSubmit = () => {};
 
   const displaySessionTime = () => {
     if (clientFormState.startTime) {
