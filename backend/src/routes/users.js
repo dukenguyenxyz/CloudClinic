@@ -15,6 +15,8 @@ const {
   viewDoctor,
 } = require('../controllers/usersController');
 
+const { createBooking } = require('../controllers/sessionsController');
+
 // // Authentication routes
 // Sign up
 router.post('/signup', signUp);
@@ -51,5 +53,8 @@ router.get('/', viewDoctors);
 
 // One Doctor
 router.get('/:id', viewDoctor);
+
+// Book a session (NEW Route)
+router.post('/:id/book', verifyToken, createBooking);
 
 module.exports = router;

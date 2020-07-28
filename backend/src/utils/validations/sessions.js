@@ -12,8 +12,8 @@ const Session = require('../../models/Session');
 
 // Ensure date is always in the future
 const schema = Joi.object({
-  startTime: Joi.date().timestamp('unix').min('now').required(),
-  endTime: Joi.date().timestamp('unix').required(),
+  startTime: Joi.date().min('now').required(),
+  endTime: Joi.date().required(),
 });
 
 const sessionValidation = async (req, session) => {
@@ -32,16 +32,17 @@ const sessionValidation = async (req, session) => {
   const endTime = moment(session.endTime);
   const timeDiff = moment.duration(endTime.diff(startTime)).asMinutes();
 
-  // console.log({ startTime, endTime });
-  // console.log(timeDiff);
+  // // console.log({ startTime, endTime });
+  // // console.log(timeDiff);
 
-  if (!(timeDiff === 30 || timeDiff === 60)) {
+  if (!(timeDiff === 15 || timeDiff === 30 || timeDiff === 60)) {
     throw new Error('invalid time range');
   }
 
   // Validation to check whether this time is available for this doctor
-  const sessions = await Session.find({ doctor: req.user._id });
+  const sessions = await Session.find({ doctor: req.params.id });
   sessions.forEach((sessionEach) => {
+    console.log('running...');
     if (
       startTime.isBetween(sessionEach.startTime, sessionEach.endTime) ||
       endTime.isBetween(sessionEach.startTime, sessionEach.endTime) ||
@@ -83,8 +84,8 @@ exports.sessionsValidationMethod2 = async (req, sessions) => {
     await newSession.save();
 
     sessionsArray.push({
-      startTime: moment(startTime).valueOf(),
-      endTime: moment(endTime).valueOf(),
+      startTime: moment(startTime).toDate(),
+      endTime: moment(endTime).toDate(),
     });
   }
   return sessionsArray;

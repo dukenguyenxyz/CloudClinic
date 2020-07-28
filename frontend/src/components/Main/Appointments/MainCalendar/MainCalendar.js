@@ -5,27 +5,23 @@ import moment from 'moment';
 import { sampleArr as mockAPISessions } from './events';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { viewSessions } from '../../../AxiosTest/sessionRoutes';
+import { sampleArr, convertAPIdataToJS } from './events';
 
 const localizer = momentLocalizer(moment);
 
-const MainCalendar = ({ formState }) => {
-  const [calendarState, setCalendarState] = useState([
-    {
-      id: 15,
-      title: 'Point in Time Event',
-      start: moment().toDate(),
-      end: moment().toDate(),
-    },
-  ]);
-  // const [calendarState, setCalendarState] = useState([]);
+const MainCalendar = ({ unavailabilities }) => {
+  // const [calendarState, setCalendarState] = useState([
+  //   {
+  //     id: 15,
+  //     title: 'Point in Time Event',
+  //     start: moment().toDate(),
+  //     end: moment().toDate(),
+  //   },
+  // ]);
 
-  useEffect(() => {
-    // async function getSessions() {
-    //   const response = await viewSessions(() => {}, mockAPISessions);
-    //   setCalendarState(response);
-    // }
-    // getSessions();
-  }, []);
+  // useEffect(() => {}, []);
+
+  // console.log(unavailabilities);
 
   return (
     <div>
@@ -35,7 +31,7 @@ const MainCalendar = ({ formState }) => {
         }}
       >
         <Calendar
-          events={calendarState}
+          events={unavailabilities}
           startAccessor="start"
           endAccessor="end"
           defaultDate={moment().toDate()}

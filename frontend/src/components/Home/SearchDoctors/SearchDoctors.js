@@ -3,7 +3,8 @@ import { viewDoctors } from '../../AxiosTest/userRoutes';
 import { v4 as uuidv4 } from 'uuid';
 import Card from '../../Card/Card';
 import DoctorListItem from '../DoctorListItem/DoctorListItem';
-
+// import { Link } from '@reach/router';
+// import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 const SearchDoctors = () => {
   const [doctors, setDoctors] = useState([]);
 
