@@ -4,9 +4,10 @@ import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
 import Button from '../../../Button/Button';
 import languages from '../../Authentication/Form/languages';
-import { navigate } from '@reach/router';
+// import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
 import axios from 'axios';
+import { updateProfile } from '../../../AxiosTest/userRoutes';
 
 const UpdateProfile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -213,33 +214,33 @@ const UpdateProfile = () => {
     //if user errors is falsy, i.e. no errors, make axios patch request
     if (!user.errors) {
       // Make axios post request to backend
-      axios
-        .patch(endpoint, user, {
-          headers: {
-            Authorization: jwt,
-            'Content-Type': 'application/json; charset=utf-8',
-          },
-        })
-        .then(response => {
-          console.log(response.data.user);
-          const user = response.data.user;
-          setUser(user);
-          navigate('/profile');
-        })
-        .catch(error => {
-          console.log(error.response);
-          {
-            user.errors
-              ? setUser({
-                  ...user,
-                  errors: [...user.errors, `${error.response.data}`],
-                })
-              : setUser({
-                  ...user,
-                  errors: [`${error.response.data}`],
-                });
-          }
-        });
+      // axios
+      //   .patch(endpoint, user, {
+      //     headers: {
+      //       Authorization: jwt,
+      //       'Content-Type': 'application/json; charset=utf-8',
+      //     },
+      //   })
+      //   .then(response => {
+      //     console.log(response.data.user);
+      //     const user = response.data.user;
+      //     setUser(user);
+      //     navigate('/profile');
+      //   })
+      //   .catch(error => {
+      //     console.log(error.response);
+      //     {
+      //       user.errors
+      //         ? setUser({
+      //             ...user,
+      //             errors: [...user.errors, `${error.response.data}`],
+      //           })
+      //         : setUser({
+      //             ...user,
+      //             errors: [`${error.response.data}`],
+      //           });
+      //     }
+      //   });
     }
   };
 
