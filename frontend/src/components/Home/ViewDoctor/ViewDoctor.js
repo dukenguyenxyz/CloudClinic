@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { viewDoctor } from '../../AxiosTest/userRoutes';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
+import Bio from '../../Main/Profile/Bio/Bio';
+import DoctorInfo from '../../Main/Profile/DoctorInfo/DoctorInfo';
+import Contact from '../../Main/Profile/Contact/Contact';
 
 const ViewDoctor = props => {
   const [doctor, setDoctor] = useState(null);
@@ -25,8 +28,14 @@ const ViewDoctor = props => {
 
   const doctorProfile = () => {
     return (
-      <div>
-        <h1>hello {doctor.firstName}</h1>
+      <div className="user-profile-wrapper">
+        <div className="panel-left">
+          <Bio user={doctor} />
+          <div className="sub-cards">
+            <DoctorInfo user={doctor} />
+            <Contact user={doctor} />
+          </div>
+        </div>
       </div>
     );
   };
