@@ -34,7 +34,7 @@ const Appointments = () => {
     sessionDuration: '',
   });
 
-  console.log(user);
+  // console.log(user);
 
   const [doctorAvailability, setDoctorAvailability] = useState({
     openingTime: moment().set({ hour: 5, minutes: 0 }).toDate(),
@@ -115,7 +115,7 @@ const Appointments = () => {
         unavailsAggregate
       );
 
-      console.log(sanitizedUnavailabilities, 'sanitizedUnavailabilities');
+      // console.log(sanitizedUnavailabilities, 'sanitizedUnavailabilities');
 
       const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
 
@@ -188,7 +188,7 @@ const Appointments = () => {
       return new RRule(newRRule);
     };
 
-    console.log(sessions, 'sanitizeDoctorSessions');
+    // console.log(sessions, 'sanitizeDoctorSessions');
 
     // Sanitize the unavailable hours
     return sessions.map(session => {
@@ -223,6 +223,8 @@ const Appointments = () => {
         ],
       });
     }
+
+    console.log('here');
 
     // check that end date & times must be greater than start date & times
     if (
@@ -275,22 +277,24 @@ const Appointments = () => {
       },
     };
 
-    try {
-      const response = await updateProfile(unavailabilityObj);
-      console.log(response);
-      const sanitizedData = omitDeep(response.data, [
-        '_id',
-        '__v',
-        'createdAt',
-      ]);
-      setUser(sanitizedData);
-    } catch (err) {
-      console.log(err);
-      setUser({
-        ...user,
-        errors: [`Something went wrong, ${err}`],
-      });
-    }
+    console.log(unavailabilityObj);
+
+    // try {
+    //   const response = await updateProfile(unavailabilityObj);
+    //   console.log(response);
+    //   const sanitizedData = omitDeep(response.data, [
+    //     '_id',
+    //     '__v',
+    //     'createdAt',
+    //   ]);
+    //   setUser(sanitizedData);
+    // } catch (err) {
+    //   console.log(err);
+    //   setUser({
+    //     ...user,
+    //     errors: [`Something went wrong, ${err}`],
+    //   });
+    // }
   };
 
   // Actions
