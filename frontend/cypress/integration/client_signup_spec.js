@@ -3,7 +3,7 @@ const newEmail = faker.internet.email();
 
 describe('Client Sign Up', () => {
   it('Visits CloudClinic', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('http://localhost:3000/home');
 
     cy.contains('Sign up').click();
     cy.url().should('include', '/authentication');
@@ -13,8 +13,6 @@ describe('Client Sign Up', () => {
     cy.contains('No').click();
 
     //Step One - Login details signup
-    cy.get('input[name="Username"]').type('Hugh').should('have.value', 'Hugh');
-
     cy.get('input[name="Email"]').type(newEmail).should('have.value', newEmail);
 
     cy.get('input[name="Password"]')
@@ -37,14 +35,13 @@ describe('Client Sign Up', () => {
       .type('Greethead')
       .should('have.value', 'Greethead');
     cy.get('select[name="Sex"]').select('male').should('have.value', 'male');
-    cy.get('input[name="Weight (kg)"]').type(82).should('have.value', 82);
     cy.get('input[name="Date of Birth"]')
       .type('1998-12-20')
       .should('have.value', '1998-12-20');
     cy.get('input[name="Mobile number"]')
       .type(428728937)
       .should('have.value', '+61428728937');
-    cy.get('input[name="Street No."]').type(5).should('have.value', 5);
+    cy.get('input[name="Street No."]').type(3).should('have.value', 3);
     cy.get('input[name="Street"]')
       .type('Beach Rd')
       .should('have.value', 'Beach Rd');
@@ -78,8 +75,12 @@ describe('Client Sign Up', () => {
       .type('Panadol')
       .should('have.value', 'Panadol');
     cy.get('select[name="Blood Type"]').select('O+').should('have.value', 'O+');
+    cy.get('input[name="Weight (kg)"]').type(82).should('have.value', 82);
 
     cy.contains('Previous');
     cy.contains('Submit').click();
+
+    cy.wait(2000);
+    cy.url().should('include', '/profile');
   });
 });

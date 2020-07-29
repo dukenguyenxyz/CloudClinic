@@ -5,16 +5,6 @@ import AuthInput from '../Form/AuthInput/AuthInput';
 const StepOne = ({ formState, onValueChange, onKeyUp }) => {
   const clientSignup = (
     <>
-      {/* <AuthInput
-        value={formState.username}
-        placeholder="Username"
-        type="text"
-        icon="username"
-        minLength="3"
-        maxLength="20"
-        onValueChange={e => onValueChange(e, 'username')}
-        onKeyUp={onKeyUp}
-      /> */}
       <AuthInput
         value={formState.email}
         placeholder="Email"

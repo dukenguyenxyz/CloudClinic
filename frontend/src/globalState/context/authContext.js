@@ -11,7 +11,6 @@ export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
   // First time user
   const [user, setUser] = useState(null);
-  // const [user, setUser] = useEffect(null);
 
   // handles fist page load with a valid user that has a jwt
   // useEffect(() => {
