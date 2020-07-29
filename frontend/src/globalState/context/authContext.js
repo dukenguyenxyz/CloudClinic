@@ -44,10 +44,6 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authState}>
-      {/* {/* {user ? children : <LoadingSpinner */}
-      {children}
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>
   );
 };

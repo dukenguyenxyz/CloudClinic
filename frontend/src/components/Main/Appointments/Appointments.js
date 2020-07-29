@@ -1,17 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
+import MainCalendar from './MainCalendar/MainCalendar';
+
 import { RRule, RRuleSet, rrulestr } from 'rrule';
 import moment from 'moment';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import omitDeep from 'omit-deep-lodash';
-import './Appointments.scss';
 
 import { AuthContext } from '../../../globalState/index';
 import { viewSessions } from '../../AxiosTest/sessionRoutes';
 import { updateProfile } from '../../AxiosTest/userRoutes';
 import { convertAPIdataToJS } from './MainCalendar/events';
-import MainCalendar from './MainCalendar/MainCalendar';
+
 import CalendarForm from './CalendarForm/CalendarForm';
+
+import './Appointments.scss';
 
 const Appointments = () => {
   // Helper method
@@ -30,15 +33,24 @@ const Appointments = () => {
     endTime: '',
     sessionDuration: '',
   });
+
   const [doctorAvailability, setDoctorAvailability] = useState({
-    openingTime: null,
-    closingTime: null,
-    lunchBreakStart: null,
-    lunchBreakEnd: null,
+    openingTime: moment().set({ hour: 5, minutes: 0 }).toDate(),
+    closingTime: moment().set({ hour: 23, minutes: 0 }).toDate(),
+    lunchBreakStart: moment().set({ hour: 11, minutes: 0 }).toDate(),
+    lunchBreakEnd: moment().set({ hour: 16, minutes: 0 }).toDate(),
     unavailableDateTimes: [
       {
-        startDateTime: null,
-        endDateTime: null,
+        startDateTime: round(
+          moment(),
+          moment.duration(15, 'minutes'),
+          'ceil'
+        ).toDate(),
+        endDateTime: round(
+          moment(),
+          moment.duration(15, 'minutes'),
+          'ceil'
+        ).toDate(),
         modifier: RRule.WEEKLY,
       },
     ],
@@ -48,12 +60,37 @@ const Appointments = () => {
   // Unavailability processing
   // Fetch workschedule from doctor
 
+  // If user already has unavaiblitiy data then prefill them
+  // Component Mounts
   useEffect(() => {
-    if (user.isDoctor) {
-      const workSchedule = user.doctorInfo.workSchedule;
-      // Sanitize workSchedule (remove _id) => _.omitDeep
-      setDoctorAvailability(workSchedule);
+    // Set the doctor unavails from fetching
+    if (
+      user.isDoctor &&
+      user.doctorInfo.schedule &&
+      user.doctorInfo.schedule.unavailabilities &&
+      user.doctorInfo.schedule.unavailabilities > 0
+    ) {
+      // Getting the unavailabilities of the doctor
+      const unavailsRules = user.doctorInfo.schedule.unavailabilities; // Form Data
+
+      // Convert unavailsRules using sanitizeDoctorSessions
+      const unavailsRealDatesData = sanitizeDoctorSessions(unavailsRules); // Calendar Display Data
+
+      // Set the unavailibities to the unavailsRealDatesData
+      setUnavailabilities(unavailsRealDatesData); // Displaying the calendar with data
+
+      // Prefilling the form
+      setDoctorAvailability(unavailsRules);
     }
+  }, []);
+
+  // When doctorAvailability updates / mounts
+  useEffect(() => {
+    // if (user.isDoctor) {
+    //   // const workSchedule = user.doctorInfo.workSchedule;
+    //   // Sanitize workSchedule (remove _id) => _.omitDeep
+    //   // setDoctorAvailability(workSchedule);
+    // }
 
     // First time the doctor creates the unavails or when the doctor updates
     if (
@@ -65,39 +102,21 @@ const Appointments = () => {
       doctorAvailability.unavailableDateTimes[0].startDateTime &&
       doctorAvailability.unavailableDateTimes[0].endDateTime
     ) {
-      const normalScheduleArray = normalScheduleAggregrates();
-      const convertedNormalSchedule = normalScheduleArray.map(session =>
-        sanitizeDoctorSessions(session)
+      // Use piping here is also good
+
+      const unavailsAggregate = _.flattenDeep(
+        normalScheduleAggregrates(),
+        doctorAvailability.unavailableDateTimes
       );
 
-      const sanitizedUnavailabilities = [
-        ...sanitizeDoctorSessions(doctorAvailability.unavailableDateTimes),
-        ...convertedNormalSchedule(),
-      ];
-
-      const sanitizedDataObj = _.flattenDeep(
-        Object.values(sanitizedUnavailabilities).map(unavailability => {
-          return convertAPIdataToJS(unavailability);
-        })
+      const sanitizedUnavailabilities = sanitizeDoctorSessions(
+        unavailsAggregate
       );
-      setUnavailabilities(sanitizedDataObj);
-    }
 
-    // Set the doctor unavails from fetching
-    if (
-      user.isDoctor &&
-      user.doctorInfo.schedule &&
-      user.doctorInfo.schedule.unavailabilities &&
-      user.doctorInfo.schedule.unavailabilities > 0
-    ) {
-      // Getting the unavailabilities of the doctor
-      const unavailsRules = user.doctorInfo.schedule.unavailabilities;
+      const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
 
-      // Convert unavailsRules using sanitizeDoctorSessions
-      const unavailsRealDatesData = sanitizeDoctorSessions(unavailsRules);
-
-      // Set the unavailibities to the unavailsRealDatesData
-      setUnavailabilities(unavailsRealDatesData);
+      // Form has already been filled
+      setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
     }
   }, [doctorAvailability]);
 
@@ -109,20 +128,20 @@ const Appointments = () => {
         .utc(doctorAvailability.openingTime)
         .startOf('day')
         .toDate(),
-      endDatetime: moment.utc(doctorAvailability.openingTime),
+      endDatetime: moment.utc(doctorAvailability.openingTime).toDate(),
       byweekday: workingDays,
       modifier: RRule.WEEKLY,
     };
 
     const unavailableLunch = {
-      startDateTime: moment.utc(doctorAvailability.lunchBreakStart),
-      endDateTime: moment.utc(doctorAvailability.lunchBreakEnd),
+      startDateTime: moment.utc(doctorAvailability.lunchBreakStart).toDate(),
+      endDateTime: moment.utc(doctorAvailability.lunchBreakEnd).toDate(),
       byweekday: workingDays,
       modifier: RRule.WEEKLY,
     };
 
     const unavailableAfternoon = {
-      startDateTime: doctorAvailability.closingTime,
+      startDateTime: moment.utc(doctorAvailability.closingTime).toDate(),
       endDatetime: moment
         .utc(doctorAvailability.closingTime)
         .endOf('day')
