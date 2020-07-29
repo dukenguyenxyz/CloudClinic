@@ -8,12 +8,30 @@ import _ from 'lodash';
 // const moment = require('moment');
 // const _ = require('lodash');
 
-// const add = require('date-fns/add');
-// const now = new Date();
+// const newHelloRule = new RRule({
+//   freq: RRule.WEEKLY,
+//   dtstart: new Date(Date.UTC(2020, 6, 30, 11, 30, 0)),
+//   until: new Date(Date.UTC(2020, 8, 17, 12, 0, 0)),
+//   byweekday: RRule.TU,
+// });
+
+// const newString = newHelloRule.toString();
+// const returnedObj = RRule.fromString(newString);
+// const newText = newHelloRule.toText();
+// const newArray = newHelloRule.all();
+
+// console.log(returnedObj, newText, newArray);
+
+// [
+//   { start, end, rrule },
+//   { start, end, rrule },
+// ];
+
+const add = require('date-fns/add');
+const now = new Date();
 
 export const dateOneStart = moment.utc().toDate();
 // const dateOneStart = moment.utc().toDate();
-
 const dateOneUntil = moment.utc().add({ days: 7, hours: 5 }).toDate();
 
 const dateTwoStart = moment.utc().add({ days: 1, hours: 2 }).toDate();
@@ -33,6 +51,8 @@ const ruleTwo = new RRule({
 
 const ruleStringified1 = ruleOne.toString();
 const ruleStringified2 = ruleTwo.toString();
+
+// console.log(ruleOne);
 
 export const sampleArr = [
   // const sampleArr = [
@@ -65,19 +85,23 @@ const sample2Arr = [
   // }
 ];
 
+// Input
 const sampleArr2 = [
   {
-    duration: 4335,
-    include: false,
-    ruleInstruction: 'DTSTART:20200729T033000Z\nRRULE:UNTIL=20210129T023000Z',
+    duration: 4335, // (minutes)
+    include: false, // unavailable / available
+    ruleInstruction: 'DTSTART:20200729T033000Z\nRRULE:UNTIL=20210129T023000Z', // new Rule(object).toString()
+    ruleInstructionText: null,
   },
   {
     duration: 102195,
     include: false,
     ruleInstruction: 'DTSTART:20200811T210000Z\nRRULE:UNTIL=20210211T200000Z',
+    ruleInstructionText: null,
   },
 ];
 
+// Output
 const sampleArr3 = [
   {
     id: 'a19adb78-9654-44be-a56b-e4cafb29d6eb',
@@ -94,9 +118,13 @@ export const convertAPIdataToJS = array => {
   // const convertAPIdataToJS = array => {
   //BUG IS HERE
   const convertedData = array.map(arrayItem => {
+    // const ruleParsed = arrayItem.ruleInstruction.replace('\n', ' ');
+    // const rruleObject = RRule.fromText(arrayItem.ruleInstructionText);
     const rruleObject = RRule.fromString(arrayItem.ruleInstruction);
+    // const rruleObject = RRule.fromString(ruleParsed);
 
-    console.log(rruleObject);
+    // console.log(arrayItem.ruleInstructionText);
+    // console.log(rruleObject);
     const ruleAll = rruleObject.all();
 
     const title = arrayItem.include ? 'Available' : 'Unavailable';
@@ -115,11 +143,12 @@ export const convertAPIdataToJS = array => {
     });
   });
 
+  // return convertedData;
   return _.flattenDeep(convertedData);
 };
 
-// const newArr = convertAPIdataToJS(sampleArr2);
-// console.log(newArr);
+const newArr = convertAPIdataToJS(sampleArr);
+console.log(newArr);
 
 {
   // export default [
