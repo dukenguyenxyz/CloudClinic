@@ -3,13 +3,14 @@ import MainCalendar from './MainCalendar/MainCalendar';
 import './Appointments.scss';
 import CalendarForm from './CalendarForm/CalendarForm';
 import { AuthContext } from '../../../globalState/index';
-import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { v4 as uuidv4 } from 'uuid';
 import { viewSessions } from '../../AxiosTest/sessionRoutes';
+import { updateProfile } from '../../AxiosTest/userRoutes';
 import { convertAPIdataToJS } from './MainCalendar/events';
+import omitDeep from 'omit-deep-lodash';
 
 const Appointments = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -55,7 +56,8 @@ const Appointments = () => {
   useEffect(() => {
     const sanitizedSessions = sanitizeDoctorSessions();
     console.log(sanitizedSessions);
-    setUnavailabilities(sanitizedSessions);
+    const sanitizedData = convertAPIdataToJS(sanitizedSessions);
+    setUnavailabilities(sanitizedData);
   }, [doctorAvailability]);
 
   const handleSelect = (e, key) => {
@@ -235,11 +237,11 @@ const Appointments = () => {
         };
       }
     );
-    return convertAPIdataToJS(unavailabilities);
+    return unavailabilities;
   };
 
   // Make API Call
-  const handleDoctorAvailabilitySubmit = () => {
+  const handleDoctorAvailabilitySubmit = async () => {
     //validations - no empty or dodgy fields
 
     checkEmptyDateFields('unavailableDateTimes');
@@ -304,7 +306,31 @@ const Appointments = () => {
       });
     }
 
-    // make POST request here
+    const unavailabilityObj = {
+      doctorInfo: {
+        schedule: {
+          unavailabilities: sanitizeDoctorSessions(), //the array here
+        },
+      },
+    };
+
+    try {
+      const response = await updateProfile(unavailabilityObj);
+      console.log(response);
+      const sanitizedData = omitDeep(response.data, [
+        '_id',
+        '__v',
+        'createdAt',
+      ]);
+      setUser(sanitizedData);
+      // navigate('/profile');
+    } catch (err) {
+      console.log(err);
+      setUser({
+        ...user,
+        errors: ['network error'],
+      });
+    }
   };
 
   const doctorAppointments = () => {
