@@ -53,27 +53,19 @@ const UpdateProfile = () => {
   //   },
   // };
 
-  console.log(user);
+  // console.log(user);
 
   const sanitizeForm = () => {
     const formFormRequest = Object.assign({}, user);
-
-    // formFormRequest.dateOfBirth.format('YYYY-MM-DD');
-
-    // if (formFormRequest.medicalHistory) {
-    // }
 
     if (formFormRequest.doctorInfo && formFormRequest.doctorInfo.rating) {
       delete formFormRequest.doctorInfo.rating;
     }
 
-    // if(formFormRequest.clientInfo && formFormRequest.clientInfo.medicalHistory){
-    //   for(let i = 0; i < medicalHistory.length; i++){
-    //     delete
-    //   }
-    // }
-
-    deleteUnwantedKeys(formFormRequest, 'allergies');
+    //obj key and subkey
+    deleteUnwantedKeys(formFormRequest, 'allergies', '_id');
+    deleteUnwantedKeys(formFormRequest, 'medicalHistory', '_id');
+    deleteUnwantedKeys(formFormRequest, 'medication', '_id');
 
     if (formFormRequest.email) {
       delete formFormRequest.email;
@@ -189,13 +181,9 @@ const UpdateProfile = () => {
     });
   };
 
-  const deleteUnwantedKeys = (obj, key) => {
+  const deleteUnwantedKeys = (obj, key, subKey) => {
     obj.clientInfo[key].forEach(el => {
-      // const inputValues = Object.keys(el);
-
-      // console.log(inputValues);
-
-      delete el._id;
+      delete el[subKey];
     });
 
     return obj;
@@ -303,7 +291,6 @@ const UpdateProfile = () => {
 
     // console.log(user);
     if (user.errors.length === 0) {
-      console.log('here');
       const updateData = async () => {
         const cloneForm = sanitizeForm();
         console.log(cloneForm);
@@ -311,7 +298,7 @@ const UpdateProfile = () => {
           const response = await updateProfile(cloneForm);
           console.log(response);
           setUser(response.data);
-          // navigate('/profile');
+          navigate('/profile');
         } catch (err) {
           console.log(err);
           setUser({
