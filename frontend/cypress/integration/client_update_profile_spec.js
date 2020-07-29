@@ -1,18 +1,16 @@
 const faker = require('faker');
 const newEmail = faker.internet.email();
 
-//REPLACE WITH SIGNIN AND CREDENTIALS ONCE OPERATIONAL
-// describe('Doctor Sign Up', () => {
-describe('Doctor Signup + Update Doctor Profile', () => {
+describe('Client Sign Up + Update Profile', () => {
   it('Visits CloudClinic', () => {
     cy.visit('http://localhost:3000/home');
 
     cy.contains('Sign up').click();
     cy.url().should('include', '/authentication');
 
-    //Step Zero - select a Yes to Doctor
-    cy.contains('No');
-    cy.contains('Yes').click();
+    //Step Zero
+    cy.contains('Yes');
+    cy.contains('No').click();
 
     //Step One - Login details signup
     cy.get('input[name="Email"]').type(newEmail).should('have.value', newEmail);
@@ -31,62 +29,60 @@ describe('Doctor Signup + Update Doctor Profile', () => {
     //Step Two - Basic Information
     cy.get('select[name="Title"]').select('Dr').should('have.value', 'Dr');
     cy.get('input[name="First Name"]')
-      .type('Harry')
-      .should('have.value', 'Harry');
+      .type('Hugh')
+      .should('have.value', 'Hugh');
     cy.get('input[name="Last Name"]')
-      .type('Buisman')
-      .should('have.value', 'Buisman');
+      .type('Greethead')
+      .should('have.value', 'Greethead');
     cy.get('select[name="Sex"]').select('male').should('have.value', 'male');
     cy.get('input[name="Date of Birth"]')
-      .type('1995-10-10')
-      .should('have.value', '1995-10-10');
+      .type('1998-12-20')
+      .should('have.value', '1998-12-20');
     cy.get('input[name="Mobile number"]')
-      .clear()
-      .type('+61428728937')
+      .type(428728937)
       .should('have.value', '+61428728937');
-    cy.get('input[name="Street No."]').type(5).should('have.value', 5);
+    cy.get('input[name="Street No."]').type(3).should('have.value', 3);
     cy.get('input[name="Street"]')
       .type('Beach Rd')
       .should('have.value', 'Beach Rd');
-    cy.get('input[name="City"]').type('Bondi').should('have.value', 'Bondi');
+    cy.get('input[name="City"]').type('Coogee').should('have.value', 'Coogee');
     cy.get('input[name="State"]').type('NSW').should('have.value', 'NSW');
     cy.get('select[name="Country"]')
       .select('Australia')
       .should('have.value', 'Australia');
-    cy.get('input[name="Postcode"]').type(2024).should('have.value', 2024);
+    cy.get('input[name="Postcode"]').type(2020).should('have.value', 2020);
 
     cy.contains('Previous');
     cy.contains('Next').click();
 
-    //Step Three - Doctor Info
-    cy.get('input[name="Licence"]')
-      .type('AUSDOC123')
-      .should('have.value', 'AUSDOC123');
-    cy.get('input[name="Accreditation"]')
-      .type('Doctor of Medicine')
-      .should('have.value', 'Doctor of Medicine');
-    cy.get('input[name="Specialty Field"]')
-      .type('General Practitioner')
-      .should('have.value', 'General Practitioner');
-    cy.get('input[name="Sub Specialty Field"]')
-      .type('Cardiology')
-      .should('have.value', 'Cardiology');
-    cy.get('input[name="Education"]')
-      .type('University of New South Wales')
-      .should('have.value', 'University of New South Wales');
-    cy.get('input[name="Years of Experience"]').type(5).should('have.value', 5);
-    cy.get('select[name="Language"]')
-      .select('English')
-      .should('have.value', 'English');
+    //Step Three - Client Info
+    cy.get('input[name="Condition"]')
+      .type('Sore Knee')
+      .should('have.value', 'Sore Knee');
+    cy.get('input[name="Start date"]')
+      .type('2019-10-10')
+      .should('have.value', '2019-10-10');
+    cy.get('input[name="Comments"]')
+      .type('Swollen')
+      .should('have.value', 'Swollen');
+    cy.get('input[name="Allergy"]').type('Grass').should('have.value', 'Grass');
+    cy.get('select[name="Severity"]').select('1').should('have.value', '1');
+    cy.get('input[name="Medication"]')
+      .type('Paracetamol')
+      .should('have.value', 'Paracetamol');
+    cy.get('input[name="Dosage (mg)"]').type(500).should('have.value', 500);
+    cy.get('input[name="Manufacturer"]')
+      .type('Panadol')
+      .should('have.value', 'Panadol');
+    cy.get('select[name="Blood Type"]').select('O+').should('have.value', 'O+');
+    cy.get('input[name="Weight (kg)"]').type(82).should('have.value', 82);
+
     cy.contains('Previous');
     cy.contains('Submit').click();
 
     cy.wait(2000);
     cy.url().should('include', '/profile');
-    //   });
-    // });
 
-    //ISSUE WHEN PUTTING IN SEPARATE DESCRIBE BLOCKS
     // describe('Doctor Update Profile', () => {
     //   it('Visits CloudClinic Account Settings', () => {
     cy.visit('http://localhost:3000/settings');
@@ -98,7 +94,6 @@ describe('Doctor Signup + Update Doctor Profile', () => {
     cy.contains('Login Details');
     cy.contains('Basic Information');
     cy.contains('Address');
-    cy.contains('Medical Licencing & Accreditation');
 
     //Login details - changing password
     cy.get('input[name="Password"]')
@@ -155,52 +150,41 @@ describe('Doctor Signup + Update Doctor Profile', () => {
       .type(3000)
       .should('have.value', 3000);
 
-    //Doctor Info
-    cy.get('input[name="Licence"]')
+    //Client Info
+    cy.get('input[name="Condition"]')
       .clear()
-      .type('TIM')
-      .should('have.value', 'TIM');
-    cy.get('input[name="Accreditation"]')
-      .first()
+      .type('Flu')
+      .should('have.value', 'Flu');
+    cy.get('input[name="Start date"]')
       .clear()
-      .type('Doctor of Surgery')
-      .should('have.value', 'Doctor of Surgery');
-    //Workaround for when there are two Accreditation fields
-    //Comment out otherwise
-    // cy.get('input[name="Accreditation"]')
-    //   .last()
-    //   .clear()
-    //   .type('Doctor of Psychology')
-    //   .should('have.value', 'Doctor of Psychology');
-
-    cy.get('input[name="Specialty Field"]')
+      .type('2019-12-05')
+      .should('have.value', '2019-12-05');
+    cy.get('input[name="Comments"]')
       .clear()
-      .type('General Practitioner')
-      .should('have.value', 'General Practitioner');
-    cy.get('input[name="Sub Specialty Field"]')
+      .type('Possible case of Coronavirus')
+      .should('have.value', 'Possible case of Coronavirus');
+    cy.get('input[name="Allergy"]')
       .clear()
-      .type('Cardiology')
-      .should('have.value', 'Cardiology');
-    cy.get('input[name="Education"]')
-      .first()
+      .type('Shellfish')
+      .should('have.value', 'Shellfish');
+    cy.get('select[name="Severity"]').select('3').should('have.value', '3');
+    cy.get('input[name="Medication"]')
       .clear()
-      .type('University of Technology Sydney')
-      .should('have.value', 'University of Technology Sydney');
-    //Comment out if necessary
-    // cy.get('input[name="Education"]')
-    //   .last()
-    //   .clear()
-    //   .type('University of Sydney')
-    //   .should('have.value', 'University of Sydney');
-
-    cy.get('input[name="Years of Experience"]')
+      .type('Ibuprofen')
+      .should('have.value', 'Ibuprofen');
+    cy.get('input[name="Dosage (mg)"]')
       .clear()
-      .type(11)
-      .should('have.value', 11);
-    cy.get('select[name="Language"]')
-      .first()
-      .select('Spanish')
-      .should('have.value', 'Spanish');
+      .type(600)
+      .should('have.value', 600);
+    cy.get('input[name="Manufacturer"]')
+      .clear()
+      .type('Nurofen')
+      .should('have.value', 'Nurofen');
+    cy.get('select[name="Blood Type"]').select('A+').should('have.value', 'A+');
+    cy.get('input[name="Weight (kg)"]')
+      .clear()
+      .type(95)
+      .should('have.value', 95);
 
     //Submit Update Button
     cy.get('button').contains('Update').click();
