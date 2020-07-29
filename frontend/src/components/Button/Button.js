@@ -39,6 +39,8 @@ const Button = ({ action, color, icon, onClick }) => {
         return <LogIn size={iconSizeSmall} />;
       case 'logOut':
         return <LogOut size={iconSizeSmall} />;
+      case 'logOutLarge':
+        return <LogOut size={iconSize} />;
       default:
         return null;
     }
@@ -58,6 +60,7 @@ const Button = ({ action, color, icon, onClick }) => {
         {icon === 'cross' && <i>{getIcon()}</i>}
         {icon === 'logIn' && <i>{getIcon()}</i>}
         {icon === 'logOut' && <i>{getIcon()}</i>}
+        {icon === 'logOutLarge' && <i>{getIcon()}</i>}
       </button>
     </div>
   );

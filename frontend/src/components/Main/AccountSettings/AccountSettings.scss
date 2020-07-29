@@ -5,5 +5,16 @@
     display: grid;
     grid-template-columns: auto auto;
     margin-bottom: 24px;
+
+    @media all and (max-width: 644px) {
+      grid-template-columns: auto;
+      grid-template-rows: auto auto;
+      gap: 24px;
+    }
+  }
+
+  .account-settings-heading,
+  .update-account {
+    margin-bottom: 24px;
   }
 }
