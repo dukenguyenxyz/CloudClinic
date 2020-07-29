@@ -30,16 +30,16 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
           localizer={localizer}
           defaultView="work_week"
           views={['month', 'day', 'work_week']}
-          // min={
-          //   doctorAvailability
-          //     ? moment(doctorAvailability.openingTime).toDate()
-          //     : undefined
-          // }
-          // max={
-          //   doctorAvailability
-          //     ? moment(doctorAvailability.closingTime).toDate()
-          //     : undefined
-          // }
+          min={
+            doctorAvailability.openingTime
+              ? moment(doctorAvailability.openingTime).toDate()
+              : undefined
+          }
+          max={
+            doctorAvailability.closingTime
+              ? moment(doctorAvailability.closingTime).toDate()
+              : undefined
+          }
         />
       </div>
     </div>

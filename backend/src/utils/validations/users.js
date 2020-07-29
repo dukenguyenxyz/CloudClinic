@@ -20,7 +20,20 @@ const schema = Joi.object({
     specialtyField: Joi.string(),
     subSpecialtyField: Joi.string(),
     education: Joi.array(),
-    unavailabilities: Joi.array(), // {duration: Number, include: Boolean, ruleInstructionText: String}
+    workSchedule: Joi.object({
+      openingTime: Joi.date(),
+      closingTime: Joi.date(),
+      lunchBreakStart: Joi.date(),
+      lunchBreakEnd: Joi.date(),
+      unavailableDateTimes: Joi.array(),
+      // .items(
+      //   Joi.object({
+      //     startDateTime: Date,
+      //     endDateTime: Date,
+      //     modifier: String,
+      //   })
+      // ),
+    }),
     yearsExperience: Joi.number().integer(),
     tags: Joi.array(),
     languagesSpoken: Joi.array(),

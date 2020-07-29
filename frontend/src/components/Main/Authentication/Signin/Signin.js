@@ -25,33 +25,46 @@ const Signin = () => {
     });
   };
 
+  const handleEnterKey = e => {
+    if (e.keyCode === 13) {
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = async () => {
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!formState.email || !formState.password) {
       setFormState({
         ...formState,
         errors: ['Please fill in all fields'],
       });
-    }
-
-    try {
-      const res = await signInUser({
-        email: 'w34234asdf@gmail.com', // formState.email,
-        password: '123456789', // formState.password,
-      });
-      localStorage.setItem('cloudclinicJWT', res.data.token);
-      const sanitizedUser = omitDeep(res.data.user, [
-        '_id',
-        '__v',
-        'createdAt',
-      ]);
-      setUser(sanitizedUser);
-      navigate('/appointments');
-      console.log(res);
-    } catch (error) {
+    } else if (!emailRegex.test(formState.email)) {
       setFormState({
         ...formState,
-        errors: [`Something went wrong ${error}`],
+        errors: ['Please enter a valid email'],
       });
+    } else {
+      try {
+        const res = await signInUser({
+          email: formState.email, // 'w34234asdf@gmail.com',
+          password: formState.password, // '123456789'
+        });
+        localStorage.setItem('cloudclinicJWT', res.data.token);
+        const sanitizedUser = omitDeep(res.data.user, [
+          '_id',
+          '__v',
+          'createdAt',
+        ]);
+        setUser(sanitizedUser);
+        navigate('/appointments');
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+        setFormState({
+          ...formState,
+          errors: [`Something went wrong`],
+        });
+      }
     }
   };
 
@@ -71,6 +84,7 @@ const Signin = () => {
             icon="email"
             minLength="3"
             onValueChange={e => onValueChange(e, 'email')}
+            onKeyUp={handleEnterKey}
           />
           <AuthInput
             value={formState.password}
@@ -79,6 +93,7 @@ const Signin = () => {
             icon="password"
             minLength="6"
             onValueChange={e => onValueChange(e, 'password')}
+            onKeyUp={handleEnterKey}
           />
         </div>
         <div className="auth-error-wrapper">

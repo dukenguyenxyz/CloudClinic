@@ -114,10 +114,7 @@ const userSchema = new mongoose.Schema({
   },
   doctorInfo: {
     workSchedule: {
-      openingTime: {
-        type: String,
-        default: '',
-      },
+      openingTime: Date,
       closingTime: Date,
       lunchBreakStart: Date,
       lunchBreakEnd: Date,

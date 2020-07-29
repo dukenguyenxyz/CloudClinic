@@ -34,6 +34,8 @@ const Appointments = () => {
     sessionDuration: '',
   });
 
+  console.log(user);
+
   const [doctorAvailability, setDoctorAvailability] = useState({
     openingTime: moment().set({ hour: 5, minutes: 0 }).toDate(),
     closingTime: moment().set({ hour: 23, minutes: 0 }).toDate(),
@@ -113,6 +115,8 @@ const Appointments = () => {
         unavailsAggregate
       );
 
+      console.log(sanitizedUnavailabilities, 'sanitizedUnavailabilities');
+
       const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
 
       // Form has already been filled
@@ -183,6 +187,8 @@ const Appointments = () => {
 
       return new RRule(newRRule);
     };
+
+    console.log(sessions, 'sanitizeDoctorSessions');
 
     // Sanitize the unavailable hours
     return sessions.map(session => {
