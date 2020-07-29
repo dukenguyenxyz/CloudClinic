@@ -22,46 +22,65 @@ const UpdateProfile = () => {
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
 
-  const mockPatchUser = {
-    firstName: 'Lisa',
-    lastName: 'Nguyen',
-    title: 'sadfasdfsadf',
-    sex: 'male',
-    weight: '55',
-    dateOfBirth: '05/11/1999',
-    phoneNumber: '04104820594',
-    email: 'lisahuang@gmail.com',
-    password: '123456789',
-    isDoctor: 'true',
-    address: {
-      number: '4',
-      street: 'Beamish Street',
-      city: 'Sydney',
-      state: 'New South Wales',
-      country: 'Australia',
-      postcode: '2149',
-    },
-    doctorInfo: {
-      licence: 'MIT',
-      accreditations: ['USyd', 'UNSW'],
-      specialtyField: 'Dentistry',
-      subSpecialtyField: 'Prosthodontics',
-      education: ['ANU', 'Macquarie University'],
-      yearsExperience: '10',
-      tags: ['Orthodontics', 'Prosthodontics'],
-      languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-    },
-  };
+  // const mockPatchUser = {
+  //   firstName: 'Lisa',
+  //   lastName: 'Nguyen',
+  //   title: 'sadfasdfsadf',
+  //   sex: 'male',
+  //   weight: '55',
+  //   dateOfBirth: '05/11/1999',
+  //   phoneNumber: '04104820594',
+  //   email: 'lisahuang@gmail.com',
+  //   password: '123456789',
+  //   isDoctor: 'true',
+  //   address: {
+  //     number: '4',
+  //     street: 'Beamish Street',
+  //     city: 'Sydney',
+  //     state: 'New South Wales',
+  //     country: 'Australia',
+  //     postcode: '2149',
+  //   },
+  //   doctorInfo: {
+  //     licence: 'MIT',
+  //     accreditations: ['USyd', 'UNSW'],
+  //     specialtyField: 'Dentistry',
+  //     subSpecialtyField: 'Prosthodontics',
+  //     education: ['ANU', 'Macquarie University'],
+  //     yearsExperience: '10',
+  //     tags: ['Orthodontics', 'Prosthodontics'],
+  //     languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
+  //   },
+  // };
+
+  console.log(user);
 
   const sanitizeForm = () => {
     const formFormRequest = Object.assign({}, user);
+
+    // formFormRequest.dateOfBirth.format('YYYY-MM-DD');
+
+    // if (formFormRequest.medicalHistory) {
+    // }
 
     if (formFormRequest.doctorInfo && formFormRequest.doctorInfo.rating) {
       delete formFormRequest.doctorInfo.rating;
     }
 
+    // if(formFormRequest.clientInfo && formFormRequest.clientInfo.medicalHistory){
+    //   for(let i = 0; i < medicalHistory.length; i++){
+    //     delete
+    //   }
+    // }
+
+    deleteUnwantedKeys(formFormRequest, 'allergies');
+
     if (formFormRequest.email) {
       delete formFormRequest.email;
+    }
+
+    if (formFormRequest.confirmPassword) {
+      delete formFormRequest.confirmPassword;
     }
 
     if (formFormRequest.isDoctor) {
@@ -170,6 +189,18 @@ const UpdateProfile = () => {
     });
   };
 
+  const deleteUnwantedKeys = (obj, key) => {
+    obj.clientInfo[key].forEach(el => {
+      // const inputValues = Object.keys(el);
+
+      // console.log(inputValues);
+
+      delete el._id;
+    });
+
+    return obj;
+  };
+
   //handler for submitting form
   const handleSubmit = () => {
     if (
@@ -270,10 +301,12 @@ const UpdateProfile = () => {
       }
     }
 
+    // console.log(user);
     if (user.errors.length === 0) {
       console.log('here');
       const updateData = async () => {
         const cloneForm = sanitizeForm();
+        console.log(cloneForm);
         try {
           const response = await updateProfile(cloneForm);
           console.log(response);

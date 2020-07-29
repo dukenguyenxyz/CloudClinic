@@ -10,7 +10,7 @@ const schema = Joi.object({
   confirmPassword: Joi.string().min(6).required(), // Joi.ref('password'),
   title: Joi.string(),
   sex: Joi.string(),
-  dateOfBirth: Joi.date(),
+  dateOfBirth: Joi.string(), // Joi.date().format('YYYY-MM-DD'),
   phoneNumber: Joi.string(),
   address: Joi.object(),
   isDoctor: Joi.boolean(),
@@ -28,7 +28,7 @@ const schema = Joi.object({
     weight: Joi.number(),
     medicalHistory: Joi.array().items(
       Joi.object({
-        startDate: Joi.date(),
+        startDate: Joi.string(), // Joi.date().format('YYYY-MM-DD'),
         condition: Joi.string(),
         notes: Joi.string(),
       })

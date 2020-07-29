@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     enum: ['male', 'female'],
   },
   dateOfBirth: {
-    type: Date,
+    type: String, // Date
   },
   phoneNumber: {
     type: String,
@@ -190,7 +190,7 @@ const userSchema = new mongoose.Schema({
           auto: true,
         },
         startDate: {
-          type: Date,
+          type: String, // Date
         },
         condition: {
           type: String,

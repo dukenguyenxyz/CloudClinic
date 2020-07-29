@@ -1,3 +1,4 @@
+const moment = require('moment');
 const User = require('../models/User');
 const Session = require('../models/Session');
 const {
@@ -35,6 +36,7 @@ exports.signUp = async (req, res) => {
 
     await user.save();
     const token = await user.generateAuthToken();
+    // moment(user.dateOfBirth).format('YYYY-MM-DD');
     res.status(201).send({ user, token });
   } catch (e) {
     res.status(400).send(e);
