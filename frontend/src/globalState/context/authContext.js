@@ -29,15 +29,15 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  // // Client Generator
+  // Client Generator
 
-  // useEffect(() => {
-  //   const generateUser = async () => {
-  //     // await signUpClient(setUser);
-  //     await signUpDoctor(setUser);
-  //   };
-  //   generateUser();
-  // }, []);
+  useEffect(() => {
+    const generateUser = async () => {
+      // await signUpClient(setUser);
+      await signUpDoctor(setUser);
+    };
+    generateUser();
+  }, []);
 
   const authState = {
     user,

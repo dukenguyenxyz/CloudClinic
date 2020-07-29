@@ -1,3 +1,5 @@
+// prettier-ignore
+
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -11,18 +13,28 @@ import mockRealEvents from '../Samples/sampleEventsReal';
 const localizer = momentLocalizer(moment);
 
 // events = unavailabilities.map(mapToRBCFormat)
-const mapToRBCFormat = e =>
-  Object.assign({}, e, {
-    start: moment(e.start, moment.ISO_8601).toDate(),
-    end: moment(e.end, moment.ISO_8601).toDate(),
+const mapToRBCFormat = (e, i) => {
+  const newDateObj = Object.assign({}, e, {
+    id: i, // convert into a number
+    start: new Date(e.start), // moment(e.start).toDate(), // moment.ISO_8601
+    end: new Date(e.end), // moment(e.end).toDate(),
   });
+
+  delete newDateObj.same;
+
+  return newDateObj;
+};
 
 const mappedData = mockRealEvents.map(mapToRBCFormat);
 
 const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
-  // const [calendarState, setCalendarState] = useState([
-  // useEffect(() => {}, []);
-  // console.log(unavailabilities);
+  const now = new Date();
+
+  const [calendarState, setCalendarState] = useState([]);
+
+  useEffect(() => {
+    // setCalendarState(unavailabilities.map(mapToRBCFormat));
+  }, [unavailabilities]);
 
   return (
     <div>
@@ -32,8 +44,9 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
         }}
       >
         <Calendar
+          // events={mockEvents}
           // events={mappedData} // mockEvents
-          events={unavailabilities.map(mapToRBCFormat)}
+          events={calendarState}
           startAccessor="start"
           endAccessor="end"
           defaultDate={moment().toDate()}
