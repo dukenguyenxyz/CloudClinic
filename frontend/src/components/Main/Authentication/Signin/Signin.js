@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import _ from 'lodash';
+import omitDeep from 'omit-deep-lodash';
 import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import Button from '../../../Button/Button';
+import { signInUser } from '../../../AxiosTest/userRoutes';
+import { AuthContext } from '../../../../globalState/index';
+import { navigate } from '@reach/router';
 
 const Signin = () => {
   const [formState, setFormState] = useState({
@@ -10,12 +15,57 @@ const Signin = () => {
     errors: [],
   });
 
+  const { user, setUser } = useContext(AuthContext);
+
   const onValueChange = (e, key) => {
     setFormState({
       ...formState,
       errors: [],
       [key]: e.target.value,
     });
+  };
+
+  const handleEnterKey = e => {
+    if (e.keyCode === 13) {
+      handleSubmit();
+    }
+  };
+
+  const handleSubmit = async () => {
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    if (!formState.email || !formState.password) {
+      setFormState({
+        ...formState,
+        errors: ['Please fill in all fields'],
+      });
+    } else if (!emailRegex.test(formState.email)) {
+      setFormState({
+        ...formState,
+        errors: ['Please enter a valid email'],
+      });
+    } else {
+      try {
+        const res = await signInUser({
+          email: formState.email, // 'w34234asdf@gmail.com',
+          password: formState.password, // '123456789'
+        });
+        localStorage.setItem('cloudclinicJWT', res.data.token);
+        const sanitizedUser = omitDeep(res.data.user, [
+          '_id',
+          '__v',
+          'createdAt',
+        ]);
+        setUser(sanitizedUser);
+        navigate('/appointments');
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+        setFormState({
+          ...formState,
+          errors: [`Something went wrong`],
+        });
+      }
+    }
   };
 
   return (
@@ -34,6 +84,7 @@ const Signin = () => {
             icon="email"
             minLength="3"
             onValueChange={e => onValueChange(e, 'email')}
+            onKeyUp={handleEnterKey}
           />
           <AuthInput
             value={formState.password}
@@ -42,6 +93,7 @@ const Signin = () => {
             icon="password"
             minLength="6"
             onValueChange={e => onValueChange(e, 'password')}
+            onKeyUp={handleEnterKey}
           />
         </div>
         <div className="auth-error-wrapper">
@@ -57,7 +109,7 @@ const Signin = () => {
           <Button
             action="Sign in"
             color="pink"
-            // onClick={onNextStepZero}
+            onClick={() => handleSubmit()}
             icon="logIn"
           />
         </div>

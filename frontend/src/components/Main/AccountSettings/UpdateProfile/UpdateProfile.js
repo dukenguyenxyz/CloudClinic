@@ -391,6 +391,44 @@ const UpdateProfile = () => {
               options={sexOptions}
               onValueChange={e => onValueChange(e, 'sex')}
             />
+            {user.doctorInfo.education.map((val, i) => {
+              return (
+                <div key={i} className="auth-multi">
+                  <AuthInput
+                    name="education"
+                    value={val}
+                    placeholder="Education"
+                    type="text"
+                    maxLength="50"
+                    icon="briefcase"
+                    onValueChange={e =>
+                      onNestedArrValueChange(e, 'doctorInfo', i, 'education')
+                    }
+                  />
+                  <div className="btn-box">
+                    {user.doctorInfo.education.length !== 1 && (
+                      <Button
+                        onClick={() =>
+                          handleRemoveClick('doctorInfo', i, 'education')
+                        }
+                        icon="minus"
+                        color="mid"
+                      />
+                    )}
+                    {user.doctorInfo.education.length - 1 === i && (
+                      <Button
+                        onClick={() =>
+                          user.doctorInfo.education[i] !== '' &&
+                          handleAddClick('doctorInfo', 'education')
+                        }
+                        icon="plus"
+                        color="mid"
+                      />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
             <AuthInput
               value={moment(user.dateOfBirth).format('YYYY-MM-DD')}
               placeholder="Date of Birth"

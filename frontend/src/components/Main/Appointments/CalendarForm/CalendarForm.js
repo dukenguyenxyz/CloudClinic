@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import { Clock, Calendar } from 'react-feather';
+
+import 'react-datepicker/dist/react-datepicker.css';
 import '../../Authentication/Form/Form.scss';
 import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import Button from '../../../Button/Button';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Clock, Calendar } from 'react-feather';
+
 import moment from 'moment';
 import { setHours, setMinutes } from 'date-fns';
 import axios from 'axios';
@@ -104,16 +106,21 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.openningTime}
+                            selected={
+                              doctorAvailability
+                                ? doctorAvailability.openingTime
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
                                 errors: [],
-                                openningTime: date,
+                                openingTime: date,
                               })
                             }
                             showTimeSelect
                             showTimeSelectOnly
+                            placeholder="Opening Time"
                             minTime={moment().hours(5).minutes(0)._d}
                             maxTime={moment().hours(22).minutes(0)._d}
                             timeIntervals={15}
@@ -127,7 +134,11 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.closingTime}
+                            selected={
+                              doctorAvailability
+                                ? doctorAvailability.closingTime
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
@@ -137,9 +148,14 @@ const CalendarForm = ({
                             }
                             showTimeSelect
                             showTimeSelectOnly
-                            minTime={moment(doctorAvailability.openningTime)
-                              .add(1, 'hour')
-                              .toDate()}
+                            placeholder="Opening Time"
+                            minTime={
+                              doctorAvailability
+                                ? moment(doctorAvailability.openingTime)
+                                    .add(1, 'hour')
+                                    .toDate()
+                                : null
+                            }
                             maxTime={moment().hours(23).minutes(0)._d}
                             timeIntervals={15}
                             timeCaption="Time"
@@ -159,7 +175,11 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.lunchBreakStart}
+                            selected={
+                              doctorAvailability
+                                ? doctorAvailability.lunchBreakStart
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
@@ -181,7 +201,11 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.lunchBreakEnd}
+                            selected={
+                              doctorAvailability
+                                ? doctorAvailability.lunchBreakEnd
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
@@ -204,178 +228,182 @@ const CalendarForm = ({
                 <div>
                   <h4>Select your unavailability</h4>
                   <div className="react-datepicker-master-wrapper">
-                    {doctorAvailability.unavailableDateTimes.map((el, i) => {
-                      return (
-                        <div key={i}>
-                          <div className="start-end-time-wrapper">
-                            <div className="start-end-time-container">
-                              <h5>Start date and time</h5>
-                              <div className="lunch-time">
-                                <Calendar color="#212429" size={14} />
-                                <DatePicker
-                                  selected={
-                                    doctorAvailability.unavailableDateTimes[i]
-                                      .startDateTime
-                                  }
-                                  onChange={date =>
-                                    handleUnavailableDateChange(
-                                      el,
-                                      i,
-                                      'unavailableDateTimes',
-                                      date,
-                                      'startDateTime'
-                                    )
-                                  }
-                                  showTimeSelect
-                                  minDate={moment().toDate()}
-                                  maxDate={moment().add(3, 'year').toDate()}
-                                  minTime={doctorAvailability.openningTime}
-                                  maxTime={moment()
-                                    .hours(23)
-                                    .minutes(0)
-                                    .toDate()}
-                                  timeIntervals={15}
-                                  timeCaption="Time"
-                                  dateFormat="MMMM d, h:mm aa"
-                                />
-                              </div>
-                            </div>
-                            <div className="start-end-time-container">
-                              <h5>End date and time</h5>
-                              <div className="lunch-time">
-                                <Calendar color="#212429" size={14} />
-                                <DatePicker
-                                  selected={
-                                    doctorAvailability.unavailableDateTimes[i]
-                                      .endDateTime
-                                  }
-                                  onChange={date =>
-                                    handleUnavailableDateChange(
-                                      el,
-                                      i,
-                                      'unavailableDateTimes',
-                                      date,
-                                      'endDateTime'
-                                    )
-                                  }
-                                  showTimeSelect
-                                  minDate={moment().toDate()}
-                                  maxDate={moment().add(3, 'year').toDate()}
-                                  minTime={doctorAvailability.openningTime}
-                                  maxTime={moment()
-                                    .hours(23)
-                                    .minutes(0)
-                                    .toDate()}
-                                  timeIntervals={15}
-                                  timeCaption="Time"
-                                  dateFormat="MMMM d, h:mm aa"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div id="appointment-form-button-wrapper">
-                            <div className="grid-item">
-                              <div className="radio-group">
-                                {/* <div className="option">
-                                  <input
-                                    type="radio"
-                                    id="allDay"
-                                    name={`condition${i}`}
-                                    value="allDay"
-                                    onChange={e =>
-                                      handleUnavailabilityModifiers(
-                                        e,
+                    {doctorAvailability &&
+                      doctorAvailability.unavailableDateTimes.map((el, i) => {
+                        return (
+                          <div key={i}>
+                            <div className="start-end-time-wrapper">
+                              <div className="start-end-time-container">
+                                <h5>Start date and time</h5>
+                                <div className="lunch-time">
+                                  <Calendar color="#212429" size={14} />
+                                  <DatePicker
+                                    selected={
+                                      doctorAvailability
+                                        ? doctorAvailability
+                                            .unavailableDateTimes[i]
+                                            .startDateTime
+                                        : null
+                                    }
+                                    onChange={date =>
+                                      handleUnavailableDateChange(
+                                        el,
                                         i,
-                                        'unavailableDateTimes'
+                                        'unavailableDateTimes',
+                                        date,
+                                        'startDateTime'
                                       )
                                     }
-                                  />
-                                  <label htmlFor="allDay">All Day</label>
-                                </div> */}
-                                <div className="option">
-                                  <input
-                                    type="radio"
-                                    id="everyWeek"
-                                    name={`condition${i}`}
-                                    value={RRule.WEEKLY} // RRule.WEEKLY
-                                    onChange={e =>
-                                      handleUnavailabilityModifiers(
-                                        e,
-                                        i,
-                                        'unavailableDateTimes'
-                                      )
+                                    showTimeSelect
+                                    minDate={moment().toDate()}
+                                    maxDate={moment().add(3, 'year').toDate()}
+                                    minTime={
+                                      doctorAvailability
+                                        ? doctorAvailability.openingTime
+                                        : null
                                     }
+                                    maxTime={moment()
+                                      .hours(23)
+                                      .minutes(0)
+                                      .toDate()}
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="MMMM d, h:mm aa"
                                   />
-                                  <label htmlFor="female">Every Week</label>
                                 </div>
-                                <div className="option">
-                                  <input
-                                    type="radio"
-                                    id="other"
-                                    name={`condition${i}`}
-                                    value={RRule.DAILY} // RRule.DAILY
-                                    onChange={e =>
-                                      handleUnavailabilityModifiers(
-                                        e,
+                              </div>
+                              <div className="start-end-time-container">
+                                <h5>End date and time</h5>
+                                <div className="lunch-time">
+                                  <Calendar color="#212429" size={14} />
+                                  <DatePicker
+                                    selected={
+                                      doctorAvailability
+                                        ? doctorAvailability
+                                            .unavailableDateTimes[i].endDateTime
+                                        : null
+                                    }
+                                    onChange={date =>
+                                      handleUnavailableDateChange(
+                                        el,
                                         i,
-                                        'unavailableDateTimes'
+                                        'unavailableDateTimes',
+                                        date,
+                                        'endDateTime'
                                       )
                                     }
+                                    showTimeSelect
+                                    minDate={moment().toDate()}
+                                    maxDate={moment().add(3, 'year').toDate()}
+                                    minTime={
+                                      doctorAvailability.openingTime
+                                        ? doctorAvailability.openingTime
+                                        : null
+                                    }
+                                    maxTime={moment()
+                                      .hours(23)
+                                      .minutes(0)
+                                      .toDate()}
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="MMMM d, h:mm aa"
                                   />
-                                  <label htmlFor="other">Daily</label>
                                 </div>
                               </div>
                             </div>
-                            <div className="grid-item">
-                              {doctorAvailability.unavailableDateTimes
-                                .length !== 1 && (
-                                <Button
-                                  onClick={() =>
-                                    handleRemoveClick('unavailableDateTimes', i)
-                                  }
-                                  icon="minus"
-                                  color="mid"
-                                />
-                              )}
-                              {doctorAvailability.unavailableDateTimes.length -
-                                1 ===
-                                i && (
-                                <Button
-                                  onClick={() =>
-                                    doctorAvailability.unavailableDateTimes[i]
-                                      .startDateTime !== '' &&
-                                    handleAddClick('unavailableDateTimes', {
-                                      startDateTime: round(
-                                        moment(),
-                                        moment.duration(15, 'minutes'),
-                                        'ceil'
-                                      ).toDate(),
-                                      endDateTime: round(
-                                        moment(),
-                                        moment.duration(15, 'minutes'),
-                                        'ceil'
-                                      ).toDate(),
-                                      modifier: '',
-                                    })
-                                  }
-                                  icon="plus"
-                                  color="mid"
-                                />
-                              )}
+                            <div id="appointment-form-button-wrapper">
+                              <div className="grid-item">
+                                <div className="radio-group">
+                                  <div className="option">
+                                    <input
+                                      type="radio"
+                                      id="everyWeek"
+                                      name={`condition${i}`}
+                                      value={RRule.WEEKLY} // RRule.WEEKLY
+                                      onChange={e =>
+                                        handleUnavailabilityModifiers(
+                                          e,
+                                          i,
+                                          'unavailableDateTimes'
+                                        )
+                                      }
+                                    />
+                                    <label htmlFor="female">Every Week</label>
+                                  </div>
+                                  <div className="option">
+                                    <input
+                                      type="radio"
+                                      id="other"
+                                      name={`condition${i}`}
+                                      value={RRule.DAILY} // RRule.DAILY
+                                      onChange={e =>
+                                        handleUnavailabilityModifiers(
+                                          e,
+                                          i,
+                                          'unavailableDateTimes'
+                                        )
+                                      }
+                                    />
+                                    <label htmlFor="other">Daily</label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="grid-item">
+                                {doctorAvailability.unavailableDateTimes
+                                  .length !== 1 && (
+                                  <Button
+                                    onClick={() =>
+                                      handleRemoveClick(
+                                        'unavailableDateTimes',
+                                        i
+                                      )
+                                    }
+                                    icon="minus"
+                                    color="mid"
+                                  />
+                                )}
+                                {doctorAvailability.unavailableDateTimes
+                                  .length -
+                                  1 ===
+                                  i && (
+                                  <Button
+                                    onClick={() =>
+                                      doctorAvailability.unavailableDateTimes[i]
+                                        .startDateTime !== '' &&
+                                      handleAddClick('unavailableDateTimes', {
+                                        startDateTime: round(
+                                          moment(),
+                                          moment.duration(15, 'minutes'),
+                                          'ceil'
+                                        ).toDate(),
+                                        endDateTime: round(
+                                          moment(),
+                                          moment.duration(15, 'minutes'),
+                                          'ceil'
+                                        ).toDate(),
+                                        modifier: '',
+                                      })
+                                    }
+                                    icon="plus"
+                                    color="mid"
+                                  />
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                 </div>
                 <div className="auth-error-wrapper">
                   <ul>
-                    {doctorAvailability.errors.map((errorMessage, i) => (
-                      <li key={i} className="auth-error-message">
-                        {errorMessage}
-                      </li>
-                    ))}
+                    {doctorAvailability &&
+                      doctorAvailability.errors &&
+                      doctorAvailability.errors.map((errorMessage, i) => (
+                        <li key={i} className="auth-error-message">
+                          {errorMessage}
+                        </li>
+                      ))}
                   </ul>
                 </div>
                 <div className="form-button-wrapper">

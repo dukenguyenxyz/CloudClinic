@@ -44,10 +44,10 @@ router.post('/:id/book', verifyToken, createBooking);
 
 // Need Double Checking
 
-// Update a session (if less than 24hr from booking)
+// Update a booking (if less than 24hr from booking)
 router.patch('/:id/update', verifyToken, updateSession);
 
-// Cancel a session (if less than 24hr from booking) (DELETE request)
+// Cancel a booking (if less than 24hr from booking) (DELETE request)
 router.patch('/:id/cancel', verifyToken, cancelSession);
 
 module.exports = router;

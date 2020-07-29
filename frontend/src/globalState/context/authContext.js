@@ -14,20 +14,20 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   // handles fist page load with a valid user that has a jwt
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem('cloudclinicJWT');
-  //   if (user === null && jwt) {
-  //     const getUser = async () => {
-  //       try {
-  //         const response = await viewProfile();
-  //         setUser(response.data);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     getUser();
-  //   }
-  // }, []);
+  useEffect(() => {
+    const jwt = localStorage.getItem('cloudclinicJWT');
+    if (user === null && jwt) {
+      const getUser = async () => {
+        try {
+          const response = await viewProfile();
+          setUser(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getUser();
+    }
+  }, []);
 
   // Client Generator
   //

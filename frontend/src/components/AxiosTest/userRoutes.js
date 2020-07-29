@@ -96,6 +96,20 @@ export const signInDoctor = async setUserCallback => {
 };
 // Hardcoded ? -- END
 
+export const signInUser = async signInObj => {
+  return await request.post('users/signin', signInObj); // emaill & password
+  // .then(res => {
+  //   console.log(res);
+  //   localStorage.setItem('cloudclinicJWT', res.data.token);
+  //   // setUserCallback(res.data.user);
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // });
+
+  // return response;
+};
+
 export const signOut = async (setUserCallback, redirect) => {
   await request
     .patch('users/signout')
