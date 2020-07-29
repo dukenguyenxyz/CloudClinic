@@ -15,22 +15,6 @@ const Schedule = () => {
     height: '50px',
   };
 
-  // startTime: { type: Date, required: false },
-  // endTime: { type: Date, required: false },
-  // doctor: { type: mongoose.Schema.Types.ObjectId, required: true },
-  // client: { type: mongoose.Schema.Types.ObjectId, required: true },
-  // status: {
-  //   type: String,
-  //   lowercase: true,
-  //   enum: ['accepted', 'pending', 'declined'],
-  //   required: true,
-  //   default: 'no',
-  // },
-  // createDate: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
-
   const [sessions, setSessions] = useState([
     {
       client: 'E. Osborne',
