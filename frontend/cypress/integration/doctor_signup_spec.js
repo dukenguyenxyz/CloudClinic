@@ -4,9 +4,10 @@ const newEmail = faker.internet.email();
 describe('Doctor Sign Up', () => {
   it('Visits CloudClinic', () => {
     cy.visit('http://localhost:3000');
+    cy.visit('http://localhost:3000/home');
 
     cy.contains('Sign up').click();
-    cy.url().should('include', '/authentication');
+    cy.url().should('include', '/home/authentication');
 
     //Step Zero - select a Yes to Doctor
     cy.contains('No');
@@ -39,7 +40,6 @@ describe('Doctor Sign Up', () => {
       .type('Buisman')
       .should('have.value', 'Buisman');
     cy.get('select[name="Sex"]').select('male').should('have.value', 'male');
-    // cy.get('input[name="Weight (kg)"]').type(82).should('have.value', 82);
     cy.get('input[name="Date of Birth"]')
       .type('1995-10-10')
       .should('have.value', '1995-10-10');

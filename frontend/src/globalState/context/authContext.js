@@ -11,6 +11,7 @@ export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
   // First time user
   const [user, setUser] = useState(null);
+  // const [user, setUser] = useEffect(null);
 
   // handles fist page load with a valid user that has a jwt
   // useEffect(() => {
@@ -30,13 +31,13 @@ export const AuthContextProvider = ({ children }) => {
 
   // Client Generator
   //
-  useEffect(() => {
-    const generateUser = async () => {
-      // await signUpClient(setUser);
-      await signUpDoctor(setUser);
-    };
-    generateUser();
-  }, []);
+  // useEffect(() => {
+  //   const generateUser = async () => {
+  //     // await signUpClient(setUser);
+  //     await signUpDoctor(setUser);
+  //   };
+  //   generateUser();
+  // }, []);
 
   const authState = {
     user,
@@ -45,7 +46,8 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={authState}>
-      {user ? children : <LoadingSpinner />}
+      {/* {user ? children : <LoadingSpinner />} */}
+      {children}
     </AuthContext.Provider>
   );
 };

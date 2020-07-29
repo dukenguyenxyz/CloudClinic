@@ -1,5 +1,3 @@
-//User needs to be logged in for test to operate
-//may need to add signup/signin step first
 describe('Doctor Update Profile', () => {
   it('Visits CloudClinic Account Settings', () => {
     cy.visit('http://localhost:3000/settings');
@@ -44,7 +42,10 @@ describe('Doctor Update Profile', () => {
     //   .should('have.value', '0428728937');
 
     //Address
-    cy.get('input[name="Street No."]').clear().type(5).should('have.value', 5);
+    cy.get('input[name="Street No."]')
+      .clear()
+      .type(23)
+      .should('have.value', 23);
     cy.get('input[name="Street"]')
       .clear()
       .type('Mountain Street')
@@ -77,11 +78,11 @@ describe('Doctor Update Profile', () => {
       .should('have.value', 'Doctor of Medicine');
     //Workaround for when there are two Accreditation fields
     //Comment out otherwise
-    cy.get('input[name="Accreditation"]')
-      .last()
-      .clear()
-      .type('Doctor of Surgery')
-      .should('have.value', 'Doctor of Surgery');
+    // cy.get('input[name="Accreditation"]')
+    //   .last()
+    //   .clear()
+    //   .type('Doctor of Surgery')
+    //   .should('have.value', 'Doctor of Surgery');
 
     cy.get('input[name="Specialty Field"]')
       .clear()
@@ -97,11 +98,11 @@ describe('Doctor Update Profile', () => {
       .type('University of New South Wales')
       .should('have.value', 'University of New South Wales');
     //Comment out if necessary
-    cy.get('input[name="Education"]')
-      .last()
-      .clear()
-      .type('University of Sydney')
-      .should('have.value', 'University of Sydney');
+    // cy.get('input[name="Education"]')
+    //   .last()
+    //   .clear()
+    //   .type('University of Sydney')
+    //   .should('have.value', 'University of Sydney');
 
     cy.get('input[name="Years of Experience"]')
       .clear()
