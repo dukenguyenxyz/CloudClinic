@@ -1,30 +1,25 @@
 import React, { useContext, useState, useEffect } from 'react';
 import MainCalendar from './MainCalendar/MainCalendar';
-
 import { RRule, RRuleSet, rrulestr } from 'rrule';
 import moment from 'moment';
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import omitDeep from 'omit-deep-lodash';
 
 import { AuthContext } from '../../../globalState/index';
-import { viewSessions } from '../../AxiosTest/sessionRoutes';
+// import { viewSessions } from '../../AxiosTest/sessionRoutes';
 import { updateProfile } from '../../AxiosTest/userRoutes';
-import { convertAPIdataToJS } from './MainCalendar/events';
-
+import {
+  round,
+  workingDays,
+  sanitizeDoctorSessions,
+  convertAPIdataToJS,
+} from './helpers';
 import CalendarForm from './CalendarForm/CalendarForm';
-
 import './Appointments.scss';
 
 const Appointments = () => {
-  // Helper method
-  function round(date, duration, method) {
-    return moment(Math[method](+date / +duration) * +duration);
-  }
-
   // Setting States
   const { user, setUser } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
   const [unavailabilities, setUnavailabilities] = useState([]);
   const [clientFormState, setClientFormState] = useState({
     doctor: '',
@@ -33,9 +28,6 @@ const Appointments = () => {
     endTime: '',
     sessionDuration: '',
   });
-
-  // console.log(user);
-
   const [doctorAvailability, setDoctorAvailability] = useState({
     openingTime: moment().set({ hour: 5, minutes: 0 }).toDate(),
     closingTime: moment().set({ hour: 23, minutes: 0 }).toDate(),
@@ -62,29 +54,50 @@ const Appointments = () => {
   // Unavailability processing
   // Fetch workschedule from doctor
 
-  // If user already has unavaiblitiy data then prefill them
-  // Component Mounts
-  useEffect(() => {
-    // Set the doctor unavails from fetching
-    if (
-      user.isDoctor &&
-      user.doctorInfo.schedule &&
-      user.doctorInfo.schedule.unavailabilities &&
-      user.doctorInfo.schedule.unavailabilities > 0
-    ) {
-      // Getting the unavailabilities of the doctor
-      const unavailsRules = user.doctorInfo.schedule.unavailabilities; // Form Data
+  const normalScheduleAggregrates = () => {
+    const unavailableSession = (startDateTime, endDateTime, byweekday) => {
+      return {
+        startDateTime: startDateTime.toDate(),
+        endDatetime: endDateTime.toDate(),
+        byweekday: byweekday,
+        modifier: RRule.WEEKLY,
+      };
+    };
 
-      // Convert unavailsRules using sanitizeDoctorSessions
-      const unavailsRealDatesData = sanitizeDoctorSessions(unavailsRules); // Calendar Display Data
+    const unavailableMorning = unavailableSession(
+      moment.utc(doctorAvailability.openingTime).startOf('day'),
+      moment.utc(doctorAvailability.openingTime),
+      workingDays
+    );
 
-      // Set the unavailibities to the unavailsRealDatesData
-      setUnavailabilities(unavailsRealDatesData); // Displaying the calendar with data
+    const unavailableLunch = unavailableSession(
+      moment.utc(doctorAvailability.lunchBreakStart),
+      moment.utc(doctorAvailability.lunchBreakEnd),
+      workingDays
+    );
 
-      // Prefilling the form
-      setDoctorAvailability(unavailsRules);
-    }
-  }, []);
+    const unavailableAfternoon = unavailableSession(
+      moment.utc(doctorAvailability.closingTime),
+      moment.utc(doctorAvailability.closingTime).endOf('day'),
+      workingDays
+    );
+
+    const unavailableWeekends = unavailableSession(
+      moment().day(6).startOf('day'),
+      moment().day(7).endOf('day'),
+      [RRule.SA]
+    );
+
+    const standardUnavailabilities = [
+      unavailableMorning,
+      unavailableLunch,
+      unavailableAfternoon,
+      unavailableWeekends,
+    ];
+
+    //Available Times
+    return standardUnavailabilities;
+  };
 
   // When doctorAvailability updates / mounts
   useEffect(() => {
@@ -104,6 +117,7 @@ const Appointments = () => {
       doctorAvailability.unavailableDateTimes[0].startDateTime &&
       doctorAvailability.unavailableDateTimes[0].endDateTime
     ) {
+      console.log('Use Effect 1');
       // Use piping here is also good
 
       const unavailsAggregate = _.flattenDeep(
@@ -115,8 +129,6 @@ const Appointments = () => {
         unavailsAggregate
       );
 
-      // console.log(sanitizedUnavailabilities, 'sanitizedUnavailabilities');
-
       const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
 
       // Form has already been filled
@@ -124,85 +136,52 @@ const Appointments = () => {
     }
   }, [doctorAvailability]);
 
-  const normalScheduleAggregrates = () => {
-    const workingDays = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR];
+  // If user already has unavaiblitiy data then prefill them
+  // Component Mounts
+  useEffect(() => {
+    console.log(user);
 
-    const unavailableMorning = {
-      startDateTime: moment
-        .utc(doctorAvailability.openingTime)
-        .startOf('day')
-        .toDate(),
-      endDatetime: moment.utc(doctorAvailability.openingTime).toDate(),
-      byweekday: workingDays,
-      modifier: RRule.WEEKLY,
-    };
+    // Set the doctor unavails from fetching
+    if (
+      user.isDoctor &&
+      user.doctorInfo.workSchedule
+      // && user.doctorInfo.workSchedule.unavailableDateTimes > 0
+    ) {
+      console.log('Use Effect 2');
+      // Problem number 2 why schedule.unavailabilities ?
 
-    const unavailableLunch = {
-      startDateTime: moment.utc(doctorAvailability.lunchBreakStart).toDate(),
-      endDateTime: moment.utc(doctorAvailability.lunchBreakEnd).toDate(),
-      byweekday: workingDays,
-      modifier: RRule.WEEKLY,
-    };
+      // Getting the unavailabilities of the doctor
+      const unavailsRules = user.doctorInfo.workSchedule; // Form Data
 
-    const unavailableAfternoon = {
-      startDateTime: moment.utc(doctorAvailability.closingTime).toDate(),
-      endDatetime: moment
-        .utc(doctorAvailability.closingTime)
-        .endOf('day')
-        .toDate(),
-      byweekday: workingDays,
-      modifier: RRule.WEEKLY,
-    };
-
-    const unavailableWeekends = {
-      startDateTime: moment().day(6).startOf('day').toDate(),
-      endDateTime: moment().day(7).endOf('day').toDate(),
-      byweekday: [RRule.SA],
-      modifier: RRule.WEEKLY,
-    };
-
-    const standardUnavailabilities = [
-      unavailableMorning,
-      unavailableLunch,
-      unavailableAfternoon,
-      unavailableWeekends,
-    ];
-
-    //Available Times
-    return standardUnavailabilities;
-  };
-
-  const sanitizeDoctorSessions = sessions => {
-    const convertUTC = date => moment.utc(date).toDate(); // '2020-07-01 09:00'
-
-    const newRRulSet = bluePrint => {
-      const newRRule = {
-        dtstart: convertUTC(bluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
-        until: convertUTC(moment(bluePrint.startDateTime).add(12, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
-        interval: 1,
+      // Conversion (no longer need openingTime losingTime for displaying for RRule, if anything happens ask Harry)
+      // Get lunch break
+      const lunchBreak = {
+        startDateTime: unavailsRules.lunchBreakStart,
+        endDateTime: unavailsRules.lunchBreakEnd,
+        modifier: RRule.WEEKLY,
+        byweekday: workingDays,
       };
 
-      if (bluePrint.modifier) newRRule.freq = bluePrint.modifier;
-      if (bluePrint.byweekday) newRRule.byweekday = bluePrint.byweekday;
+      // Spread lunch break with unavails
+      const convertedArray = [
+        ...unavailsRules.unavailableDateTimes,
+        lunchBreak,
+      ];
 
-      return new RRule(newRRule);
-    };
+      console.log(convertedArray);
 
-    // console.log(sessions, 'sanitizeDoctorSessions');
+      // Convert unavailsRules using sanitizeDoctorSessions
+      const unavailsRealDatesData = sanitizeDoctorSessions(convertedArray); // Calendar Display Data
 
-    // Sanitize the unavailable hours
-    return sessions.map(session => {
-      return {
-        duration: moment(session.endDateTime).diff(
-          session.startDateTime,
-          'minutes'
-        ), //integer
-        include: false,
-        ruleInstruction: newRRulSet(session).toString(),
-        ruleInstructionText: newRRulSet(session).toText(),
-      };
-    });
-  };
+      // Set the unavailibities to the unavailsRealDatesData
+      setUnavailabilities(unavailsRealDatesData); // Displaying the calendar with data
+
+      // Prefilling the form
+      setDoctorAvailability(unavailsRules);
+    }
+  }, []);
+
+  // Actions
 
   const handleDoctorAvailabilitySubmit = async () => {
     //validations - no empty or dodgy fields
@@ -273,31 +252,31 @@ const Appointments = () => {
 
     const unavailabilityObj = {
       doctorInfo: {
-        schedule: sanitizeDoctorSessions(),
+        workSchedule: doctorAvailability, // Need to pass params in
       },
     };
 
+    delete unavailabilityObj.doctorInfo.workSchedule.errors;
+
     console.log(unavailabilityObj);
 
-    // try {
-    //   const response = await updateProfile(unavailabilityObj);
-    //   console.log(response);
-    //   const sanitizedData = omitDeep(response.data, [
-    //     '_id',
-    //     '__v',
-    //     'createdAt',
-    //   ]);
-    //   setUser(sanitizedData);
-    // } catch (err) {
-    //   console.log(err);
-    //   setUser({
-    //     ...user,
-    //     errors: [`Something went wrong, ${err}`],
-    //   });
-    // }
+    try {
+      const response = await updateProfile(unavailabilityObj);
+      console.log(response);
+      const sanitizedData = omitDeep(response.data, [
+        '_id',
+        '__v',
+        'createdAt',
+      ]);
+      setUser(sanitizedData);
+    } catch (err) {
+      console.log(err);
+      setUser({
+        ...user,
+        errors: [`Something went wrong, ${err}`],
+      });
+    }
   };
-
-  // Actions
 
   const handleSelect = (e, key) => {
     setClientFormState({

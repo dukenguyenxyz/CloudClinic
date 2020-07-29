@@ -4,15 +4,16 @@ import { Clock, Calendar } from 'react-feather';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../Authentication/Form/Form.scss';
-import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
+// import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import Button from '../../../Button/Button';
 
 import moment from 'moment';
-import { setHours, setMinutes } from 'date-fns';
-import axios from 'axios';
+// import { setHours, setMinutes } from 'date-fns';
+// import axios from 'axios';
 import Schedule from '../Schedule/Schedule';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
+// import { formatTimeHour, formatTimeDate } from '../helpers';
 
 const CalendarForm = ({
   clientFormState,
@@ -108,14 +109,16 @@ const CalendarForm = ({
                           <DatePicker
                             selected={
                               doctorAvailability
-                                ? doctorAvailability.openingTime
+                                ? moment(
+                                    doctorAvailability.openingTime
+                                  ).toDate()
                                 : null
                             }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
                                 errors: [],
-                                openingTime: date,
+                                openingTime: moment(date).toDate(),
                               })
                             }
                             showTimeSelect
@@ -136,14 +139,16 @@ const CalendarForm = ({
                           <DatePicker
                             selected={
                               doctorAvailability
-                                ? doctorAvailability.closingTime
+                                ? moment(
+                                    doctorAvailability.closingTime
+                                  ).toDate()
                                 : null
                             }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
                                 errors: [],
-                                closingTime: date,
+                                closingTime: moment(date).toDate(),
                               })
                             }
                             showTimeSelect
@@ -177,13 +182,15 @@ const CalendarForm = ({
                           <DatePicker
                             selected={
                               doctorAvailability
-                                ? doctorAvailability.lunchBreakStart
+                                ? moment(
+                                    doctorAvailability.lunchBreakStart
+                                  ).toDate()
                                 : null
                             }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
-                                lunchBreakStart: date,
+                                lunchBreakStart: moment(date).toDate(),
                               })
                             }
                             showTimeSelect
@@ -203,13 +210,15 @@ const CalendarForm = ({
                           <DatePicker
                             selected={
                               doctorAvailability
-                                ? doctorAvailability.lunchBreakEnd
+                                ? moment(
+                                    doctorAvailability.lunchBreakEnd
+                                  ).toDate()
                                 : null
                             }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
-                                lunchBreakEnd: date,
+                                lunchBreakEnd: moment(date).toDate(),
                               })
                             }
                             showTimeSelect
@@ -240,9 +249,11 @@ const CalendarForm = ({
                                   <DatePicker
                                     selected={
                                       doctorAvailability
-                                        ? doctorAvailability
-                                            .unavailableDateTimes[i]
-                                            .startDateTime
+                                        ? moment(
+                                            doctorAvailability
+                                              .unavailableDateTimes[i]
+                                              .startDateTime
+                                          ).toDate()
                                         : null
                                     }
                                     onChange={date =>
@@ -250,16 +261,19 @@ const CalendarForm = ({
                                         el,
                                         i,
                                         'unavailableDateTimes',
-                                        date,
+                                        moment(date).toDate(),
                                         'startDateTime'
                                       )
                                     }
                                     showTimeSelect
                                     minDate={moment().toDate()}
                                     maxDate={moment().add(3, 'year').toDate()}
+                                    // // Format ?
                                     minTime={
                                       doctorAvailability
-                                        ? doctorAvailability.openingTime
+                                        ? moment(
+                                            doctorAvailability.openingTime
+                                          ).toDate()
                                         : null
                                     }
                                     maxTime={moment()
@@ -279,8 +293,11 @@ const CalendarForm = ({
                                   <DatePicker
                                     selected={
                                       doctorAvailability
-                                        ? doctorAvailability
-                                            .unavailableDateTimes[i].endDateTime
+                                        ? moment(
+                                            doctorAvailability
+                                              .unavailableDateTimes[i]
+                                              .endDateTime
+                                          ).toDate()
                                         : null
                                     }
                                     onChange={date =>
@@ -288,16 +305,19 @@ const CalendarForm = ({
                                         el,
                                         i,
                                         'unavailableDateTimes',
-                                        date,
+                                        moment(date).toDate(),
                                         'endDateTime'
                                       )
                                     }
                                     showTimeSelect
                                     minDate={moment().toDate()}
                                     maxDate={moment().add(3, 'year').toDate()}
+                                    // // Format ?
                                     minTime={
                                       doctorAvailability.openingTime
-                                        ? doctorAvailability.openingTime
+                                        ? moment(
+                                            doctorAvailability.openingTime
+                                          ).toDate()
                                         : null
                                     }
                                     maxTime={moment()
