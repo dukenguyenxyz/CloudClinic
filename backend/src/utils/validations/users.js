@@ -20,10 +20,7 @@ const schema = Joi.object({
     specialtyField: Joi.string(),
     subSpecialtyField: Joi.string(),
     education: Joi.array(),
-    schedule: Joi.object({
-      workingHours: Joi.array(), // {duration: Number, include: Boolean, ruleInstructionText: String}
-      unavailabilities: Joi.array(),
-    }),
+    unavailabilities: Joi.array(), // {duration: Number, include: Boolean, ruleInstructionText: String}
     yearsExperience: Joi.number().integer(),
     tags: Joi.array(),
     languagesSpoken: Joi.array(),
