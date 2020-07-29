@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-// import events from './events';
-import { sampleArr as mockAPISessions } from './events';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+import { sampleArr as mockAPISessions, convertAPIdataToJS } from './events';
 import { viewSessions } from '../../../AxiosTest/sessionRoutes';
-import { sampleArr, convertAPIdataToJS } from './events';
 
 const localizer = momentLocalizer(moment);
 
 const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
   // const [calendarState, setCalendarState] = useState([
-  //   {
-  //     id: 15,
-  //     title: 'Point in Time Event',
-  //     start: moment().toDate(),
-  //     end: moment().toDate(),
-  //   },
-  // ]);
 
   // useEffect(() => {}, []);
 
@@ -39,8 +31,8 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
           defaultView="work_week"
           views={['month', 'day', 'work_week']}
           min={
-            doctorAvailability.openningTime
-              ? moment(doctorAvailability.openningTime).toDate()
+            doctorAvailability.openingTime
+              ? moment(doctorAvailability.openingTime).toDate()
               : undefined
           }
           max={

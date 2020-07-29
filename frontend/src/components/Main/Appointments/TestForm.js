@@ -4,7 +4,7 @@ import { RRule, RRuleSet, rrulestr } from 'rrule';
 
 // const TestForm = () => {
 //   const [formState, setFormState] = useState({
-//     openningTime: moment().set({ hour: 6, minute: 0 }).toDate(),
+//     openingTime: moment().set({ hour: 6, minute: 0 }).toDate(),
 //     closingTime: moment().set({ hour: 18, minute: 0 }).toDate(),
 //     lunchBreakStart: moment().set({ hour: 12, minute: 0 }).toDate(),
 //     lunchBreakEnd: moment().set({ hour: 13, minute: 0 }).toDate(),

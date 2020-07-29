@@ -113,19 +113,19 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
   doctorInfo: {
-    schedule: {
-      workingHours: [
+    workSchedule: {
+      openingTime: {
+        type: String,
+        default: '',
+      },
+      closingTime: Date,
+      lunchBreakStart: Date,
+      lunchBreakEnd: Date,
+      unavailableDateTimes: [
         {
-          duration: Number,
-          include: Boolean,
-          ruleInstructionText: String,
-        },
-      ],
-      unavailabilities: [
-        {
-          duration: Number,
-          include: Boolean,
-          ruleInstructionText: String,
+          startDateTime: Date,
+          endDateTime: Date,
+          modifier: String,
         },
       ],
     },

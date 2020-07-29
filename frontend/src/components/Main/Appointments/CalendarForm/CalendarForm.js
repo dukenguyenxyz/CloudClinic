@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import '../../Authentication/Form/Form.scss';
 import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import Button from '../../../Button/Button';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { Clock, Calendar } from 'react-feather';
 import moment from 'moment';
 import { setHours, setMinutes } from 'date-fns';
@@ -104,12 +104,16 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.openningTime}
+                            selected={
+                              doctorAvailability.openingTime
+                                ? doctorAvailability.openingTime
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
                                 errors: [],
-                                openningTime: date,
+                                openingTime: date,
                               })
                             }
                             showTimeSelect
@@ -128,7 +132,11 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.closingTime}
+                            selected={
+                              doctorAvailability.closingTime
+                                ? doctorAvailability.closingTime
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
@@ -139,7 +147,7 @@ const CalendarForm = ({
                             showTimeSelect
                             showTimeSelectOnly
                             placeholder="Opening Time"
-                            minTime={moment(doctorAvailability.openningTime)
+                            minTime={moment(doctorAvailability.openingTime)
                               .add(1, 'hour')
                               .toDate()}
                             maxTime={moment().hours(23).minutes(0)._d}
@@ -161,7 +169,11 @@ const CalendarForm = ({
                         <div className="lunch-time">
                           <Clock color="#212429" size={14} />
                           <DatePicker
-                            selected={doctorAvailability.lunchBreakStart}
+                            selected={
+                              doctorAvailability.lunchBreakStart
+                                ? doctorAvailability.lunchBreakStart
+                                : null
+                            }
                             onChange={date =>
                               setDoctorAvailability({
                                 ...doctorAvailability,
@@ -218,6 +230,10 @@ const CalendarForm = ({
                                   selected={
                                     doctorAvailability.unavailableDateTimes[i]
                                       .startDateTime
+                                      ? doctorAvailability.unavailableDateTimes[
+                                          i
+                                        ].startDateTime
+                                      : null
                                   }
                                   onChange={date =>
                                     handleUnavailableDateChange(
@@ -231,7 +247,7 @@ const CalendarForm = ({
                                   showTimeSelect
                                   minDate={moment().toDate()}
                                   maxDate={moment().add(3, 'year').toDate()}
-                                  minTime={doctorAvailability.openningTime}
+                                  minTime={doctorAvailability.openingTime}
                                   maxTime={moment()
                                     .hours(23)
                                     .minutes(0)
@@ -250,6 +266,10 @@ const CalendarForm = ({
                                   selected={
                                     doctorAvailability.unavailableDateTimes[i]
                                       .endDateTime
+                                      ? doctorAvailability.unavailableDateTimes[
+                                          i
+                                        ].endDateTime
+                                      : null
                                   }
                                   onChange={date =>
                                     handleUnavailableDateChange(
@@ -263,7 +283,7 @@ const CalendarForm = ({
                                   showTimeSelect
                                   minDate={moment().toDate()}
                                   maxDate={moment().add(3, 'year').toDate()}
-                                  minTime={doctorAvailability.openningTime}
+                                  minTime={doctorAvailability.openingTime}
                                   maxTime={moment()
                                     .hours(23)
                                     .minutes(0)
@@ -278,22 +298,6 @@ const CalendarForm = ({
                           <div id="appointment-form-button-wrapper">
                             <div className="grid-item">
                               <div className="radio-group">
-                                {/* <div className="option">
-                                  <input
-                                    type="radio"
-                                    id="allDay"
-                                    name={`condition${i}`}
-                                    value="allDay"
-                                    onChange={e =>
-                                      handleUnavailabilityModifiers(
-                                        e,
-                                        i,
-                                        'unavailableDateTimes'
-                                      )
-                                    }
-                                  />
-                                  <label htmlFor="allDay">All Day</label>
-                                </div> */}
                                 <div className="option">
                                   <input
                                     type="radio"
@@ -373,11 +377,13 @@ const CalendarForm = ({
                 </div>
                 <div className="auth-error-wrapper">
                   <ul>
-                    {doctorAvailability.errors.map((errorMessage, i) => (
-                      <li key={i} className="auth-error-message">
-                        {errorMessage}
-                      </li>
-                    ))}
+                    {doctorAvailability &&
+                      doctorAvailability.errors &&
+                      doctorAvailability.errors.map((errorMessage, i) => (
+                        <li key={i} className="auth-error-message">
+                          {errorMessage}
+                        </li>
+                      ))}
                   </ul>
                 </div>
                 <div className="form-button-wrapper">

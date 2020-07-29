@@ -1,27 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-import MainCalendar from './MainCalendar/MainCalendar';
-import './Appointments.scss';
-import CalendarForm from './CalendarForm/CalendarForm';
-import { AuthContext } from '../../../globalState/index';
+import { RRule, RRuleSet, rrulestr } from 'rrule';
 import moment from 'moment';
 import _ from 'lodash';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { v4 as uuidv4 } from 'uuid';
+import omitDeep from 'omit-deep-lodash';
+import './Appointments.scss';
+
+import { AuthContext } from '../../../globalState/index';
 import { viewSessions } from '../../AxiosTest/sessionRoutes';
 import { updateProfile } from '../../AxiosTest/userRoutes';
 import { convertAPIdataToJS } from './MainCalendar/events';
-import omitDeep from 'omit-deep-lodash';
+import MainCalendar from './MainCalendar/MainCalendar';
+import CalendarForm from './CalendarForm/CalendarForm';
 
 const Appointments = () => {
-  const { user, setUser } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [doctorSessions, setDoctorSessions] = useState([]);
-  const [unavailabilities, setUnavailabilities] = useState([]);
-
+  // Helper method
   function round(date, duration, method) {
     return moment(Math[method](+date / +duration) * +duration);
   }
 
+  // Setting States
+  const { user, setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [unavailabilities, setUnavailabilities] = useState([]);
   const [clientFormState, setClientFormState] = useState({
     doctor: '',
     client: user.firstName,
@@ -29,9 +30,8 @@ const Appointments = () => {
     endTime: '',
     sessionDuration: '',
   });
-
   const [doctorAvailability, setDoctorAvailability] = useState({
-    openningTime: null,
+    openingTime: null,
     closingTime: null,
     lunchBreakStart: null,
     lunchBreakEnd: null,
@@ -45,9 +45,19 @@ const Appointments = () => {
     errors: [],
   });
 
+  // Unavailability processing
+  // Fetch workschedule from doctor
+
   useEffect(() => {
+    if (user.isDoctor) {
+      const workSchedule = user.doctorInfo.workSchedule;
+      // Sanitize workSchedule (remove _id) => _.omitDeep
+      setDoctorAvailability(workSchedule);
+    }
+
+    // First time the doctor creates the unavails or when the doctor updates
     if (
-      doctorAvailability.openningTime &&
+      doctorAvailability.openingTime &&
       doctorAvailability.closingTime &&
       doctorAvailability.lunchBreakStart &&
       doctorAvailability.lunchBreakEnd &&
@@ -55,16 +65,210 @@ const Appointments = () => {
       doctorAvailability.unavailableDateTimes[0].startDateTime &&
       doctorAvailability.unavailableDateTimes[0].endDateTime
     ) {
-      const sanitizedUnavailabilities = sanitizeDoctorSessions();
+      const normalScheduleArray = normalScheduleAggregrates();
+      const convertedNormalSchedule = normalScheduleArray.map(session =>
+        sanitizeDoctorSessions(session)
+      );
+
+      const sanitizedUnavailabilities = [
+        ...sanitizeDoctorSessions(doctorAvailability.unavailableDateTimes),
+        ...convertedNormalSchedule(),
+      ];
+
       const sanitizedDataObj = _.flattenDeep(
         Object.values(sanitizedUnavailabilities).map(unavailability => {
           return convertAPIdataToJS(unavailability);
         })
       );
-
       setUnavailabilities(sanitizedDataObj);
     }
+
+    // Set the doctor unavails from fetching
+    if (
+      user.isDoctor &&
+      user.doctorInfo.schedule &&
+      user.doctorInfo.schedule.unavailabilities &&
+      user.doctorInfo.schedule.unavailabilities > 0
+    ) {
+      // Getting the unavailabilities of the doctor
+      const unavailsRules = user.doctorInfo.schedule.unavailabilities;
+
+      // Convert unavailsRules using sanitizeDoctorSessions
+      const unavailsRealDatesData = sanitizeDoctorSessions(unavailsRules);
+
+      // Set the unavailibities to the unavailsRealDatesData
+      setUnavailabilities(unavailsRealDatesData);
+    }
   }, [doctorAvailability]);
+
+  const normalScheduleAggregrates = () => {
+    const workingDays = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR];
+
+    const unavailableMorning = {
+      startDateTime: moment
+        .utc(doctorAvailability.openingTime)
+        .startOf('day')
+        .toDate(),
+      endDatetime: moment.utc(doctorAvailability.openingTime),
+      byweekday: workingDays,
+      modifier: RRule.WEEKLY,
+    };
+
+    const unavailableLunch = {
+      startDateTime: moment.utc(doctorAvailability.lunchBreakStart),
+      endDateTime: moment.utc(doctorAvailability.lunchBreakEnd),
+      byweekday: workingDays,
+      modifier: RRule.WEEKLY,
+    };
+
+    const unavailableAfternoon = {
+      startDateTime: doctorAvailability.closingTime,
+      endDatetime: moment
+        .utc(doctorAvailability.closingTime)
+        .endOf('day')
+        .toDate(),
+      byweekday: workingDays,
+      modifier: RRule.WEEKLY,
+    };
+
+    const unavailableWeekends = {
+      startDateTime: moment().day(6).startOf('day').toDate(),
+      endDateTime: moment().day(7).endOf('day').toDate(),
+      byweekday: [RRule.SA],
+      modifier: RRule.WEEKLY,
+    };
+
+    const standardUnavailabilities = [
+      unavailableMorning,
+      unavailableLunch,
+      unavailableAfternoon,
+      unavailableWeekends,
+    ];
+
+    //Available Times
+    return standardUnavailabilities;
+  };
+
+  const sanitizeDoctorSessions = sessions => {
+    const convertUTC = date => moment.utc(date).toDate(); // '2020-07-01 09:00'
+
+    const newRRulSet = bluePrint => {
+      const newRRule = {
+        dtstart: convertUTC(bluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
+        until: convertUTC(moment(bluePrint.startDateTime).add(12, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
+        interval: 1,
+      };
+
+      if (bluePrint.modifier) newRRule.freq = bluePrint.modifier;
+      if (bluePrint.byweekday) newRRule.byweekday = bluePrint.byweekday;
+
+      return new RRule(newRRule);
+    };
+
+    // Sanitize the unavailable hours
+    return sessions.map(session => {
+      return {
+        duration: moment(session.endDateTime).diff(
+          session.startDateTime,
+          'minutes'
+        ), //integer
+        include: false,
+        ruleInstruction: newRRulSet(session).toString(),
+        ruleInstructionText: newRRulSet(session).toText(),
+      };
+    });
+  };
+
+  const handleDoctorAvailabilitySubmit = async () => {
+    //validations - no empty or dodgy fields
+
+    checkEmptyDateFields('unavailableDateTimes');
+    checkValidSubDateFields('unavailableDateTimes');
+
+    if (
+      !moment(doctorAvailability.openingTime).isValid() ||
+      !moment(doctorAvailability.closingTime).isValid() ||
+      !moment(doctorAvailability.lunchBreakStart).isValid() ||
+      !moment(doctorAvailability.lunchBreakEnd).isValid()
+    ) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: [
+          'Please fill in all fields and only include valid dates and times',
+        ],
+      });
+    }
+
+    // check that end date & times must be greater than start date & times
+    if (
+      moment(doctorAvailability.closingTime).isSameOrBefore(
+        doctorAvailability.openingTime
+      )
+    ) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: ['Please select a valid closing time'],
+      });
+    }
+
+    if (
+      moment(doctorAvailability.openingTime).isSameOrAfter(
+        doctorAvailability.closingTime
+      )
+    ) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: ['Please select a valid opening time'],
+      });
+    }
+
+    if (
+      moment(doctorAvailability.lunchBreakStart).isSameOrAfter(
+        doctorAvailability.lunchBreakEnd
+      )
+    ) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: ['Please select a valid lunch break start time'],
+      });
+    }
+
+    if (
+      moment(doctorAvailability.lunchBreakEnd).isSameOrBefore(
+        doctorAvailability.lunchBreakStart
+      )
+    ) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: ['Please select a valid lunch break end time'],
+      });
+    }
+
+    const unavailabilityObj = {
+      doctorInfo: {
+        schedule: sanitizeDoctorSessions(),
+      },
+    };
+
+    try {
+      const response = await updateProfile(unavailabilityObj);
+      console.log(response);
+      const sanitizedData = omitDeep(response.data, [
+        '_id',
+        '__v',
+        'createdAt',
+      ]);
+      setUser(sanitizedData);
+    } catch (err) {
+      console.log(err);
+      setUser({
+        ...user,
+        errors: [`Something went wrong, ${err}`],
+      });
+    }
+  };
+
+  // Actions
 
   const handleSelect = (e, key) => {
     setClientFormState({
@@ -177,215 +381,7 @@ const Appointments = () => {
     });
   };
 
-  const sanitizeDoctorSessions = () => {
-    const convertUTC = date => {
-      return moment.utc(date).toDate(); // '2020-07-01 09:00'
-    };
-
-    const newRRulSet = bluePrint => {
-      const newRRule = {
-        dtstart: convertUTC(bluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
-        until: convertUTC(moment(bluePrint.startDateTime).add(12, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
-        interval: 1,
-      };
-
-      if (bluePrint.modifier) {
-        newRRule.freq = bluePrint.modifier;
-      }
-
-      if (bluePrint.byweekday) {
-        newRRule.byweekday = bluePrint.byweekday;
-      }
-
-      const newRRuleGenerated = new RRule(newRRule);
-
-      return newRRuleGenerated;
-    };
-
-    const unavailableMorning = {
-      startDateTime: moment
-        .utc(doctorAvailability.openningTime)
-        .startOf('day')
-        .toDate(),
-      endDatetime: moment.utc(doctorAvailability.openningTime),
-      byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
-      modifier: RRule.WEEKLY,
-    };
-
-    const unavailableLunch = {
-      startDateTime: moment.utc(doctorAvailability.lunchBreakStart),
-      endDateTime: moment.utc(doctorAvailability.lunchBreakEnd),
-      byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
-      modifier: RRule.WEEKLY,
-    };
-
-    const unavailableAfternoon = {
-      startDateTime: doctorAvailability.closingTime,
-      endDatetime: moment
-        .utc(doctorAvailability.closingTime)
-        .endOf('day')
-        .toDate(),
-      byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
-      modifier: RRule.WEEKLY,
-    };
-
-    const unavailableWeekends = {
-      startDateTime: moment().day(6).startOf('day').toDate(),
-      endDateTime: moment().day(7).endOf('day').toDate(),
-      byweekday: [RRule.SA],
-      modifier: RRule.WEEKLY,
-    };
-
-    const standardUnavailabilities = [
-      unavailableMorning,
-      unavailableLunch,
-      unavailableAfternoon,
-      unavailableWeekends,
-    ];
-
-    //Available Times
-    const normalSchedule = standardUnavailabilities.map(period => {
-      return {
-        duration: moment(period.endDateTime).diff(
-          period.startDateTime,
-          'minutes'
-        ),
-        include: false,
-        ruleInstruction: newRRulSet(period).toString(),
-        ruleInstructionText: newRRulSet(period).toText(),
-      };
-    });
-    // Sanitize the unavailable hours
-
-    // 6AM ... < 6AM is unavailable
-    // 7PM ... > 7PM is unavailabile
-
-    const unavailabilities = doctorAvailability.unavailableDateTimes.map(
-      unavailability => {
-        return {
-          duration: moment(unavailability.endDateTime).diff(
-            unavailability.startDateTime,
-            'minutes'
-          ), //integer
-          include: false,
-          ruleInstruction: newRRulSet(unavailability).toString(),
-          ruleInstructionText: newRRulSet(unavailability).toText(),
-        };
-      }
-    );
-
-    /* needs to return and object 
-    {
-      workingHours: [Array],
-      unavailabilities: [Array]
-    }
-    */
-    return {
-      normalSchedule,
-      unavailabilities,
-    };
-  };
-
-  // Make API Call
-  const handleDoctorAvailabilitySubmit = async () => {
-    //validations - no empty or dodgy fields
-
-    checkEmptyDateFields('unavailableDateTimes');
-    checkValidSubDateFields('unavailableDateTimes');
-
-    if (
-      !moment(doctorAvailability.openningTime).isValid() ||
-      !moment(doctorAvailability.closingTime).isValid() ||
-      !moment(doctorAvailability.lunchBreakStart).isValid() ||
-      !moment(doctorAvailability.lunchBreakEnd).isValid()
-    ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: [
-          'Please fill in all fields and only include valid dates and times',
-        ],
-      });
-    }
-
-    // check that end date & times must be greater than start date & times
-    if (
-      moment(doctorAvailability.closingTime).isSameOrBefore(
-        doctorAvailability.openningTime
-      )
-    ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid closing time'],
-      });
-    }
-
-    if (
-      moment(doctorAvailability.openningTime).isSameOrAfter(
-        doctorAvailability.closingTime
-      )
-    ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid openning time'],
-      });
-    }
-
-    if (
-      moment(doctorAvailability.lunchBreakStart).isSameOrAfter(
-        doctorAvailability.lunchBreakEnd
-      )
-    ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid lunch break start time'],
-      });
-    }
-
-    if (
-      moment(doctorAvailability.lunchBreakEnd).isSameOrBefore(
-        doctorAvailability.lunchBreakStart
-      )
-    ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid lunch break end time'],
-      });
-    }
-
-    // const unavailabilityObj = {
-    //   doctorInfo: {
-    //     schedule: {
-    //       unavailabilities: sanitizeDoctorSessions(), //the array here
-    //     },
-    //   },
-    // };
-
-    const unavailabilityObj = {
-      doctorInfo: {
-        schedule: sanitizeDoctorSessions(),
-      },
-    };
-
-    try {
-      const response = await updateProfile(unavailabilityObj);
-      console.log(response);
-      const sanitizedData = omitDeep(response.data, [
-        '_id',
-        '__v',
-        'createdAt',
-      ]);
-      setUser(sanitizedData);
-      // navigate('/profile');
-    } catch (err) {
-      console.log(err);
-      setUser({
-        ...user,
-        errors: ['network error'],
-      });
-    }
-  };
-
-  const doctorAppointments = () => {
+  const renderDoctorAppointments = () => {
     return (
       <div className="appointments-wrapper">
         <section className="calendar-form-wrapper">
@@ -409,7 +405,7 @@ const Appointments = () => {
     );
   };
 
-  const clientAppointments = () => {
+  const renderClientAppointments = () => {
     return (
       <div className="appointments-wrapper">
         <section className="calendar-form-wrapper">
@@ -427,7 +423,9 @@ const Appointments = () => {
   };
 
   const showAppointmentView = () => {
-    return user.isDoctor ? doctorAppointments() : clientAppointments();
+    return user.isDoctor
+      ? renderDoctorAppointments()
+      : renderClientAppointments();
   };
 
   return showAppointmentView();

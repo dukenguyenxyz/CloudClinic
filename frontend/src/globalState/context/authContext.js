@@ -30,13 +30,13 @@ export const AuthContextProvider = ({ children }) => {
 
   // Client Generator
   //
-  // useEffect(() => {
-  //   const generateUser = async () => {
-  //     // await signUpClient(setUser);
-  //     await signUpDoctor(setUser);
-  //   };
-  //   generateUser();
-  // }, []);
+  useEffect(() => {
+    const generateUser = async () => {
+      // await signUpClient(setUser);
+      await signUpDoctor(setUser);
+    };
+    generateUser();
+  }, []);
 
   const authState = {
     user,
@@ -45,7 +45,8 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={authState}>
-      {/* {user ? children : <LoadingSpinner />} */}
+      {/* {/* {user ? children : <LoadingSpinner */}
+      {children}
       {children}
     </AuthContext.Provider>
   );
