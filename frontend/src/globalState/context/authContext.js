@@ -5,7 +5,7 @@ import {
   signUpClient,
   signUpDoctor,
 } from '../../components/AxiosTest/userRoutes';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+// import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -28,15 +28,15 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  // Client Generator
-  //
-  useEffect(() => {
-    const generateUser = async () => {
-      // await signUpClient(setUser);
-      await signUpDoctor(setUser);
-    };
-    generateUser();
-  }, []);
+  // // Client Generator
+
+  // useEffect(() => {
+  //   const generateUser = async () => {
+  //     // await signUpClient(setUser);
+  //     await signUpDoctor(setUser);
+  //   };
+  //   generateUser();
+  // }, []);
 
   const authState = {
     user,

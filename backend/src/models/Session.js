@@ -10,7 +10,7 @@ const sessionSchema = new mongoose.Schema({
     lowercase: true,
     enum: ['accepted', 'pending', 'declined'],
     required: true,
-    default: 'no',
+    default: 'pending',
   },
   createDate: {
     type: Date,

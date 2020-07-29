@@ -21,10 +21,10 @@ const schema = Joi.object({
     subSpecialtyField: Joi.string(),
     education: Joi.array(),
     workSchedule: Joi.object({
-      openingTime: Joi.date(),
-      closingTime: Joi.date(),
-      lunchBreakStart: Joi.date(),
-      lunchBreakEnd: Joi.date(),
+      openingTime: Joi.string(),
+      closingTime: Joi.string(),
+      lunchBreakStart: Joi.string(),
+      lunchBreakEnd: Joi.string(),
       unavailableDateTimes: Joi.array(),
       // .items(
       //   Joi.object({
