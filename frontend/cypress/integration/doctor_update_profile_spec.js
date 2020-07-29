@@ -74,15 +74,15 @@ describe('Doctor Update Profile', () => {
     cy.get('input[name="Accreditation"]')
       .first()
       .clear()
-      .type('Doctor of Medicine')
-      .should('have.value', 'Doctor of Medicine');
+      .type('Doctor of Surgery')
+      .should('have.value', 'Doctor of Surgery');
     //Workaround for when there are two Accreditation fields
     //Comment out otherwise
     // cy.get('input[name="Accreditation"]')
     //   .last()
     //   .clear()
-    //   .type('Doctor of Surgery')
-    //   .should('have.value', 'Doctor of Surgery');
+    //   .type('Doctor of Psychology')
+    //   .should('have.value', 'Doctor of Psychology');
 
     cy.get('input[name="Specialty Field"]')
       .clear()
@@ -95,8 +95,8 @@ describe('Doctor Update Profile', () => {
     cy.get('input[name="Education"]')
       .first()
       .clear()
-      .type('University of New South Wales')
-      .should('have.value', 'University of New South Wales');
+      .type('University of Technology Sydney')
+      .should('have.value', 'University of Technology Sydney');
     //Comment out if necessary
     // cy.get('input[name="Education"]')
     //   .last()
@@ -106,8 +106,8 @@ describe('Doctor Update Profile', () => {
 
     cy.get('input[name="Years of Experience"]')
       .clear()
-      .type(5)
-      .should('have.value', 5);
+      .type(11)
+      .should('have.value', 11);
     cy.get('select[name="Language"]')
       .first()
       .select('Spanish')

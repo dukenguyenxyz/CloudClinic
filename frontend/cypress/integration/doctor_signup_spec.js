@@ -14,10 +14,6 @@ describe('Doctor Sign Up', () => {
     cy.contains('Yes').click();
 
     //Step One - Login details signup
-    cy.get('input[name="Username"]')
-      .type('Hazza')
-      .should('have.value', 'Hazza');
-
     cy.get('input[name="Email"]').type(newEmail).should('have.value', newEmail);
 
     cy.get('input[name="Password"]')
