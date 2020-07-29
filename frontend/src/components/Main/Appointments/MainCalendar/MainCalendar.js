@@ -6,6 +6,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import mockEvents from '../Samples/sampleEvents';
 import mockRealEvents from '../Samples/sampleEventsReal';
+import mockReal2Events from '../Samples/sampledata';
 
 // import { sampleArr as mockAPISessions, convertAPIdataToJS } from '../helpers';
 // import { viewSessions } from '../../../AxiosTest/sessionRoutes';
@@ -45,8 +46,9 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
       >
         <Calendar
           // events={mockEvents}
-          // events={mappedData} // mockEvents
-          events={calendarState}
+          events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
+          // events={calendarState}
+          // events={unavailabilities.map(mapToRBCFormat)}
           startAccessor="start"
           endAccessor="end"
           defaultDate={moment().toDate()}
