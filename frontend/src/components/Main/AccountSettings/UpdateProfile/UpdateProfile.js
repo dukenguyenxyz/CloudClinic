@@ -580,7 +580,7 @@ const UpdateProfile = () => {
                     value={val}
                     placeholder="Education"
                     type="text"
-                    maxLength="30"
+                    maxLength="50"
                     icon="briefcase"
                     onValueChange={e =>
                       onNestedArrValueChange(e, 'doctorInfo', i, 'education')
