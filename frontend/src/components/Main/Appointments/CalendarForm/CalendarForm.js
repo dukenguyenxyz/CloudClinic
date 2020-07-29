@@ -276,7 +276,7 @@ const CalendarForm = ({
                           <div id="appointment-form-button-wrapper">
                             <div className="grid-item">
                               <div className="radio-group">
-                                <div className="option">
+                                {/* <div className="option">
                                   <input
                                     type="radio"
                                     id="allDay"
@@ -291,13 +291,13 @@ const CalendarForm = ({
                                     }
                                   />
                                   <label htmlFor="allDay">All Day</label>
-                                </div>
+                                </div> */}
                                 <div className="option">
                                   <input
                                     type="radio"
                                     id="everyWeek"
                                     name={`condition${i}`}
-                                    value="2" // RRule.WEEKLY
+                                    value={RRule.WEEKLY} // RRule.WEEKLY
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
                                         e,
@@ -313,7 +313,7 @@ const CalendarForm = ({
                                     type="radio"
                                     id="other"
                                     name={`condition${i}`}
-                                    value="3" // RRule.DAILY
+                                    value={RRule.DAILY} // RRule.DAILY
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
                                         e,

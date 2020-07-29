@@ -46,7 +46,7 @@ const Appointments = () => {
           moment.duration(15, 'minutes'),
           'ceil'
         ).toDate(),
-        modifier: '',
+        modifier: RRule.WEEKLY,
       },
     ],
     errors: [],
@@ -54,7 +54,7 @@ const Appointments = () => {
 
   useEffect(() => {
     const sanitizedSessions = sanitizeDoctorSessions();
-    // console.log(sanitizedSessions);
+    console.log(sanitizedSessions);
     setUnavailabilities(sanitizedSessions);
   }, [doctorAvailability]);
 
@@ -169,91 +169,38 @@ const Appointments = () => {
     });
   };
 
-  /// OLD
-  const aggregateUnavailability = () => {
-    // // RRULES
-    // // doctorAvailability.openningTime
-    // // doctorAvailability.closingTime
-    // // doctorAvailability.lunchBreakStart
-    // // doctorAvailability.lunchBreakEnd
-    // // const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
-    // //   unavailability => {
-    // //     if (unavailability.modifier === 'allDay') {
-    // //       return {
-    // //         startDate: moment(unavailability.startDateTime)
-    // //           .startOf('day')
-    // //           .toDate(),
-    // //         endDate: moment(unavailability.startDateTime).endOf('day').toDate(),
-    // //       };
-    // //     }
-    // //   }
-    // // );
-    // const allDayUnavailability = doctorAvailability.unavailableDateTimes.map(
-    //   unavailability => {
-    //     if (unavailability.modifier === 'allDay') {
-    //       return {
-    //         startDate: moment(unavailability.startDateTime)
-    //           .startOf('day')
-    //           .toDate(),
-    //         endDate: moment(unavailability.startDateTime).endOf('day').toDate(),
-    //       };
-    //     }
-    //   }
-    // );
-    // const convertUTC = date => {
-    //   return moment.utc(date).toDate(); // '2020-07-01 09:00'
-    // };
-    // const newRRulSet = ruleBluePrint => {
-    //   const newRRule = new RRule({
-    //     dtstart: convertUTC(ruleBluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
-    //     until: convertUTC(moment(ruleBluePrint.startDateTime).add(6, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
-    //   });
-    //   if (ruleBluePrint.modifier) {
-    //     newRRule.freq = parseInt(ruleBluePrint.modifier, 10); // RRule.MONTHLY, (NUMERIC VALUE)
-    //   }
-    //   return newRRule;
-    // };
-    // const unavailabilities = doctorAvailability.unavailableDateTimes.map(
-    //   unavailability => {
-    //     return {
-    //       include: false,
-    //       ruleInstruction: newRRulSet(unavailability).toString(),
-    //       endDateTime: convertUTC(unavailability.endDateTime),
-    //     };
-    //   }
-    // );
-    // return unavailabilities;
-  };
-
   const sanitizeDoctorSessions = () => {
     const convertUTC = date => {
       return moment.utc(date).toDate(); // '2020-07-01 09:00'
     };
 
     const newRRulSet = bluePrint => {
-      const newRRule = new RRule({
+      const newRRule = {
         dtstart: convertUTC(bluePrint.startDateTime), // new Date(Date.UTC(2012, 1, 1, 10, 30)) (CONVERT THIS TO UTC)
-        until: convertUTC(moment(bluePrint.startDateTime).add(6, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
-      });
+        until: convertUTC(moment(bluePrint.startDateTime).add(12, 'months')), // new Date(Date.UTC(2012, 1, 1, 10, 30))
+        interval: 1,
+      };
 
       if (bluePrint.modifier) {
-        newRRule.freq = parseInt(bluePrint.modifier, 10); // RRule.MONTHLY, (NUMERIC VALUE)
+        newRRule.freq = bluePrint.modifier;
       }
 
-      return newRRule;
+      const newRRuleGenerated = new RRule(newRRule);
+
+      return newRRuleGenerated;
     };
 
     // Sanitize the available hours
     const morningHours = {
       startDateTime: doctorAvailability.openningTime,
       endDateTime: doctorAvailability.lunchBreakStart,
-      modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+      // modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
     };
 
     const afternoonHours = {
       startDateTime: doctorAvailability.lunchBreakEnd,
       endDateTime: doctorAvailability.closingTime,
-      modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+      // modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
     };
 
     const workingHours = [morningHours, afternoonHours];
@@ -267,6 +214,7 @@ const Appointments = () => {
         ),
         include: true,
         ruleInstruction: newRRulSet(period).toString(),
+        ruleInstructionText: newRRulSet(period).toText(),
       };
     });
     // Sanitize the unavailable hours
@@ -280,9 +228,10 @@ const Appointments = () => {
           duration: moment(unavailability.endDateTime).diff(
             unavailability.startDateTime,
             'minutes'
-          ),
+          ), //integer
           include: false,
           ruleInstruction: newRRulSet(unavailability).toString(),
+          ruleInstructionText: newRRulSet(unavailability).toText(),
         };
       }
     );
