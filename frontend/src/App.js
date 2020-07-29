@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import './App.scss';
 import { Router, Location } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
-import { AuthContext } from './globalState/index';
 import ContextProvider from './globalState/state';
 import Navbar from './components/Navbar/Navbar';
 import Layout from './components/Layout/Layout';
@@ -26,6 +25,8 @@ import PatientProfile from './components/Main/Patients/PatientProfile/PatientPro
 import SearchDoctors from './components/Home/SearchDoctors/SearchDoctors';
 import Public from './components/Home/Public/Public';
 import ViewDoctor from './components/Home/ViewDoctor/ViewDoctor';
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+import LoadingWrapper from './components/LoadingWrapper/LoadingWrapper';
 
 function App() {
   const routeVariants = {
@@ -64,11 +65,6 @@ function App() {
     ease: 'easeInOut',
   };
 
-  // if user is null & there's a valid jwt in local storage
-  // grab the JWT and make a get request for the user that matches that jwt
-  // show a loading spinner while we wait from response
-  // call the setUser callback to set user in auth context
-
   return (
     <ContextProvider>
       <div className="App">
@@ -76,53 +72,55 @@ function App() {
           {({ location }) => (
             <Layout>
               <Navbar location={location} />
-              <Main>
-                <AnimatePresence exitBeforeEnter>
-                  <Header
-                    location={location}
-                    key={location.key}
-                    variants={headerVariants}
-                    initialAnimation={'initial'}
-                    inAnimation={'in'}
-                    outAnimation={'out'}
-                    transition={routeTransition}
-                  />
-                </AnimatePresence>
-                <AnimatePresence exitBeforeEnter>
-                  <MotionContainer
-                    location={location}
-                    variants={routeVariants}
-                    initialAnimation={'initial'}
-                    inAnimation={'in'}
-                    outAnimation={'out'}
-                    transition={routeTransition}
-                    key={location.key}
-                  >
-                    <ViewNavigation location={location} />
-                    <Router location={location}>
-                      <Public path="/">
-                        <Home path="home" />
-                        <SearchDoctors path="search" />
-                        <ViewDoctor path=":id" />
-                      </Public>
-                      <PrivateRoute as={Profile} path="/profile" />
-                      <PrivateDoctorRoute as={Patients} path="/patients">
-                        <PatientList path="/" />
-                        <PatientProfile path=":id" />
-                      </PrivateDoctorRoute>
-                      <PrivateRoute as={Messaging} path="/messaging" />
-                      <PrivateRoute as={Appointments} path="/appointments" />
-                      {/* <PrivateRoute as={AccountSettings} path="/settings" /> */}
-                      <AccountSettings path="/settings" />
-                      <Authentication
-                        path="/authentication"
-                        location={location}
-                      />
-                      <FourOhFour path="/404" default />
-                    </Router>
-                  </MotionContainer>
-                </AnimatePresence>
-              </Main>
+              <LoadingWrapper>
+                <Main>
+                  <AnimatePresence exitBeforeEnter>
+                    <Header
+                      location={location}
+                      key={location.key}
+                      variants={headerVariants}
+                      initialAnimation={'initial'}
+                      inAnimation={'in'}
+                      outAnimation={'out'}
+                      transition={routeTransition}
+                    />
+                  </AnimatePresence>
+                  <AnimatePresence exitBeforeEnter initial={false}>
+                    <MotionContainer
+                      location={location}
+                      variants={routeVariants}
+                      initialAnimation={'initial'}
+                      inAnimation={'in'}
+                      outAnimation={'out'}
+                      transition={routeTransition}
+                      key={location.key}
+                    >
+                      <ViewNavigation location={location} />
+                      <Router location={location}>
+                        <Public path="/">
+                          <Home path="home" />
+                          <SearchDoctors path="search" />
+                          <ViewDoctor path=":id" />
+                        </Public>
+                        <PrivateRoute as={Profile} path="/profile" />
+                        <PrivateDoctorRoute as={Patients} path="/patients">
+                          <PatientList path="/" />
+                          <PatientProfile path=":id" />
+                        </PrivateDoctorRoute>
+                        <PrivateRoute as={Messaging} path="/messaging" />
+                        <PrivateRoute as={Appointments} path="/appointments" />
+                        {/* <PrivateRoute as={AccountSettings} path="/settings" /> */}
+                        <AccountSettings path="/settings" />
+                        <Authentication
+                          path="/authentication"
+                          location={location}
+                        />
+                        <FourOhFour path="/404" default />
+                      </Router>
+                    </MotionContainer>
+                  </AnimatePresence>
+                </Main>
+              </LoadingWrapper>
             </Layout>
           )}
         </Location>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SearchContextProvider } from './context/searchContext';
 import { AuthContextProvider } from './context/authContext';
-import { SignupContextProvider } from './context/signupContext';
+import { LoadingContextProvider } from './context/loadingContext';
 import { NavbarContextProvider } from './context/navbarContext';
 
 function ProviderComposer({ contexts, children }) {
@@ -20,7 +20,7 @@ const ContextProvider = ({ children }) => {
       contexts={[
         <SearchContextProvider />,
         <AuthContextProvider />,
-        <SignupContextProvider />,
+        <LoadingContextProvider />,
         <NavbarContextProvider />,
       ]}
     >

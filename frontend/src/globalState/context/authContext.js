@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import {
   viewProfile,
   signUpClient,
   signUpDoctor,
 } from '../../components/AxiosTest/userRoutes';
-// import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
   // First time user
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // handles fist page load with a valid user that has a jwt
   useEffect(() => {
@@ -21,6 +20,9 @@ export const AuthContextProvider = ({ children }) => {
         try {
           const response = await viewProfile();
           setUser(response.data);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
         } catch (error) {
           console.log(error);
         }
