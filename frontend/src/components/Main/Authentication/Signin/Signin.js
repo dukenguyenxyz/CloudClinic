@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import _ from 'lodash';
+import omitDeep from 'omit-deep-lodash';
 import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import Button from '../../../Button/Button';
+import { signInUser } from '../../../AxiosTest/userRoutes';
+import { AuthContext } from '../../../../globalState/index';
+import { navigate } from '@reach/router';
 
 const Signin = () => {
   const [formState, setFormState] = useState({
@@ -10,12 +15,44 @@ const Signin = () => {
     errors: [],
   });
 
+  const { user, setUser } = useContext(AuthContext);
+
   const onValueChange = (e, key) => {
     setFormState({
       ...formState,
       errors: [],
       [key]: e.target.value,
     });
+  };
+
+  const handleSubmit = async () => {
+    if (!formState.email || !formState.password) {
+      setFormState({
+        ...formState,
+        errors: ['Please fill in all fields'],
+      });
+    }
+
+    try {
+      const res = await signInUser({
+        email: 'w34234asdf@gmail.com', // formState.email,
+        password: '123456789', // formState.password,
+      });
+      localStorage.setItem('cloudclinicJWT', res.data.token);
+      const sanitizedUser = omitDeep(res.data.user, [
+        '_id',
+        '__v',
+        'createdAt',
+      ]);
+      setUser(sanitizedUser);
+      navigate('/appointments');
+      console.log(res);
+    } catch (error) {
+      setFormState({
+        ...formState,
+        errors: [`Something went wrong ${error}`],
+      });
+    }
   };
 
   return (
@@ -57,7 +94,7 @@ const Signin = () => {
           <Button
             action="Sign in"
             color="pink"
-            // onClick={onNextStepZero}
+            onClick={() => handleSubmit()}
             icon="logIn"
           />
         </div>
