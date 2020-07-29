@@ -39,7 +39,7 @@ describe('Doctor Sign Up', () => {
       .type('Buisman')
       .should('have.value', 'Buisman');
     cy.get('select[name="Sex"]').select('male').should('have.value', 'male');
-    cy.get('input[name="Weight (kg)"]').type(82).should('have.value', 82);
+    // cy.get('input[name="Weight (kg)"]').type(82).should('have.value', 82);
     cy.get('input[name="Date of Birth"]')
       .type('1995-10-10')
       .should('have.value', '1995-10-10');

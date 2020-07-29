@@ -58,7 +58,7 @@ describe('Client Sign Up', () => {
     cy.contains('Previous');
     cy.contains('Next').click();
 
-    //Step Three - Doctor Info
+    //Step Three - Client Info
     cy.get('input[name="Condition"]')
       .type('Sore Knee')
       .should('have.value', 'Sore Knee');

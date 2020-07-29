@@ -504,7 +504,9 @@ const UpdateProfile = () => {
               type="text"
               maxLength="30"
               icon="licence"
-              onValueChange={e => onValueChange(e, 'licence')}
+              onValueChange={e =>
+                onNestedValueChange(e, 'doctorInfo', 'licence')
+              }
             />
             {user.doctorInfo.accreditations.map((val, i) => {
               // console.log('Mapping of accreditations');
