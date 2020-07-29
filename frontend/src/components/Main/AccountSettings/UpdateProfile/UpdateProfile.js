@@ -63,9 +63,11 @@ const UpdateProfile = () => {
     }
 
     //obj key and subkey
-    deleteUnwantedKeys(formFormRequest, 'allergies', '_id');
-    deleteUnwantedKeys(formFormRequest, 'medicalHistory', '_id');
-    deleteUnwantedKeys(formFormRequest, 'medication', '_id');
+    if (formFormRequest.isDoctor === false) {
+      deleteUnwantedKeys(formFormRequest, 'allergies', '_id');
+      deleteUnwantedKeys(formFormRequest, 'medicalHistory', '_id');
+      deleteUnwantedKeys(formFormRequest, 'medication', '_id');
+    }
 
     if (formFormRequest.email) {
       delete formFormRequest.email;
@@ -183,7 +185,9 @@ const UpdateProfile = () => {
 
   const deleteUnwantedKeys = (obj, key, subKey) => {
     obj.clientInfo[key].forEach(el => {
-      delete el[subKey];
+      if (el[subKey]) {
+        delete el[subKey];
+      }
     });
 
     return obj;
