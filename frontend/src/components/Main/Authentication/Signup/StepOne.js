@@ -5,7 +5,7 @@ import AuthInput from '../Form/AuthInput/AuthInput';
 const StepOne = ({ formState, onValueChange, onKeyUp }) => {
   const clientSignup = (
     <>
-      <AuthInput
+      {/* <AuthInput
         value={formState.username}
         placeholder="Username"
         type="text"
@@ -14,7 +14,7 @@ const StepOne = ({ formState, onValueChange, onKeyUp }) => {
         maxLength="20"
         onValueChange={e => onValueChange(e, 'username')}
         onKeyUp={onKeyUp}
-      />
+      /> */}
       <AuthInput
         value={formState.email}
         placeholder="Email"

@@ -3,11 +3,10 @@ const newEmail = faker.internet.email();
 
 describe('Doctor Sign Up', () => {
   it('Visits CloudClinic', () => {
-    cy.visit('http://localhost:3000');
     cy.visit('http://localhost:3000/home');
 
     cy.contains('Sign up').click();
-    cy.url().should('include', '/home/authentication');
+    cy.url().should('include', '/authentication');
 
     //Step Zero - select a Yes to Doctor
     cy.contains('No');
@@ -40,7 +39,8 @@ describe('Doctor Sign Up', () => {
       .type('1995-10-10')
       .should('have.value', '1995-10-10');
     cy.get('input[name="Mobile number"]')
-      .type(428728937)
+      .clear()
+      .type('+61428728937')
       .should('have.value', '+61428728937');
     cy.get('input[name="Street No."]').type(5).should('have.value', 5);
     cy.get('input[name="Street"]')

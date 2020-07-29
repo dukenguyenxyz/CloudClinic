@@ -153,12 +153,7 @@ const Signup = () => {
   const onNextStepOne = () => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (
-      !formState.password ||
-      !formState.confirmPassword ||
-      !formState.username ||
-      !formState.email
-    ) {
+    if (!formState.password || !formState.confirmPassword || !formState.email) {
       setFormState({
         ...formState,
         errors: ['Please fill in all the inputs'],
@@ -188,7 +183,6 @@ const Signup = () => {
       !formState.firstName ||
       !formState.lastName ||
       !formState.title ||
-      // !formState.weight ||
       !formState.dob ||
       !formState.phone ||
       !formState.addressNumber ||
@@ -312,7 +306,7 @@ const Signup = () => {
       lastName: formState.lastName,
       title: formState.title,
       sex: formState.sex,
-      weight: formState.weight,
+      // weight: formState.weight,
       dateOfBirth: formState.dob,
       phoneNumber: formState.phone,
       email: formState.email,
