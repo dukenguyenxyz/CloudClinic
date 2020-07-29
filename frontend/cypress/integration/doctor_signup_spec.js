@@ -84,5 +84,8 @@ describe('Doctor Sign Up', () => {
 
     cy.contains('Previous');
     cy.contains('Submit').click();
+
+    cy.wait(2000);
+    cy.url().should('include', '/profile');
   });
 });

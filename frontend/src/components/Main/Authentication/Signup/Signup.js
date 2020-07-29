@@ -306,7 +306,6 @@ const Signup = () => {
       lastName: formState.lastName,
       title: formState.title,
       sex: formState.sex,
-      // weight: formState.weight,
       dateOfBirth: formState.dob,
       phoneNumber: formState.phone,
       email: formState.email,
