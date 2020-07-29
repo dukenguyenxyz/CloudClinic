@@ -54,10 +54,17 @@ const Appointments = () => {
   });
 
   useEffect(() => {
-    const sanitizedSessions = sanitizeDoctorSessions();
-    console.log(sanitizedSessions);
-    const sanitizedData = convertAPIdataToJS(sanitizedSessions);
-    setUnavailabilities(sanitizedData);
+    const sanitizedUnavailabilities = sanitizeDoctorSessions();
+    const sanitizedDataObj = _.flattenDeep(
+      Object.values(sanitizedUnavailabilities).map(unavailability => {
+        return convertAPIdataToJS(unavailability);
+      })
+    );
+
+    console.log(sanitizedDataObj);
+
+    // const sanitizedData = convertAPIdataToJS(sanitizedSessions);
+    setUnavailabilities(sanitizedDataObj);
   }, [doctorAvailability]);
 
   const handleSelect = (e, key) => {
@@ -187,34 +194,60 @@ const Appointments = () => {
         newRRule.freq = bluePrint.modifier;
       }
 
+      if (bluePrint.byweekday) {
+        newRRule.byweekday = bluePrint.byweekday;
+      }
+
       const newRRuleGenerated = new RRule(newRRule);
 
       return newRRuleGenerated;
     };
 
-    // Sanitize the available hours
-    const morningHours = {
-      startDateTime: doctorAvailability.openningTime,
-      endDateTime: doctorAvailability.lunchBreakStart,
-      // modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+    const unavailableMorning = {
+      startDateTime: moment(doctorAvailability.openningTime)
+        .startOf('day')
+        .toDate(),
+      endDatetime: doctorAvailability.openningTime,
+      byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+      modifier: RRule.WEEKLY,
     };
 
-    const afternoonHours = {
-      startDateTime: doctorAvailability.lunchBreakEnd,
-      endDateTime: doctorAvailability.closingTime,
-      // modifier: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+    const unavailableLunch = {
+      startDateTime: doctorAvailability.lunchBreakStart,
+      endDateTime: doctorAvailability.lunchBreakEnd,
+      byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+      modifier: RRule.WEEKLY,
     };
 
-    const workingHours = [morningHours, afternoonHours];
+    const unavailableAfternoon = {
+      startDateTime: doctorAvailability.closingTime,
+      endDatetime: moment(doctorAvailability.closingTime).endOf('day').toDate(),
+      byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+      modifier: RRule.WEEKLY,
+    };
+
+    const unavailableWeekends = {
+      startDateTime: moment().day(6).startOf('day').toDate(),
+      endDateTime: moment().day(7).endOf('day').toDate(),
+      byweekday: [RRule.SA],
+      modifier: RRule.WEEKLY,
+    };
+
+    const standardUnavailabilities = [
+      unavailableMorning,
+      unavailableLunch,
+      unavailableAfternoon,
+      unavailableWeekends,
+    ];
 
     //Available Times
-    const workingHoursSchedules = workingHours.map(period => {
+    const normalSchedule = standardUnavailabilities.map(period => {
       return {
         duration: moment(period.endDateTime).diff(
           period.startDateTime,
           'minutes'
         ),
-        include: true,
+        include: false,
         ruleInstruction: newRRulSet(period).toString(),
         ruleInstructionText: newRRulSet(period).toText(),
       };
@@ -237,7 +270,17 @@ const Appointments = () => {
         };
       }
     );
-    return unavailabilities;
+
+    /* needs to return and object 
+    {
+      workingHours: [Array],
+      unavailabilities: [Array]
+    }
+    */
+    return {
+      normalSchedule,
+      unavailabilities,
+    };
   };
 
   // Make API Call
@@ -306,11 +349,17 @@ const Appointments = () => {
       });
     }
 
+    // const unavailabilityObj = {
+    //   doctorInfo: {
+    //     schedule: {
+    //       unavailabilities: sanitizeDoctorSessions(), //the array here
+    //     },
+    //   },
+    // };
+
     const unavailabilityObj = {
       doctorInfo: {
-        schedule: {
-          unavailabilities: sanitizeDoctorSessions(), //the array here
-        },
+        schedule: sanitizeDoctorSessions(),
       },
     };
 
