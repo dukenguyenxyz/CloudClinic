@@ -31,22 +31,14 @@ const Appointments = () => {
   });
 
   const [doctorAvailability, setDoctorAvailability] = useState({
-    openningTime: moment().set({ hour: 6, minute: 0 }).toDate(),
-    closingTime: moment().set({ hour: 18, minute: 0 }).toDate(),
-    lunchBreakStart: moment().set({ hour: 12, minute: 0 }).toDate(),
-    lunchBreakEnd: moment().set({ hour: 13, minute: 0 }).toDate(),
+    openningTime: null,
+    closingTime: null,
+    lunchBreakStart: null,
+    lunchBreakEnd: null,
     unavailableDateTimes: [
       {
-        startDateTime: round(
-          moment(),
-          moment.duration(15, 'minutes'),
-          'ceil'
-        ).toDate(),
-        endDateTime: round(
-          moment(),
-          moment.duration(15, 'minutes'),
-          'ceil'
-        ).toDate(),
+        startDateTime: null,
+        endDateTime: null,
         modifier: RRule.WEEKLY,
       },
     ],
@@ -54,17 +46,24 @@ const Appointments = () => {
   });
 
   useEffect(() => {
-    const sanitizedUnavailabilities = sanitizeDoctorSessions();
-    const sanitizedDataObj = _.flattenDeep(
-      Object.values(sanitizedUnavailabilities).map(unavailability => {
-        return convertAPIdataToJS(unavailability);
-      })
-    );
+    if (
+      doctorAvailability.openningTime &&
+      doctorAvailability.closingTime &&
+      doctorAvailability.lunchBreakStart &&
+      doctorAvailability.lunchBreakEnd &&
+      doctorAvailability.unavailableDateTimes[0] &&
+      doctorAvailability.unavailableDateTimes[0].startDateTime &&
+      doctorAvailability.unavailableDateTimes[0].endDateTime
+    ) {
+      const sanitizedUnavailabilities = sanitizeDoctorSessions();
+      const sanitizedDataObj = _.flattenDeep(
+        Object.values(sanitizedUnavailabilities).map(unavailability => {
+          return convertAPIdataToJS(unavailability);
+        })
+      );
 
-    console.log(sanitizedDataObj);
-
-    // const sanitizedData = convertAPIdataToJS(sanitizedSessions);
-    setUnavailabilities(sanitizedDataObj);
+      setUnavailabilities(sanitizedDataObj);
+    }
   }, [doctorAvailability]);
 
   const handleSelect = (e, key) => {
@@ -204,24 +203,28 @@ const Appointments = () => {
     };
 
     const unavailableMorning = {
-      startDateTime: moment(doctorAvailability.openningTime)
+      startDateTime: moment
+        .utc(doctorAvailability.openningTime)
         .startOf('day')
         .toDate(),
-      endDatetime: doctorAvailability.openningTime,
+      endDatetime: moment.utc(doctorAvailability.openningTime),
       byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
       modifier: RRule.WEEKLY,
     };
 
     const unavailableLunch = {
-      startDateTime: doctorAvailability.lunchBreakStart,
-      endDateTime: doctorAvailability.lunchBreakEnd,
+      startDateTime: moment.utc(doctorAvailability.lunchBreakStart),
+      endDateTime: moment.utc(doctorAvailability.lunchBreakEnd),
       byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
       modifier: RRule.WEEKLY,
     };
 
     const unavailableAfternoon = {
       startDateTime: doctorAvailability.closingTime,
-      endDatetime: moment(doctorAvailability.closingTime).endOf('day').toDate(),
+      endDatetime: moment
+        .utc(doctorAvailability.closingTime)
+        .endOf('day')
+        .toDate(),
       byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
       modifier: RRule.WEEKLY,
     };

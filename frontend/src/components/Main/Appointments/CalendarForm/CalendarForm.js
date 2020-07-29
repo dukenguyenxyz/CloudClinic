@@ -114,6 +114,7 @@ const CalendarForm = ({
                             }
                             showTimeSelect
                             showTimeSelectOnly
+                            placeholder="Opening Time"
                             minTime={moment().hours(5).minutes(0)._d}
                             maxTime={moment().hours(22).minutes(0)._d}
                             timeIntervals={15}
@@ -137,6 +138,7 @@ const CalendarForm = ({
                             }
                             showTimeSelect
                             showTimeSelectOnly
+                            placeholder="Opening Time"
                             minTime={moment(doctorAvailability.openningTime)
                               .add(1, 'hour')
                               .toDate()}

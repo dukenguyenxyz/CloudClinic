@@ -9,7 +9,7 @@ import { sampleArr, convertAPIdataToJS } from './events';
 
 const localizer = momentLocalizer(moment);
 
-const MainCalendar = ({ unavailabilities }) => {
+const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
   // const [calendarState, setCalendarState] = useState([
   //   {
   //     id: 15,
@@ -38,6 +38,16 @@ const MainCalendar = ({ unavailabilities }) => {
           localizer={localizer}
           defaultView="work_week"
           views={['month', 'day', 'work_week']}
+          min={
+            doctorAvailability.openningTime
+              ? moment(doctorAvailability.openningTime).toDate()
+              : undefined
+          }
+          max={
+            doctorAvailability.closingTime
+              ? moment(doctorAvailability.closingTime).toDate()
+              : undefined
+          }
         />
       </div>
     </div>
