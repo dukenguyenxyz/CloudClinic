@@ -18,7 +18,6 @@ const Signup = () => {
     isDoctor: false,
     errors: [],
     validationIcon: '',
-    username: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -60,7 +59,6 @@ const Signup = () => {
       lastName: 'Huang',
       title: 'Mr',
       sex: 'female',
-      weight: '55',
       dateOfBirth: '05/11/1999',
       phoneNumber: '04104820594',
       email: `${newEmail}`,
@@ -121,6 +119,7 @@ const Signup = () => {
           },
         ],
         bloodType: 'A+',
+        weight: '55',
       },
     };
 
@@ -153,12 +152,7 @@ const Signup = () => {
   const onNextStepOne = () => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (
-      !formState.password ||
-      !formState.confirmPassword ||
-      !formState.username ||
-      !formState.email
-    ) {
+    if (!formState.password || !formState.confirmPassword || !formState.email) {
       setFormState({
         ...formState,
         errors: ['Please fill in all the inputs'],
@@ -188,7 +182,6 @@ const Signup = () => {
       !formState.firstName ||
       !formState.lastName ||
       !formState.title ||
-      // !formState.weight ||
       !formState.dob ||
       !formState.phone ||
       !formState.addressNumber ||
@@ -312,7 +305,6 @@ const Signup = () => {
       lastName: formState.lastName,
       title: formState.title,
       sex: formState.sex,
-      weight: formState.weight,
       dateOfBirth: formState.dob,
       phoneNumber: formState.phone,
       email: formState.email,
@@ -345,7 +337,6 @@ const Signup = () => {
       lastName: formState.lastName,
       title: formState.title,
       sex: formState.sex,
-      weight: formState.weight,
       dateOfBirth: formState.dob,
       phoneNumber: formState.phone,
       email: formState.email,
@@ -365,6 +356,7 @@ const Signup = () => {
         allergies: formState.allergies,
         medication: formState.medication,
         bloodType: formState.bloodType,
+        weight: formState.weight,
       },
     };
   };

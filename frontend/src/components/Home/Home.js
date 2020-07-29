@@ -15,10 +15,10 @@ const Home = ({}) => {
               Voluptatum, eum.
             </p>
             <div className="auth-button-wrapper">
-              <Link to="authentication" state={{ signIn: true }}>
+              <Link to="/authentication" state={{ signIn: true }}>
                 <Button action="Sign in" color="navy" />
               </Link>
-              <Link to="authentication" state={{ signIn: false }}>
+              <Link to="/authentication" state={{ signIn: false }}>
                 <Button action="Sign up" color="pink" />
               </Link>
             </div>

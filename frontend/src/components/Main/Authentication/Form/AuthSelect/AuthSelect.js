@@ -69,13 +69,17 @@ const AuthSelect = ({
 
   return (
     <div className="auth-select-wrapper">
-      <i>{getIcon()}</i>
-      <select name={placeholder} value={value} onChange={onValueChange}>
-        <option value="" defaultValue disabled hidden>
-          {getDirective()}
-        </option>
-        {options.map(makeSelectItem)}
-      </select>
+      {options && (
+        <React.Fragment>
+          <i>{getIcon()}</i>
+          <select name={placeholder} value={value} onChange={onValueChange}>
+            <option value="" defaultValue disabled hidden>
+              {getDirective()}
+            </option>
+            {options.map(makeSelectItem)}
+          </select>
+        </React.Fragment>
+      )}
     </div>
   );
 };

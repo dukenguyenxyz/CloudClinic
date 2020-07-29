@@ -9,6 +9,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(false);
   // First time user
   const [user, setUser] = useState(null);
 
@@ -41,11 +42,11 @@ export const AuthContextProvider = ({ children }) => {
   const authState = {
     user,
     setUser,
+    isLoading,
+    setIsLoading,
   };
 
   return (
-    <AuthContext.Provider value={authState}>
-      {user ? children : <LoadingSpinner />}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>
   );
 };

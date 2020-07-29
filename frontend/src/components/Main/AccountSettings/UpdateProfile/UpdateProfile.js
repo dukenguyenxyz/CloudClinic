@@ -358,12 +358,11 @@ const UpdateProfile = () => {
               value={user.title}
               placeholder="Title"
               type="text"
-              directive="title"
-              icon="username"
-              minLength="3"
-              maxLength="15"
-              options={titleOptions}
-              onValueChange={e => onValueChange(e, 'title')}
+              maxLength="30"
+              icon="licence"
+              onValueChange={e =>
+                onNestedValueChange(e, 'doctorInfo', 'licence')
+              }
             />
             <AuthInput
               value={user.firstName}
