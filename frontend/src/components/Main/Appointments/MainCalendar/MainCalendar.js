@@ -11,18 +11,26 @@ import mockRealEvents from '../Samples/sampleEventsReal';
 const localizer = momentLocalizer(moment);
 
 // events = unavailabilities.map(mapToRBCFormat)
+// const mapToRBCFormat = e =>
+//   Object.assign({}, e, {
+//     start: moment(e.start, moment.ISO_8601).toDate(),
+//     end: moment(e.end, moment.ISO_8601).toDate(),
+//   });
+
 const mapToRBCFormat = e =>
   Object.assign({}, e, {
-    start: moment(e.start, moment.ISO_8601).toDate(),
-    end: moment(e.end, moment.ISO_8601).toDate(),
+    start: moment(e.start)._d,
+    end: moment(e.end)._d,
   });
 
 const mappedData = mockRealEvents.map(mapToRBCFormat);
 
 const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
-  // const [calendarState, setCalendarState] = useState([
-  // useEffect(() => {}, []);
-  // console.log(unavailabilities);
+  const [calendarState, setCalendarState] = useState([]);
+
+  useEffect(() => {
+    setCalendarState(unavailabilities.map(mapToRBCFormat));
+  }, [unavailabilities]);
 
   return (
     <div>
@@ -33,23 +41,24 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
       >
         <Calendar
           // events={mappedData} // mockEvents
-          events={unavailabilities.map(mapToRBCFormat)}
+          // events={unavailabilities.map(mapToRBCFormat)}
+          events={calendarState}
           startAccessor="start"
           endAccessor="end"
           defaultDate={moment().toDate()}
           localizer={localizer}
           defaultView="work_week"
           views={['month', 'day', 'work_week']}
-          // min={
-          //   doctorAvailability.openingTime
-          //     ? moment(doctorAvailability.openingTime).toDate()
-          //     : undefined
-          // }
-          // max={
-          //   doctorAvailability.closingTime
-          //     ? moment(doctorAvailability.closingTime).toDate()
-          //     : undefined
-          // }
+          min={
+            doctorAvailability.openingTime
+              ? moment(doctorAvailability.openingTime).toDate()
+              : undefined
+          }
+          max={
+            doctorAvailability.closingTime
+              ? moment(doctorAvailability.closingTime).toDate()
+              : undefined
+          }
         />
       </div>
     </div>
