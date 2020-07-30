@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-continue */
 /* eslint-disable radix */
+
 const seeder = require('mongoose-seed');
 const faker = require('faker');
 const _ = require('lodash');
@@ -8,6 +9,9 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 require('colors');
 const dotenv = require('dotenv');
+const { RRule } = require('rrule');
+const util = require('util');
+
 // Access dotenv
 dotenv.config({ path: '../../config/.env' });
 
@@ -22,33 +26,27 @@ const schemaDocs = (modelName) => {
 };
 
 const userDocs = schemaDocs('User');
-const sessionDocs = schemaDocs('Session');
 
-// const userDocs = [
-//   {
-//     model: 'User',
-//     documents: [],
-//   },
-// ];
-// const sessionDocs = [
-//   {
-//     model: 'Session',
-//     documents: [],
-//   },
-// ];
+const usersList = {
+  mc: ['male', 'client', 39],
+  md: ['male', 'doctor', 42],
+  fc: ['female', 'client', 40],
+  fd: ['female', 'doctor', 43],
+};
 
-const generateMaleUser = () => {
+const generateUser = (sex) => {
   const _id = new mongoose.Types.ObjectId();
-
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName()
+  const firstName = faker.name.firstName(sex);
+  const lastName = faker.name.lastName();
 
   return {
     _id,
     firstName,
     lastName,
-    sex: 'male',
-    dateOfBirth: faker.date.past(),
+    sex,
+    dateOfBirth: moment()
+      .subtract(_.random(20, 50), 'years')
+      .format('YYYY-MM-DD'),
     phoneNumber: faker.phone.phoneNumber(),
     address: {
       number: _.random(1, 250),
@@ -56,77 +54,101 @@ const generateMaleUser = () => {
       city: faker.address.city(),
       state: faker.address.state(),
       country: faker.address.country(),
-      postcode: parseInt(faker.address.zipCode()),
+      postcode: parseInt(faker.address.zipCode(), 10),
     },
-    email: faker.internet.email(firstName,lastName,"gmail.com"),
-    s3Image: `https://s3-cloudclinic.s3-ap-southeast-2.amazonaws.com/avatars/mc-${_.random(1, 250)}.jpg`, 
-    password: '123456789',
-  };
-}
-
-const generateUser = () => {
-  const sexes = ['male', 'female'];
-  const _id = new mongoose.Types.ObjectId();
-
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName()
-
-  return {
-    _id,
-    firstName
-    lastName
-    sex: _.sample(sexes),
-    dateOfBirth: faker.date.past(),
-    phoneNumber: faker.phone.phoneNumber(),
-    address: {
-      number: _.random(1, 250),
-      street: faker.address.streetName(),
-      city: faker.address.city(),
-      state: faker.address.state(),
-      country: faker.address.country(),
-      postcode: parseInt(faker.address.zipCode()),
-    },
-    email: faker.internet.email(),
+    email: faker.internet.email(firstName, lastName, 'gmail.com'),
     password: '123456789',
   };
 };
 
-// Currently only seeding with one item of each array, good if could seed one array with multiple unique items
+// moment().format() returns a string: 2020-07-30T10:44:50+10:00
+const generateWorkSchedule = () => {
+  const openingTimes = [5, 6, 7, 8, 9]; // _.random(5, 9);
+  const closingTimes = [17, 18, 19, 20, 21, 22, 23];
+  const lunchBreakStartTimes = [11, 12, 13, 14, 15];
+  const randomHours = [1, 2];
 
-const seedClients = (numClients) => {
-  const clients = [];
+  const openingTime = moment()
+    .set({ hour: _.sample(openingTimes), minute: 0 })
+    .format();
 
-  const clientInfo = {
-    titles: ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'],
-    bloodTypes: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-    medications: [
-      'penicilin',
-      'prednisone',
-      'metformin',
-      'ibuprofen',
-      'paracetamol',
-    ],
-    conditions: [
-      'asthma',
-      'hypertension',
-      'arthritis',
-      'diabetes',
-      'bronchitis',
-      'influenza',
-    ],
-    allergies: [
-      'eggs',
-      'milk',
-      'peanuts',
-      'soy',
-      'wheat',
-      'shellfish',
-      'sesame',
+  const closingTime = moment()
+    .set({ hour: _.sample(closingTimes), minute: 0 })
+    .format();
+
+  const lunchBreakStart = moment()
+    .set({ hour: _.sample(lunchBreakStartTimes), minute: 0 })
+    .format();
+
+  const lunchBreakEnd = moment(lunchBreakStart).add(1, 'hour').format();
+
+  const unavailableStartDateTime = moment(lunchBreakEnd)
+    .add(1, 'hour')
+    .format();
+
+  const unavailableEndDateTime = moment(unavailableStartDateTime)
+    .add(_.sample(randomHours), 'hour')
+    .format();
+
+  return {
+    openingTime,
+    closingTime,
+    lunchBreakStart,
+    lunchBreakEnd,
+    unavailableDateTimes: [
+      {
+        startDateTime: unavailableStartDateTime,
+        endDateTime: unavailableEndDateTime,
+        modifier: RRule.WEEKLY,
+      },
     ],
   };
+};
 
-  for (let i = 0; i < numClients; i += 1) {
-    const clientInfoGen = {
+const addRoleInfo = {
+  // Currently only seeding with one item of each array, good if could seed one array with multiple unique items // Seed tags // Seed multiple languages not just one // DOCTOR needs schedule now
+  client: () => {
+    const clientInfo = {
+      titles: ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'],
+      bloodTypes: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+      medications: [
+        'penicilin',
+        'prednisone',
+        'metformin',
+        'ibuprofen',
+        'paracetamol',
+        'Doxycycline',
+        'Dupixent',
+        'Entresto',
+        'Entyvio',
+        'Farxiga',
+        'Gabapentin',
+        'Gilenya',
+        'Humira',
+        'Hydrochlorothiazide',
+        'Ibuprofen',
+        'Imbruvica',
+      ],
+      conditions: [
+        'asthma',
+        'hypertension',
+        'arthritis',
+        'diabetes',
+        'bronchitis',
+        'influenza',
+      ],
+      allergies: [
+        'eggs',
+        'milk',
+        'peanuts',
+        'soy',
+        'wheat',
+        'shellfish',
+        'sesame',
+      ],
+    };
+
+    return {
       title: _.sample(clientInfo.titles),
       isDoctor: false,
       clientInfo: {
@@ -147,76 +169,60 @@ const seedClients = (numClients) => {
         medication: [
           {
             name: _.sample(clientInfo.medications),
-            dosage: _.random(1, 5),
+            dosage: _.random(10, 500),
             manufacturer: faker.company.companyName(),
           },
         ],
-        bloodType: _.sample(clientInfo.bloodType),
+        bloodType: _.sample(clientInfo.bloodTypes),
       },
     };
+  },
+  doctor: () => {
+    const doctorInfo = {
+      specialtyFields: [
+        'General Practitioner',
+        'Cardiology',
+        'Paediatrics',
+        'Dermatology',
+        'Ophthalmology',
+        'Endocrinology',
+        'Gastroenterology',
+        'Oncology',
+        'Urology',
+        'Gynecology',
+      ],
+      educations: [
+        'University of Sydney',
+        'University of New South Wales',
+        'University of Newcastle',
+        'Western Sydney University',
+        'University of Technology Sydney',
+        'University of Queensland',
+        'University of Melbourne',
+        'Monash University',
+        'Australian National University',
+        'University of Western Australia',
+        'University of Wollongong',
+      ],
+      languages: [
+        'English',
+        'Mandarin',
+        'Spanish',
+        'French',
+        'Vietnamese',
+        'Arabic',
+        'Indonesian',
+        'Cantonese',
+        'Portuguese',
+        'German',
+      ],
+    };
 
-    const newClient = Object.assign(generateUser(), clientInfoGen);
-
-    clients.push(newClient);
-
-    // userDocs[0].documents.push(newClient);
-  }
-
-  userDocs[0].documents.push(clients);
-
-  return clients;
-};
-
-// Seed tags
-// Seed multiple languages not just one
-const seedDoctors = (numDoctors) => {
-  const doctors = [];
-
-  const doctorInfo = {
-    specialtyFields: [
-      'General Practitioner',
-      'Cardiology',
-      'Paediatrics',
-      'Dermatology',
-      'Ophthalmology',
-      'Endocrinology',
-      'Gastroenterology',
-      'Oncology',
-      'Urology',
-      'Gynecology',
-    ],
-    educations: [
-      'University of Sydney',
-      'University of New South Wales',
-      'University of Newcastle',
-      'Western Sydney University',
-      'University of Technology Sydney',
-      'University of Queensland',
-      'University of Melbourne',
-      'Monash University',
-      'Australian National University',
-      'University of Western Australia',
-      'University of Wollongong',
-    ],
-    languages: [
-      'English',
-      'Mandarin',
-      'Spanish',
-      'French',
-      'Vietnamese',
-      'Arabic',
-      'Indonesian',
-      'Cantonese',
-      'Portuguese',
-      'German',
-    ],
-  };
-
-  for (let i = 0; i < numDoctors; i += 1) {
-    const doctorInfoGen = {
+    return {
       title: 'Dr',
       isDoctor: true,
       doctorInfo: {
+        workSchedule: generateWorkSchedule(),
         licence: 'AustDocL'.concat(_.random(1, 50)).toString(),
         accreditation: ['Doctor of Medicine'],
         specialtyField: _.sample(doctorInfo.specialtyFields),
@@ -227,124 +233,37 @@ const seedDoctors = (numDoctors) => {
         rating: Math.floor(Math.random() * 5) + 1,
       },
     };
-
-    const newDoctor = Object.assign(generateUser(), doctorInfoGen);
-
-    // userDocs[0].documents.push(newDoctor);
-    doctors.push(newDoctor);
-  }
-
-  userDocs[0].documents.push(...doctors);
-
-  return doctors;
+  },
 };
 
-const seedFreeSessions = (doctorsP) => {
-  const setHour = (momentObj, hour) => {
-    return momentObj
-      .set({ hour, minute: 0, second: 0, millisecond: 0 })
-      .valueOf();
-  };
+const userSeed = () => {
+  Object.entries(usersList).forEach(([key, [sex, role, count]], i) => {
+    // // Check if assignment is correct
+    console.log(key, sex, role, count, i);
 
-  const startDate = moment().add(1, 'days');
-  const endDate = moment().add(1, 'months');
+    for (let k; k < count; k += 1) {
+      // Generate user
+      let user = generateUser(sex);
 
-  const range = {
-    morning: [8, 9],
-    afternoon: [12, 14],
-  };
+      // Add role info
+      const roleInfo = addRoleInfo[role]();
+      user = { ...user, ...roleInfo };
 
-  const freeSessionGen = (
-    startSession,
-    endSession,
-    doctor,
-    duration = 30,
-    restMin = 5
-  ) => {
-    const sessions = [];
+      // Add image
+      user.s3Image = `https://s3-cloudclinic.s3-ap-southeast-2.amazonaws.com/avatars/${key}-${count}.jpg`;
 
-    let startTime = startSession;
-    let endTime = moment(0);
-
-    // While endTime is before endSession
-    while (endTime.isBefore(endSession)) {
-      endTime = moment(startTime).add(duration, 'minutes');
-
-      const session = {
-        startTime: moment(startTime).valueOf(),
-        endTime: moment(endTime).valueOf(),
-        doctor: doctor._id,
-      };
-
-      sessions.push(session);
-
-      // Free time bewteen sessions: 5 mins
-      startTime = endTime.add(restMin, 'minutes');
+      // Push
+      userDocs[0].documents.push(user);
     }
-
-    return [...sessions];
-  };
-
-  doctorsP.forEach((doctor) => {
-    const sessionBluePrint = (day, rangeP) => {
-      return {
-        startTime: setHour(day, rangeP[0]),
-        endTime: setHour(day, range.morning[1]),
-        doctor: doctor._id,
-        client: null,
-      };
-    };
-
-    for (
-      let day = moment(startDate);
-      day.isBefore(endDate, 'days');
-      day.add(1, 'days')
-    ) {
-      // Skip if Sunday
-      if (day.day() === 0) {
-        continue;
-      }
-
-      const morningSessions = sessionBluePrint(day, range.morning);
-      const afternoonSessions = sessionBluePrint(day, range.afternoon);
-
-      [morningSessions, afternoonSessions].forEach((period) => {
-        const freeSessions = freeSessionGen(
-          period.startTime,
-          period.endTime,
-          doctor
-        );
-        sessionDocs[0].documents.push(freeSessions);
-
-        // console.log(freeSessions);
-      });
-    }
-  });
-};
-
-const seedBookings = (clients, rate = 6) => {
-  const sessions = sessionDocs[0].documents;
-
-  // // Check whether we are actually getting back a flattened array of objects
-  console.log('This should be a Session object:', sessions[0]);
-
-  // // Rate of booking
-  const finalRate = parseInt((rate / 10) * sessions.length, 10);
-
-  // // Sessions that are randomly chosen for booking
-  const toBookSessions = _.sampleSize(sessions, finalRate);
-
-  toBookSessions.forEach((session) => {
-    session.client = _.sample(clients)._id;
   });
 };
 
 const runSeeds = () => {
-  const clients = seedClients(30);
-  const doctors = seedDoctors(10);
-  seedFreeSessions(doctors);
-  sessionDocs[0].documents = _.flattenDeep(sessionDocs[0].documents);
-  seedBookings(clients);
+  // // Seed users
+  userSeed();
+  console.log(userDocs[0].documents);
+
+  // // Seed sessions
 };
 
 runSeeds();
@@ -354,15 +273,13 @@ const dbServer = process.env.MONGO_URI;
 // Commen this section out to test seeds internal
 seeder.connect(dbServer, function () {
   // Load Mongoose models
-  seeder.loadModels(['../models/User.js', '../models/Session.js']);
+  seeder.loadModels(['../models/User.js']);
 
   // Clear specified collections
-  seeder.clearModels(['User', 'Session'], function () {
+  seeder.clearModels(['User'], function () {
     // Callback to populate DB once collections have been cleared
     seeder.populateModels(userDocs, function () {
-      seeder.populateModels(sessionDocs, function () {
-        seeder.disconnect();
-      });
+      seeder.disconnect();
     });
   });
 });

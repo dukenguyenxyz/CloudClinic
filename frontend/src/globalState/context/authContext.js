@@ -37,6 +37,9 @@ export const AuthContextProvider = ({ children }) => {
   //   const generateUser = async () => {
   //     // await signUpClient(setUser);
   //     await signUpDoctor(setUser);
+  //     setTimeout(() => {
+  //       setIsLoading(false);
+  //     }, 2000);
   //   };
   //   generateUser();
   // }, []);
