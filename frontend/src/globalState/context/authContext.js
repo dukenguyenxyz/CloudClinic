@@ -31,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  // // Client Generator
+  // Client Generator
 
   // useEffect(() => {
   //   const generateUser = async () => {
