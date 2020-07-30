@@ -36,7 +36,7 @@ const UserProfile = props => {
             <Contact user={user} />
           </div>
         </div>
-        <h1>Something here</h1>
+        {/* <h1>Something here</h1> */}
       </div>
     );
   };
