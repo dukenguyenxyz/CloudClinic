@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
@@ -14,6 +14,7 @@ import {
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { signOutAll, deleteProfile } from '../../../AxiosTest/userRoutes.js';
+import Card from '../../../Card/Card';
 
 const UpdateProfile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -21,6 +22,8 @@ const UpdateProfile = () => {
   const titleOptions = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'];
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
+
+  const [uploadedImage, setUploadedImage] = useState({});
 
   const sanitizeForm = () => {
     const formFormRequest = Object.assign({}, user);
@@ -319,6 +322,47 @@ const UpdateProfile = () => {
     }
   };
 
+  const handleChange = event => {
+    setUploadedImage(event.target.files[0]);
+  };
+
+  const handleImageUpload = async e => {
+    e.preventDefault();
+
+    // const file = e.target.file;
+
+    // // File path needs to get access to the HTML upload file
+
+    // if (file.size > 150000) {
+    //   setUser({
+    //     ...user,
+    //     errors: [`'${file.name}' is too large, please pick a smaller file`],
+    //   });
+    // }
+
+    // hit s3 bucket
+    // await response
+    if (user.errors.length === 0) {
+      try {
+        const responseFile = await axios.post('/api/uploads', uploadedImage);
+        console.log(responseFile);
+
+        const responseUpdateUser = await updateProfile({
+          profileImage: responseFile,
+        });
+        console.log(responseUpdateUser);
+        setUser(responseUpdateUser.data);
+        navigate('/profile');
+      } catch (err) {
+        console.log(err);
+        setUser({
+          ...user,
+          errors: ['network error'],
+        });
+      }
+    }
+  };
+
   if (user) {
     return (
       <div className="update-profile-wrapper">
@@ -341,6 +385,34 @@ const UpdateProfile = () => {
             }}
           />
         </div>
+        <Card>
+          <div className="image-upload-wrapper">
+            <form>
+              <label htmlFor="img">Upload your profile image</label>
+              {/* <input
+                type="file"
+                id="img"
+                name="img"
+                accept="image/*"
+                onChange={e => handleChange(e)}
+              /> */}
+              <AuthInput
+                type="file"
+                id="img"
+                name="img"
+                accept="image/*"
+                onValueChange={handleChange}
+                icon="upload"
+              />
+              <Button
+                action="Upload"
+                icon="uploadCloud"
+                onClick={handleImageUpload}
+                color="mid"
+              />
+            </form>
+          </div>
+        </Card>
         <div className="form-wrapper">
           <div className="trim" />
           <div className="form-container">

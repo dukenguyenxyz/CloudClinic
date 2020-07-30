@@ -1,5 +1,6 @@
 import axios from 'axios';
 import faker from 'faker';
+import placeholder from '../../assets/md-19.jpg';
 
 const email = () => faker.internet.email();
 const newEmailClient = email();
@@ -22,6 +23,8 @@ export const request = axios.create({
 //   });
 // };
 
+const relImagePath = './frontend/src/assets/md-19.jpg';
+
 export const JWTHeader = {
   headers: {
     Authorization: localStorage.getItem('cloudclinicJWT'),
@@ -34,9 +37,10 @@ export const JSONHeader = {
   },
 };
 
+const link = faker.image.imageUrl();
+
 export const newUserClient = {
-  profileImage:
-    'https://static-media-prod-cdn.itsre-sumo.mozilla.net/static/sumo/img/default-FFA-avatar.png',
+  profileImage: link,
   firstName: 'Hasadfasdi',
   lastName: 'Doctorson',
   title: 'Sir',
@@ -106,8 +110,7 @@ export const newUserClient = {
 };
 
 export const newUserDoctor = {
-  profileImage:
-    'https://static-media-prod-cdn.itsre-sumo.mozilla.net/static/sumo/img/default-FFA-avatar.png',
+  profileImage: link,
   firstName: 'Lisa',
   lastName: 'asdfsdf',
   title: 'Dr',
@@ -127,7 +130,7 @@ export const newUserDoctor = {
     postcode: '2149',
   },
   doctorInfo: {
-    schedule: {
+    workSchedule: {
       openingTime: '2020-07-30T08:00:53+10:00',
       closingTime: '2020-07-30T21:00:53+10:00',
       lunchBreakStart: '2020-07-30T13:00:53+10:00',

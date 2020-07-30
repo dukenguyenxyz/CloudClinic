@@ -38,6 +38,7 @@ export const signUpUser = async (
 
 // Testing routes
 export const signUpClient = async setUserCallback => {
+  console.log(newUserClient);
   await axios
     .post(`${url}/api/users/signup`, newUserClient, JSONHeader)
     .then(res => {
@@ -51,6 +52,7 @@ export const signUpClient = async setUserCallback => {
 };
 
 export const signUpDoctor = async setUserCallback => {
+  console.log(newUserDoctor);
   await axios
     .post(`${url}/api/users/signup`, newUserDoctor, JSONHeader)
     .then(res => {

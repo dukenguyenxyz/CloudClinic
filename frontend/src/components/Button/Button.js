@@ -11,6 +11,7 @@ import {
   LogIn,
   LogOut,
   X,
+  UploadCloud,
 } from 'react-feather';
 
 const Button = ({ action, color, icon, onClick }) => {
@@ -41,6 +42,8 @@ const Button = ({ action, color, icon, onClick }) => {
         return <LogOut size={iconSizeSmall} />;
       case 'logOutLarge':
         return <LogOut size={iconSize} />;
+      case 'uploadCloud':
+        return <UploadCloud size={iconSize} />;
       default:
         return null;
     }
@@ -61,6 +64,7 @@ const Button = ({ action, color, icon, onClick }) => {
         {icon === 'logIn' && <i>{getIcon()}</i>}
         {icon === 'logOut' && <i>{getIcon()}</i>}
         {icon === 'logOutLarge' && <i>{getIcon()}</i>}
+        {icon === 'uploadCloud' && <i>{getIcon()}</i>}
       </button>
     </div>
   );

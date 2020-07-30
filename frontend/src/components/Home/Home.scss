@@ -88,6 +88,11 @@
     height: 100%;
     .col-r {
       grid-column: 2/2;
+
+      @media all and (max-width: 768px) {
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
     }
 
     p {

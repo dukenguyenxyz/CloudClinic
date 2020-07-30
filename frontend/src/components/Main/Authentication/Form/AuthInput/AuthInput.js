@@ -23,6 +23,7 @@ import {
   Map,
   CheckCircle,
   XCircle,
+  Upload,
 } from 'react-feather';
 
 const AuthInput = ({
@@ -42,6 +43,8 @@ const AuthInput = ({
   validationIcon,
   onKeyPress,
   onInput,
+  id,
+  accept,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -85,6 +88,8 @@ const AuthInput = ({
         return <MessageCircle color="#212429" size={14} />;
       case 'postcode':
         return <Map color="#212429" size={14} />;
+      case 'upload':
+        return <Upload color="#212429" size={14} />;
       default:
         return '';
     }
@@ -126,6 +131,8 @@ const AuthInput = ({
         checked={value && true}
         onKeyPress={onKeyPress}
         onInput={onInput}
+        id={id}
+        accept={accept}
       />
       <i className="icon-validation">{getValidationIcon()}</i>
     </div>

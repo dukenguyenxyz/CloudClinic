@@ -3,6 +3,7 @@
 const Joi = require('@hapi/joi'); // Validation
 
 const schema = Joi.object({
+  profileImage: Joi.string(),
   firstName: Joi.string().min(2).required(),
   lastName: Joi.string().min(2).required(),
   email: Joi.string().min(6).required().email(),
@@ -15,7 +16,6 @@ const schema = Joi.object({
   address: Joi.object(),
   isDoctor: Joi.boolean(),
   doctorInfo: Joi.object({
-    profileImage: Joi.string(),
     licence: Joi.string(),
     accreditations: Joi.array(),
     specialtyField: Joi.string(),
