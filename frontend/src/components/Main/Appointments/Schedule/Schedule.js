@@ -61,7 +61,7 @@ const Schedule = () => {
           return (
             <li key={uuidv4()}>
               <div className="session-container">
-                <div className="status"></div>
+                <div className="status">
                   <span>pending</span>
                 </div>
                 <div className="client-wrapper">
