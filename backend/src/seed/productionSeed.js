@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-continue */
-/* eslint-disable radix */
 
 const seeder = require('mongoose-seed');
 const faker = require('faker');
@@ -10,7 +9,7 @@ const mongoose = require('mongoose');
 require('colors');
 const dotenv = require('dotenv');
 const { RRule } = require('rrule');
-const util = require('util');
+// const util = require('util');
 
 // Access dotenv
 dotenv.config({ path: '../../config/.env' });
@@ -239,9 +238,9 @@ const addRoleInfo = {
 const userSeed = () => {
   Object.entries(usersList).forEach(([key, [sex, role, count]], i) => {
     // // Check if assignment is correct
-    console.log(key, sex, role, count, i);
+    console.log(key, sex, role, `Count: ${count}`, i);
 
-    for (let k; k < count; k += 1) {
+    for (let k = 1; k < count + 1; k += 1) {
       // Generate user
       let user = generateUser(sex);
 
@@ -250,10 +249,11 @@ const userSeed = () => {
       user = { ...user, ...roleInfo };
 
       // Add image
-      user.s3Image = `https://s3-cloudclinic.s3-ap-southeast-2.amazonaws.com/avatars/${key}-${count}.jpg`;
+      user.s3Image = `https://s3-cloudclinic.s3-ap-southeast-2.amazonaws.com/avatars/${key}-${k}.jpg`;
 
       // Push
       userDocs[0].documents.push(user);
+      // console.log(user);
     }
   });
 };
@@ -261,7 +261,7 @@ const userSeed = () => {
 const runSeeds = () => {
   // // Seed users
   userSeed();
-  console.log(userDocs[0].documents);
+  // console.log(userDocs[0].documents);
 
   // // Seed sessions
 };
