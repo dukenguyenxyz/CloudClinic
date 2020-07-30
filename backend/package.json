@@ -9,7 +9,7 @@
     "test": "jest --watch  --runInBand --detectOpenHandles",
     "frontend": "npm start --prefix \"../frontend\"",
     "dev": "concurrently \"npm run nodemon\" \"npm run frontend\"",
-    "seed": "cd src && cd seed && node seed"
+    "seed": "cd src && cd seed && node productionSeed"
   },
   "repository": {
     "type": "git",
@@ -52,8 +52,8 @@
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2",
-    "uuid": "^8.3.0",
-    "uuidv4": "^6.2.0"
+    "uuidv4": "^6.2.0",
+    "rrule": "^2.6.4"
   },
   "devDependencies": {}
 }
