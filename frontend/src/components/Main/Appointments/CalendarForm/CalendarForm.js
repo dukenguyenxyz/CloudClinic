@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import DatePicker from 'react-datepicker';
 import { Clock, Calendar } from 'react-feather';
-
+import { DoctorListContext } from '../../../../globalState/index';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../Authentication/Form/Form.scss';
 // import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
@@ -29,9 +29,9 @@ const CalendarForm = ({
   round,
   handleUnavailabilityModifiers,
   handleDoctorAvailabilitySubmit,
+  doctorList,
+  handleSubmit,
 }) => {
-  const doctors = ['Dr. Fizz', 'Dr. James', 'Dr. Foo', 'Dr. Bar'];
-
   const [tabState, setTabState] = useState({
     activeTab: 'availability',
   });
@@ -40,14 +40,6 @@ const CalendarForm = ({
   let handleColor = time => {
     return time.getHours() > 12 ? 'text-success' : 'text-error';
   };
-
-  useEffect(() => {
-    // Requst doctor sessions
-    // set doctorSessions
-    // console.log(moment().add(1, 'hour').toDate());
-  }, []);
-
-  const handleSubmit = () => {};
 
   const displaySessionTime = () => {
     if (clientFormState.startTime) {
@@ -483,14 +475,14 @@ const CalendarForm = ({
             </div>
             <div>
               <AuthSelect
-                // name="Doctor"
                 value={clientFormState.doctor}
                 placeholder="Doctor"
                 type="text"
                 icon="userPlus"
                 directive="doctor"
-                options={doctors}
+                options={doctorList}
                 onValueChange={e => handleSelect(e, 'doctor')}
+                doctorList={doctorList}
               />
               <h4>Select an appointment date and time</h4>
               <div className="react-datepicker-master-wrapper">
@@ -581,11 +573,11 @@ const CalendarForm = ({
             </div>
             <div className="auth-error-wrapper">
               <ul>
-                {/* {clientFormState.errors.map((errorMessage, i) => (
-              <li key={i} className="auth-error-message">
-                {errorMessage}
-              </li>
-            ))} */}
+                {clientFormState.errors.map((errorMessage, i) => (
+                  <li key={i} className="auth-error-message">
+                    {errorMessage}
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="form-button-wrapper">

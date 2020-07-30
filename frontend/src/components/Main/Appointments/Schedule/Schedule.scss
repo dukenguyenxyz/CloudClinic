@@ -61,3 +61,21 @@
     }
   }
 }
+
+.session-container {
+  display: flex;
+  flex-direction: column;
+  .status {
+    margin-bottom: 24px;
+    span {
+      font-size: 10px;
+      background-color: var(--navy-blue);
+      padding: 4px 12px;
+      border-radius: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: white;
+      border: 1px solid var(--black);
+    }
+  }
+}

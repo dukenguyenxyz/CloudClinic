@@ -4,6 +4,8 @@ import Button from '../../../Button/Button';
 import Image from '../../../../assets/md-19.jpg';
 import axios from 'axios';
 import moment from 'moment';
+import { request } from '../../../AxiosTest/config'; // config.js
+import { v4 as uuidv4 } from 'uuid';
 
 const Schedule = () => {
   const styles = {
@@ -24,8 +26,32 @@ const Schedule = () => {
     },
   ]);
 
+  const handleAccept = async () => {
+    // try {
+    //   const id
+    //   const response = await request.post(`sessions/${id}/accept`);
+    // } catch (e) {}
+  };
+
+  const handleDecline = async () => {
+    // try {
+    // } catch (e) {}
+  };
+
   useEffect(() => {
     // axios call here
+    const getSessions = async () => {
+      try {
+        // const response = await request.get('sessions');
+        const response = await axios.get('sessions');
+        console.log(response);
+        setSessions(response.data);
+      } catch (e) {
+        console.log(e);
+        // spread the error
+      }
+    };
+    getSessions();
   }, []);
 
   return (
@@ -33,34 +59,31 @@ const Schedule = () => {
       <ul>
         {sessions.map(session => {
           return (
-            <li>
-              <div className="client-wrapper">
-                <div className="client">
-                  <div className="avatar" style={styles} />
+            <li key={uuidv4()}>
+              <div className="session-container">
+                <div className="status">
+                  <span>pending</span>
                 </div>
-                <div className="middle">
-                  <div className="name">{session.client}</div>
-                  <div className="booking">Mon 26th Jul 11:30 - 12:00pm</div>
-                </div>
-                <div className="process">
-                  <Button
-                    action="accept"
-                    color="pink"
-                    onClick={() =>
-                      console.log(
-                        'PATCH request to backend to set confirmed to true'
-                      )
-                    }
-                  />
-                  <Button
-                    action="decline"
-                    color="dark"
-                    onClick={() =>
-                      console.log(
-                        'PATCH request to backend to set confirmed to declined'
-                      )
-                    }
-                  />
+                <div className="client-wrapper">
+                  <div className="client">
+                    <div className="avatar" style={styles} />
+                  </div>
+                  <div className="middle">
+                    <div className="name">{session.client}</div>
+                    <div className="booking">Mon 26th Jul 11:30 - 12:00pm</div>
+                  </div>
+                  <div className="process">
+                    <Button
+                      action="accept"
+                      color="pink"
+                      onClick={() => handleAccept()}
+                    />
+                    <Button
+                      action="decline"
+                      color="dark"
+                      onClick={() => handleDecline()}
+                    />
+                  </div>
                 </div>
               </div>
             </li>

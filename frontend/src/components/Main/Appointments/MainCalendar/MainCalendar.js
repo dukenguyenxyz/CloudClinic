@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import mockEvents from '../Samples/sampleEvents';
@@ -33,7 +34,13 @@ const mapToRBCFormat = e => {
 
 const mappedData = mockRealEvents.map(mapToRBCFormat);
 
-const MainCalendar = ({ unavailabilities, doctorAvailability, user }) => {
+const MainCalendar = ({
+  unavailabilities,
+  doctorAvailability,
+  user,
+  doctorList,
+  selectedDoctor,
+}) => {
   const [calendarState, setCalendarState] = useState([]);
 
   const renderClientCalendar = () => {
@@ -55,16 +62,22 @@ const MainCalendar = ({ unavailabilities, doctorAvailability, user }) => {
             localizer={localizer}
             defaultView="work_week"
             views={['month', 'day', 'work_week']}
-            // min={
-            //   doctorAvailability.openingTime
-            //     ? moment(doctorAvailability.openingTime).toDate()
-            //     : undefined
-            // }
-            // max={
-            //   doctorAvailability.closingTime
-            //     ? moment(doctorAvailability.closingTime).toDate()
-            //     : undefined
-            // }
+            min={
+              !_.isEmpty(selectedDoctor) &&
+              selectedDoctor.doctorInfo.workSchedule.openingTime
+                ? moment(
+                    selectedDoctor.doctorInfo.workSchedule.openingTime
+                  ).toDate()
+                : undefined
+            }
+            max={
+              !_.isEmpty(selectedDoctor) &&
+              selectedDoctor.doctorInfo.workSchedule.closingTime
+                ? moment(
+                    selectedDoctor.doctorInfo.workSchedule.closingTime
+                  ).toDate()
+                : undefined
+            }
           />
         </div>
       </div>

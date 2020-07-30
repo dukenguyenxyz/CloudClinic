@@ -6,6 +6,8 @@ import _ from 'lodash';
 import omitDeep from 'omit-deep-lodash';
 
 import { AuthContext } from '../../../globalState/index';
+import { DoctorListContext } from '../../../globalState/index';
+import { request } from '../../AxiosTest/config';
 // import { viewSessions } from '../../AxiosTest/sessionRoutes';
 import { updateProfile } from '../../AxiosTest/userRoutes';
 import {
@@ -20,13 +22,15 @@ import './Appointments.scss';
 const Appointments = () => {
   // Setting States
   const { user, setUser } = useContext(AuthContext);
+  const { doctorList } = useContext(DoctorListContext);
   const [unavailabilities, setUnavailabilities] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState({});
   const [clientFormState, setClientFormState] = useState({
     doctor: '',
-    client: user.firstName,
     startTime: round(moment(), moment.duration(15, 'minutes'), 'ceil').toDate(),
     endTime: '',
     sessionDuration: '',
+    errors: [],
   });
   const [doctorAvailability, setDoctorAvailability] = useState({
     openingTime: moment().set({ hour: 5, minutes: 0 }).toDate(),
@@ -51,10 +55,28 @@ const Appointments = () => {
     errors: [],
   });
 
+  useEffect(() => {
+    if (!_.isEmpty(selectedDoctor)) {
+      const selectedDoctorUnavailabilites =
+        selectedDoctor.doctorInfo.workSchedule;
+
+      console.log(selectedDoctorUnavailabilites);
+
+      const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
+        selectedDoctorUnavailabilites
+      );
+
+      // Form has already been filled
+      setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
+    }
+  }, [selectedDoctor]);
+
   // Unavailability processing
   // Fetch workschedule from doctor
 
-  const normalScheduleAggregrates = () => {
+  const normalScheduleAggregrates = availability => {
+    // doctorAvailability = availability
+
     const unavailableSession = (startDateTime, endDateTime, byweekday) => {
       return {
         startDateTime: startDateTime.toDate(),
@@ -65,20 +87,20 @@ const Appointments = () => {
     };
 
     const unavailableMorning = unavailableSession(
-      moment.utc(doctorAvailability.openingTime).startOf('day'),
-      moment.utc(doctorAvailability.openingTime),
+      moment.utc(availability.openingTime).startOf('day'),
+      moment.utc(availability.openingTime),
       workingDays
     );
 
     const unavailableLunch = unavailableSession(
-      moment.utc(doctorAvailability.lunchBreakStart),
-      moment.utc(doctorAvailability.lunchBreakEnd),
+      moment.utc(availability.lunchBreakStart),
+      moment.utc(availability.lunchBreakEnd),
       workingDays
     );
 
     const unavailableAfternoon = unavailableSession(
-      moment.utc(doctorAvailability.closingTime),
-      moment.utc(doctorAvailability.closingTime).endOf('day'),
+      moment.utc(availability.closingTime),
+      moment.utc(availability.closingTime).endOf('day'),
       workingDays
     );
 
@@ -99,6 +121,21 @@ const Appointments = () => {
     return standardUnavailabilities;
   };
 
+  const convertWorkScheduleToCalendarEvents = availability => {
+    // doctorAvailability = availability
+    const unavailsAggregate = _.flattenDeep(
+      normalScheduleAggregrates(availability),
+      availability.unavailableDateTimes
+    );
+
+    const sanitizedUnavailabilities = sanitizeDoctorSessions(unavailsAggregate);
+
+    const sanitizedDataObjReturn = convertAPIdataToJS(
+      sanitizedUnavailabilities
+    );
+    return sanitizedDataObjReturn;
+  };
+
   // When doctorAvailability updates / mounts
   useEffect(() => {
     // if (user.isDoctor) {
@@ -117,19 +154,12 @@ const Appointments = () => {
       doctorAvailability.unavailableDateTimes[0].startDateTime &&
       doctorAvailability.unavailableDateTimes[0].endDateTime
     ) {
-      console.log('Use Effect 1');
+      // console.log('Use Effect 1');
       // Use piping here is also good
 
-      const unavailsAggregate = _.flattenDeep(
-        normalScheduleAggregrates(),
-        doctorAvailability.unavailableDateTimes
+      const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
+        doctorAvailability
       );
-
-      const sanitizedUnavailabilities = sanitizeDoctorSessions(
-        unavailsAggregate
-      );
-
-      const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
 
       // Form has already been filled
       setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
@@ -139,7 +169,7 @@ const Appointments = () => {
   // If user already has unavaiblitiy data then prefill them
   // Component Mounts
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
 
     // Set the doctor unavails from fetching
     if (
@@ -147,7 +177,7 @@ const Appointments = () => {
       user.doctorInfo.workSchedule
       // && user.doctorInfo.workSchedule.unavailableDateTimes > 0
     ) {
-      console.log('Use Effect 2');
+      // console.log('Use Effect 2');
       // Problem number 2 why schedule.unavailabilities ?
 
       // Getting the unavailabilities of the doctor
@@ -168,7 +198,7 @@ const Appointments = () => {
         lunchBreak,
       ];
 
-      console.log(convertedArray);
+      // console.log(convertedArray);
 
       // Convert unavailsRules using sanitizeDoctorSessions
       const unavailsRealDatesData = sanitizeDoctorSessions(convertedArray); // Calendar Display Data
@@ -203,7 +233,7 @@ const Appointments = () => {
       });
     }
 
-    console.log('here');
+    // console.log('here');
 
     // check that end date & times must be greater than start date & times
     if (
@@ -258,7 +288,7 @@ const Appointments = () => {
 
     delete unavailabilityObj.doctorInfo.workSchedule.errors;
 
-    console.log(unavailabilityObj);
+    // console.log(unavailabilityObj);
 
     try {
       const response = await updateProfile(unavailabilityObj);
@@ -281,8 +311,55 @@ const Appointments = () => {
   const handleSelect = (e, key) => {
     setClientFormState({
       ...clientFormState,
-      [key]: e.target.value,
+      [key]: e.target.selectedOptions[0].id,
     });
+
+    const id = e.target.selectedOptions[0].id;
+
+    const doctor = doctorList.find(el => el._id === id);
+
+    setSelectedDoctor(doctor);
+  };
+
+  const handleSubmit = async () => {
+    // //validations
+    // pending
+
+    // unavailabilities.forEach(unavailability => {
+    //   if (
+    //     moment(clientFormState.startTime).isBetween(
+    //       moment(unavailability.start),
+    //       moment(unavailability.end)
+    //     )
+    //   ) {
+    //     setClientFormState({
+    //       ...clientFormState,
+    //       errors: ['Sorry, the booking you select is unavailable'],
+    //     });
+
+    //     return null;
+    //   }
+    // });
+
+    try {
+      const sessionToBook = {
+        startTime: moment(clientFormState.startTime).format('YYYY-MM-DD hh:mm'),
+        endTime: moment(clientFormState.endTime).format('YYYY-MM-DD hh:mm'),
+      };
+
+      console.log(sessionToBook);
+
+      const response = await request.post(
+        `users/${clientFormState.doctor}/book`,
+        sessionToBook
+      );
+      console.log(response);
+    } catch (error) {
+      setClientFormState({
+        ...clientFormState,
+        errors: [`something went wrong ${error}`],
+      });
+    }
   };
 
   const handleAddClick = (key, formFieldsObject) => {
@@ -403,12 +480,14 @@ const Appointments = () => {
             handleUnavailabilityModifiers={handleUnavailabilityModifiers}
             round={round}
             handleDoctorAvailabilitySubmit={handleDoctorAvailabilitySubmit}
+            doctorList={doctorList}
           />
         </section>
         <MainCalendar
           user={user}
           doctorAvailability={doctorAvailability}
           unavailabilities={unavailabilities}
+          doctorList={doctorList}
         />
       </div>
     );
@@ -424,12 +503,17 @@ const Appointments = () => {
             handleSelect={handleSelect}
             handleSessionDuration={handleSessionDuration}
             user={user}
+            doctorList={doctorList}
+            selectedDoctor={selectedDoctor}
+            handleSubmit={handleSubmit}
           />
         </section>
         <MainCalendar
           user={user}
           clientFormState={clientFormState}
           unavailabilities={unavailabilities}
+          doctorList={doctorList}
+          selectedDoctor={selectedDoctor}
         />
       </div>
     );
