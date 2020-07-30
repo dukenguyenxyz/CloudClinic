@@ -33,45 +33,84 @@ const mapToRBCFormat = e => {
 
 const mappedData = mockRealEvents.map(mapToRBCFormat);
 
-const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
+const MainCalendar = ({ unavailabilities, doctorAvailability, user }) => {
   const [calendarState, setCalendarState] = useState([]);
 
-  // useEffect(() => {
-  //   // setCalendarState(unavailabilities.map(mapToRBCFormat));
-  // }, [unavailabilities]);
-
-  return (
-    <div>
-      <div
-        style={{
-          height: '90vh',
-        }}
-      >
-        <Calendar
-          // events={mockEvents}
-          // events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
-          // events={calendarState}
-          events={unavailabilities.map(mapToRBCFormat)}
-          startAccessor="start"
-          endAccessor="end"
-          defaultDate={moment().toDate()}
-          localizer={localizer}
-          defaultView="work_week"
-          views={['month', 'day', 'work_week']}
-          min={
-            doctorAvailability.openingTime
-              ? moment(doctorAvailability.openingTime).toDate()
-              : undefined
-          }
-          max={
-            doctorAvailability.closingTime
-              ? moment(doctorAvailability.closingTime).toDate()
-              : undefined
-          }
-        />
+  const renderClientCalendar = () => {
+    return (
+      <div>
+        <div
+          style={{
+            height: '90vh',
+          }}
+        >
+          <Calendar
+            // events={mockEvents}
+            // events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
+            // events={calendarState}
+            events={unavailabilities.map(mapToRBCFormat)}
+            startAccessor="start"
+            endAccessor="end"
+            defaultDate={moment().toDate()}
+            localizer={localizer}
+            defaultView="work_week"
+            views={['month', 'day', 'work_week']}
+            // min={
+            //   doctorAvailability.openingTime
+            //     ? moment(doctorAvailability.openingTime).toDate()
+            //     : undefined
+            // }
+            // max={
+            //   doctorAvailability.closingTime
+            //     ? moment(doctorAvailability.closingTime).toDate()
+            //     : undefined
+            // }
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
+
+  const renderDoctorCalendar = () => {
+    return (
+      <div>
+        <div
+          style={{
+            height: '90vh',
+          }}
+        >
+          <Calendar
+            // events={mockEvents}
+            // events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
+            // events={calendarState}
+            events={unavailabilities.map(mapToRBCFormat)}
+            startAccessor="start"
+            endAccessor="end"
+            defaultDate={moment().toDate()}
+            localizer={localizer}
+            defaultView="work_week"
+            views={['month', 'day', 'work_week']}
+            min={
+              doctorAvailability.openingTime
+                ? moment(doctorAvailability.openingTime).toDate()
+                : undefined
+            }
+            max={
+              doctorAvailability.closingTime
+                ? moment(doctorAvailability.closingTime).toDate()
+                : undefined
+            }
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const showCalendarView = () => {
+    return user.isDoctor ? renderDoctorCalendar() : renderClientCalendar();
+  };
+
+  return showCalendarView();
 };
 
 export default MainCalendar;

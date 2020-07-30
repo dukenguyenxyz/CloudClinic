@@ -474,126 +474,128 @@ const CalendarForm = ({
 
   const ClientForm = () => {
     return (
-      <div className="form-wrapper">
-        <div className="trim" />
-        <div className="form-container">
-          <div className="form-header">
-            <h1>Make an appointment</h1>
-          </div>
-          <div>
-            <AuthSelect
-              // name="Doctor"
-              value={clientFormState.doctor}
-              placeholder="Doctor"
-              type="text"
-              icon="userPlus"
-              directive="doctor"
-              options={doctors}
-              onValueChange={e => handleSelect(e, 'doctor')}
-            />
-            <h4>Select an appointment date and time</h4>
-            <div className="react-datepicker-master-wrapper">
-              {/* <label htmlFor="date" className="date-label">
+      <div className="tab-wrapper">
+        <div className="form-wrapper">
+          <div className="trim" />
+          <div className="form-container">
+            <div className="form-header">
+              <h1>Make an appointment</h1>
+            </div>
+            <div>
+              <AuthSelect
+                // name="Doctor"
+                value={clientFormState.doctor}
+                placeholder="Doctor"
+                type="text"
+                icon="userPlus"
+                directive="doctor"
+                options={doctors}
+                onValueChange={e => handleSelect(e, 'doctor')}
+              />
+              <h4>Select an appointment date and time</h4>
+              <div className="react-datepicker-master-wrapper">
+                {/* <label htmlFor="date" className="date-label">
               Select an appointment
             </label> */}
-              <Clock color="#212429" size={14} />
-              <DatePicker
-                name="date"
-                popperPlacement="bottom-end"
-                placeholderText="Click to select a date and time"
-                showTimeSelect
-                selected={clientFormState.startTime}
-                minDate={moment().toDate()}
-                maxDate={moment().add(1, 'year').toDate()}
-                minTime={moment().hours(8).minutes(0)._d}
-                maxTime={moment().hours(17).minutes(0)._d}
-                // excludeDates={[new Date(), subDays(new Date(), 1)]}
-                excludeTimes={[moment().add(1, 'hour').toDate()]}
-                // excludeTimes={santizeDoctorSessions()}
-                onChange={date =>
-                  setClientFormState({
-                    ...clientFormState,
-                    startTime: date,
-                    endTime: moment(date)
-                      .add(clientFormState.sessionDuration, 'minutes')
-                      .toDate(),
-                  })
-                }
-                timeClassName={handleColor}
-                dateFormat="MMMM d, h:mm aa"
-              />
+                <Clock color="#212429" size={14} />
+                <DatePicker
+                  name="date"
+                  popperPlacement="bottom-end"
+                  placeholderText="Click to select a date and time"
+                  showTimeSelect
+                  selected={clientFormState.startTime}
+                  minDate={moment().toDate()}
+                  maxDate={moment().add(1, 'year').toDate()}
+                  minTime={moment().hours(8).minutes(0)._d}
+                  maxTime={moment().hours(17).minutes(0)._d}
+                  // excludeDates={[new Date(), subDays(new Date(), 1)]}
+                  excludeTimes={[moment().add(1, 'hour').toDate()]}
+                  // excludeTimes={santizeDoctorSessions()}
+                  onChange={date =>
+                    setClientFormState({
+                      ...clientFormState,
+                      startTime: date,
+                      endTime: moment(date)
+                        .add(clientFormState.sessionDuration, 'minutes')
+                        .toDate(),
+                    })
+                  }
+                  timeClassName={handleColor}
+                  dateFormat="MMMM d, h:mm aa"
+                />
+              </div>
+              <h4>Select a duration</h4>
+              <fieldset className="appointment-time-slot-wrapper">
+                <div className="time-slot">
+                  <div>
+                    <input
+                      type="radio"
+                      name="duration"
+                      id=""
+                      value="15"
+                      onChange={e => handleSessionDuration(e, '15')}
+                    />
+                    <span>15 min</span>
+                  </div>
+                  <span className="appointment-time">
+                    {clientFormState.sessionDuration === '15'
+                      ? displaySessionTime()
+                      : ''}
+                  </span>
+                </div>
+                <div className="time-slot">
+                  <div>
+                    <input
+                      type="radio"
+                      name="duration"
+                      id=""
+                      value="30"
+                      onChange={e => handleSessionDuration(e, '30')}
+                    />
+                    <span>30 min</span>
+                  </div>
+                  <span className="appointment-time">
+                    {clientFormState.sessionDuration === '30'
+                      ? displaySessionTime()
+                      : ''}
+                  </span>
+                </div>
+                <div className="time-slot">
+                  <div>
+                    <input
+                      type="radio"
+                      name="duration"
+                      id=""
+                      value="60"
+                      onChange={e => handleSessionDuration(e, '60')}
+                    />
+                    <span>60 min</span>
+                  </div>
+                  <span className="appointment-time">
+                    {clientFormState.sessionDuration === '60'
+                      ? displaySessionTime()
+                      : ''}
+                  </span>
+                </div>
+              </fieldset>
             </div>
-            <h4>Select a duration</h4>
-            <fieldset className="appointment-time-slot-wrapper">
-              <div className="time-slot">
-                <div>
-                  <input
-                    type="radio"
-                    name="duration"
-                    id=""
-                    value="15"
-                    onChange={e => handleSessionDuration(e, '15')}
-                  />
-                  <span>15 min</span>
-                </div>
-                <span className="appointment-time">
-                  {clientFormState.sessionDuration === '15'
-                    ? displaySessionTime()
-                    : ''}
-                </span>
-              </div>
-              <div className="time-slot">
-                <div>
-                  <input
-                    type="radio"
-                    name="duration"
-                    id=""
-                    value="30"
-                    onChange={e => handleSessionDuration(e, '30')}
-                  />
-                  <span>30 min</span>
-                </div>
-                <span className="appointment-time">
-                  {clientFormState.sessionDuration === '30'
-                    ? displaySessionTime()
-                    : ''}
-                </span>
-              </div>
-              <div className="time-slot">
-                <div>
-                  <input
-                    type="radio"
-                    name="duration"
-                    id=""
-                    value="60"
-                    onChange={e => handleSessionDuration(e, '60')}
-                  />
-                  <span>60 min</span>
-                </div>
-                <span className="appointment-time">
-                  {clientFormState.sessionDuration === '60'
-                    ? displaySessionTime()
-                    : ''}
-                </span>
-              </div>
-            </fieldset>
-          </div>
-          <div className="auth-error-wrapper">
-            <ul>
-              {/* {clientFormState.errors.map((errorMessage, i) => (
+            <div className="auth-error-wrapper">
+              <ul>
+                {/* {clientFormState.errors.map((errorMessage, i) => (
               <li key={i} className="auth-error-message">
                 {errorMessage}
               </li>
             ))} */}
-            </ul>
-          </div>
-          <div className="form-button-wrapper">
-            <Button
-              action="Confirm"
-              color="pink"
-              onClick={handleSubmit}
-              icon="check"
-            />
+              </ul>
+            </div>
+            <div className="form-button-wrapper">
+              <Button
+                action="Confirm"
+                color="pink"
+                onClick={handleSubmit}
+                icon="check"
+              />
+            </div>
           </div>
         </div>
       </div>

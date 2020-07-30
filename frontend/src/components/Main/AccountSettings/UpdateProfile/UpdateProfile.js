@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
@@ -145,6 +145,7 @@ const UpdateProfile = () => {
             ...user,
             errors: ['Please enter all fields'],
           });
+          return null;
         }
       }
     });
@@ -180,6 +181,8 @@ const UpdateProfile = () => {
         ...user,
         errors: ['Please fill in all the inputs'],
       });
+
+      return null;
     }
 
     if (user.password !== user.confirmPassword) {
@@ -187,6 +190,7 @@ const UpdateProfile = () => {
         ...user,
         errors: ['Passwords do not match'],
       });
+      return null;
     }
 
     if (!user.email.includes('@')) {
@@ -194,6 +198,7 @@ const UpdateProfile = () => {
         ...user,
         errors: ['Please enter a valid email'],
       });
+      return null;
     }
 
     if (user.doctorInfo) {
@@ -202,6 +207,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please enter a valid doctor licence'],
         });
+        return null;
       }
 
       if (!user.doctorInfo.accreditations && user.isDoctor) {
@@ -209,6 +215,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please enter your accreditations'],
         });
+        return null;
       }
 
       if (!user.doctorInfo.specialtyField && user.isDoctor) {
@@ -216,6 +223,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please enter your sepciality field'],
         });
+        return null;
       }
 
       if (!user.doctorInfo.education && user.isDoctor) {
@@ -223,6 +231,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please include your education'],
         });
+        return null;
       }
 
       if (!user.doctorInfo.yearsExperience && user.isDoctor) {
@@ -230,6 +239,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please enter your years of experience'],
         });
+        return null;
       }
 
       if (!user.doctorInfo.languagesSpoken && user.isDoctor) {
@@ -237,6 +247,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please enter the languages you speak'],
         });
+        return null;
       }
     }
 
@@ -257,6 +268,7 @@ const UpdateProfile = () => {
           ...user,
           errors: ['Please enter your weight'],
         });
+        return null;
       }
     }
 
@@ -391,44 +403,6 @@ const UpdateProfile = () => {
               options={sexOptions}
               onValueChange={e => onValueChange(e, 'sex')}
             />
-            {user.doctorInfo.education.map((val, i) => {
-              return (
-                <div key={i} className="auth-multi">
-                  <AuthInput
-                    name="education"
-                    value={val}
-                    placeholder="Education"
-                    type="text"
-                    maxLength="50"
-                    icon="briefcase"
-                    onValueChange={e =>
-                      onNestedArrValueChange(e, 'doctorInfo', i, 'education')
-                    }
-                  />
-                  <div className="btn-box">
-                    {user.doctorInfo.education.length !== 1 && (
-                      <Button
-                        onClick={() =>
-                          handleRemoveClick('doctorInfo', i, 'education')
-                        }
-                        icon="minus"
-                        color="mid"
-                      />
-                    )}
-                    {user.doctorInfo.education.length - 1 === i && (
-                      <Button
-                        onClick={() =>
-                          user.doctorInfo.education[i] !== '' &&
-                          handleAddClick('doctorInfo', 'education')
-                        }
-                        icon="plus"
-                        color="mid"
-                      />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
             <AuthInput
               value={moment(user.dateOfBirth).format('YYYY-MM-DD')}
               placeholder="Date of Birth"
@@ -588,49 +562,50 @@ const UpdateProfile = () => {
                     onNestedValueChange(e, 'doctorInfo', 'subSpecialtyField')
                   }
                 />
-                {user.doctorInfo.education.map((val, i) => {
-                  return (
-                    <div key={i} className="auth-multi">
-                      <AuthInput
-                        name="education"
-                        value={val}
-                        placeholder="Education"
-                        type="text"
-                        maxLength="30"
-                        icon="briefcase"
-                        onValueChange={e =>
-                          onNestedArrValueChange(
-                            e,
-                            'doctorInfo',
-                            i,
-                            'education'
-                          )
-                        }
-                      />
-                      <div className="btn-box">
-                        {user.doctorInfo.education.length !== 1 && (
-                          <Button
-                            onClick={() =>
-                              handleRemoveClick('doctorInfo', i, 'education')
-                            }
-                            icon="minus"
-                            color="mid"
-                          />
-                        )}
-                        {user.doctorInfo.education.length - 1 === i && (
-                          <Button
-                            onClick={() =>
-                              user.doctorInfo.education[i] !== '' &&
-                              handleAddClick('doctorInfo', 'education')
-                            }
-                            icon="plus"
-                            color="mid"
-                          />
-                        )}
+                {user.isDoctor &&
+                  user.doctorInfo.education.map((val, i) => {
+                    return (
+                      <div key={i} className="auth-multi">
+                        <AuthInput
+                          name="education"
+                          value={val}
+                          placeholder="Education"
+                          type="text"
+                          maxLength="30"
+                          icon="briefcase"
+                          onValueChange={e =>
+                            onNestedArrValueChange(
+                              e,
+                              'doctorInfo',
+                              i,
+                              'education'
+                            )
+                          }
+                        />
+                        <div className="btn-box">
+                          {user.doctorInfo.education.length !== 1 && (
+                            <Button
+                              onClick={() =>
+                                handleRemoveClick('doctorInfo', i, 'education')
+                              }
+                              icon="minus"
+                              color="mid"
+                            />
+                          )}
+                          {user.doctorInfo.education.length - 1 === i && (
+                            <Button
+                              onClick={() =>
+                                user.doctorInfo.education[i] !== '' &&
+                                handleAddClick('doctorInfo', 'education')
+                              }
+                              icon="plus"
+                              color="mid"
+                            />
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
                 <AuthInput
                   value={user.doctorInfo.yearsExperience}
                   placeholder="Years of Experience"

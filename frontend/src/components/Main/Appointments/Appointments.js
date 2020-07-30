@@ -406,6 +406,7 @@ const Appointments = () => {
           />
         </section>
         <MainCalendar
+          user={user}
           doctorAvailability={doctorAvailability}
           unavailabilities={unavailabilities}
         />
@@ -426,6 +427,7 @@ const Appointments = () => {
           />
         </section>
         <MainCalendar
+          user={user}
           clientFormState={clientFormState}
           unavailabilities={unavailabilities}
         />

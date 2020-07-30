@@ -5,6 +5,7 @@ import {
   signUpClient,
   signUpDoctor,
 } from '../../components/AxiosTest/userRoutes';
+import { navigate } from '@reach/router';
 
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -25,7 +26,10 @@ export const AuthContextProvider = ({ children }) => {
             setIsLoading(false);
           }, 2000);
         } catch (error) {
-          console.log(error);
+          setTimeout(() => {
+            setIsLoading(false);
+            console.log(error);
+          }, 2000);
         }
       };
       getUser();

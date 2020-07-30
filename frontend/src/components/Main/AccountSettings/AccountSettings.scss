@@ -3,7 +3,7 @@
 
   .account-control {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     margin-bottom: 24px;
 
     @media all and (max-width: 644px) {
