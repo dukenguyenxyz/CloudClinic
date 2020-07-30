@@ -36,10 +36,7 @@ const Profile = ({ isOpen, user, setUser }) => {
   return (
     <div className="navbar-profile-wrapper">
       <div className="profile">
-        <img
-          className="avatar"
-          // src={user.profileImage ? user.profileImage : null}
-        />
+        <img className="avatar" src={user ? user.profileImage : null} />
         <motion.span
           className="name"
           variants={name}

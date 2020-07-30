@@ -331,6 +331,19 @@ const UpdateProfile = () => {
   const handleImageUpload = async e => {
     e.preventDefault();
 
+    // console.log(uploadedImage);
+
+    if (
+      Object.keys(uploadedImage).length === 0 &&
+      uploadedImage.constructor === Object
+    ) {
+      setUser({
+        ...user,
+        errors: ['Please include an image'],
+      });
+      return null;
+    }
+
     if (uploadedImage.size > 1000000) {
       setUser({
         ...user,
@@ -347,7 +360,8 @@ const UpdateProfile = () => {
 
     // hit s3 bucket
     // await response
-    if (user.errors.length === 0) {
+
+    if (fd) {
       try {
         const responseFile = await request.post('/uploads', fd, {
           onUploadProgress: progressEvent => {
@@ -363,7 +377,7 @@ const UpdateProfile = () => {
         console.log(responseFile);
 
         const responseUpdateUser = await updateProfile({
-          profileImage: responseFile.link,
+          profileImage: responseFile.data.Location,
         });
         console.log(responseUpdateUser);
         setUser(responseUpdateUser.data);
@@ -404,13 +418,6 @@ const UpdateProfile = () => {
           <div className="image-upload-wrapper">
             <form>
               <label htmlFor="img">Upload your profile image</label>
-              {/* <input
-                type="file"
-                id="img"
-                name="img"
-                accept="image/*"
-                onChange={e => handleChange(e)}
-              /> */}
               <AuthInput
                 type="file"
                 id="img"
@@ -426,6 +433,10 @@ const UpdateProfile = () => {
                 color="mid"
               />
             </form>
+            <div className="ui-display">
+              <span>{loadingState}</span>
+            </div>
+            <div className="image-upload"></div>
           </div>
         </Card>
         <div className="form-wrapper">

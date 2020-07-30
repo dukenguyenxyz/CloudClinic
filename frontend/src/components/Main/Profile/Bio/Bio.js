@@ -9,7 +9,10 @@ const Bio = ({ user }) => {
     <Card>
       <div className="user-profile-container">
         <div className="user-header-wrapper">
-          <img className="avatar" />
+          <img
+            className="avatar"
+            src={user.profileImage ? user.profileImage : null}
+          />
           <div className="name">
             {user.isDoctor && 'Dr.'} {user.firstName}
             <br />
