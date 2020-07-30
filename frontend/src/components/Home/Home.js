@@ -2,8 +2,13 @@ import React from 'react';
 import './Home.scss';
 import Button from '../Button/Button';
 import { Link } from '@reach/router';
+import Mockup from '../../assets/Free-iPhone-Xr_.png';
 
-const Home = ({}) => {
+const Home = () => {
+  const mockupStyles = {
+    backgroundImage: `url(${Mockup})`,
+  };
+
   return (
     <div>
       <div className="circle-wrapper">
@@ -23,11 +28,13 @@ const Home = ({}) => {
               </Link>
             </div>
           </div>
+          <div className="mockup" style={mockupStyles} />
         </div>
         <div className="circle" />
       </div>
       <section className="home-section">
         <div className="home-grid">
+          <div className="circle-l" />
           <div className="col-r">
             <h2>Features</h2>
             <p>

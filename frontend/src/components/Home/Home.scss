@@ -47,9 +47,36 @@
   }
 }
 
+.mockup {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 0;
+  padding-top: 50%;
+  position: absolute;
+  top: 10%;
+  right: 0;
+  left: 55%;
+  pointer-events: none;
+
+  @media all and (max-width: 976px) {
+    top: 40%;
+    left: 30%;
+  }
+  @media all and (max-width: 560px) {
+    top: 60%;
+    left: 25%;
+  }
+
+  @media all and (max-width: 425px) {
+    display: none;
+  }
+}
+
 .home-section {
-  margin: 24px;
+  margin: 7rem 24px 24px 24px;
   height: 94vh;
+  position: relative;
 
   h2 {
     font-size: 3rem;
@@ -116,4 +143,16 @@
   button:first-child {
     margin-right: 12px;
   }
+}
+
+.circle-l {
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background-color: var(--navy-blue);
+  position: absolute;
+  left: -30vw;
+  right: -10vw;
+  top: -10vh;
+  z-index: -1;
 }

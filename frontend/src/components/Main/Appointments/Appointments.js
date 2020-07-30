@@ -425,7 +425,10 @@ const Appointments = () => {
             user={user}
           />
         </section>
-        <MainCalendar clientFormState={clientFormState} />
+        <MainCalendar
+          clientFormState={clientFormState}
+          unavailabilities={unavailabilities}
+        />
       </div>
     );
   };

@@ -10,7 +10,6 @@ const mongoose = require('mongoose');
 require('colors');
 const dotenv = require('dotenv');
 const { RRule } = require('rrule');
-const util = require('util');
 
 // Access dotenv
 dotenv.config({ path: '../../config/.env' });
