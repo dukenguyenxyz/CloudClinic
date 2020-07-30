@@ -14,11 +14,16 @@ import mockReal2Events from '../Samples/sampledata';
 const localizer = momentLocalizer(moment);
 
 // events = unavailabilities.map(mapToRBCFormat)
-const mapToRBCFormat = (e, i) => {
-  const newDateObj = Object.assign({}, e, {
-    id: i, // convert into a number
-    start: new Date(e.start), // moment(e.start).toDate(), // moment.ISO_8601
-    end: new Date(e.end), // moment(e.end).toDate(),
+// const mapToRBCFormat = e =>
+//   Object.assign({}, e, {
+//     start: moment(e.start, moment.ISO_8601).toDate(),
+//     end: moment(e.end, moment.ISO_8601).toDate(),
+//   });
+
+const mapToRBCFormat = e =>
+  Object.assign({}, e, {
+    start: moment(e.start)._d,
+    end: moment(e.end)._d,
   });
 
   delete newDateObj.same;
@@ -29,13 +34,11 @@ const mapToRBCFormat = (e, i) => {
 const mappedData = mockRealEvents.map(mapToRBCFormat);
 
 const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
-  const now = new Date();
-
   const [calendarState, setCalendarState] = useState([]);
 
-  useEffect(() => {
-    // setCalendarState(unavailabilities.map(mapToRBCFormat));
-  }, [unavailabilities]);
+  // useEffect(() => {
+  //   // setCalendarState(unavailabilities.map(mapToRBCFormat));
+  // }, [unavailabilities]);
 
   return (
     <div>
@@ -55,16 +58,16 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
           localizer={localizer}
           defaultView="work_week"
           views={['month', 'day', 'work_week']}
-          // min={
-          //   doctorAvailability.openingTime
-          //     ? moment(doctorAvailability.openingTime).toDate()
-          //     : undefined
-          // }
-          // max={
-          //   doctorAvailability.closingTime
-          //     ? moment(doctorAvailability.closingTime).toDate()
-          //     : undefined
-          // }
+          min={
+            doctorAvailability.openingTime
+              ? moment(doctorAvailability.openingTime).toDate()
+              : undefined
+          }
+          max={
+            doctorAvailability.closingTime
+              ? moment(doctorAvailability.closingTime).toDate()
+              : undefined
+          }
         />
       </div>
     </div>

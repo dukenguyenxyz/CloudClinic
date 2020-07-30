@@ -6,9 +6,21 @@ $duration: 1.4s;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
 
   h1 {
     margin-bottom: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 }
 

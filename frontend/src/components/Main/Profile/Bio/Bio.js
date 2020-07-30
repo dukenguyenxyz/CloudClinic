@@ -5,15 +5,11 @@ import moment from 'moment';
 const Bio = ({ user }) => {
   const age = moment().diff(moment(user.dateOfBirth), 'years');
 
-  // user {
-  //   s3Image: 'http....'
-  // }
-
   return (
     <Card>
       <div className="user-profile-container">
         <div className="user-header-wrapper">
-          <img className="avatar" src="/dksjdh" />
+          <img className="avatar" />
           <div className="name">
             {user.isDoctor && 'Dr.'} {user.firstName}
             <br />

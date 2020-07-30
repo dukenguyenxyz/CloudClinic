@@ -238,6 +238,7 @@ const CalendarForm = ({
                   <h4>Select your unavailability</h4>
                   <div className="react-datepicker-master-wrapper">
                     {doctorAvailability &&
+                    doctorAvailability.unavailableDateTimes.length > 0 ? (
                       doctorAvailability.unavailableDateTimes.map((el, i) => {
                         return (
                           <div key={i}>
@@ -412,7 +413,32 @@ const CalendarForm = ({
                             </div>
                           </div>
                         );
-                      })}
+                      })
+                    ) : (
+                      <div id="appointment-form-button-wrapper">
+                        <div className="grid-item">
+                          <Button
+                            onClick={() =>
+                              handleAddClick('unavailableDateTimes', {
+                                startDateTime: round(
+                                  moment(),
+                                  moment.duration(15, 'minutes'),
+                                  'ceil'
+                                ).toDate(),
+                                endDateTime: round(
+                                  moment(),
+                                  moment.duration(15, 'minutes'),
+                                  'ceil'
+                                ).toDate(),
+                                modifier: '',
+                              })
+                            }
+                            icon="plus"
+                            color="mid"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="auth-error-wrapper">
