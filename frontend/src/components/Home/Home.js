@@ -14,10 +14,10 @@ const Home = () => {
       <div className="circle-wrapper">
         <div className="home-wrapper">
           <div>
-            <h1>CloudClinic is a holistic healthcare consultation service.</h1>
+            <h1>CloudClinic - a holistic healthcare consultation service.</h1>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatum, eum.
+              Quality patient care organised and delivered remotely by partnered
+              Doctors.
             </p>
             <div className="auth-button-wrapper">
               <Link to="/authentication" state={{ signIn: true }}>
@@ -38,17 +38,15 @@ const Home = () => {
           <div className="col-r">
             <h2>Features</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora
-              debitis voluptate aspernatur, nobis repudiandae sequi distinctio
-              aperiam enim. Perferendis similique incidunt temporibus doloremque
-              sed error!
+              CloudClinic improves access to medical consultations for people in
+              need of socially distant healthcare, and assists regional
+              communities in reducing the need to travel for medical advice.
             </p>
             <ul>
-              <li>Lorem ipsum dolor sit amet consectetur.</li>
-              <li>Lorem ipsum dolor sit amet consectetur.</li>
-              <li>Lorem ipsum dolor sit amet.</li>
-              <li>Lorem, ipsum dolor sit amet consectetur adipisicing.</li>
-              <li>Lorem ipsum dolor sit amet consectetur.</li>
+              <li>Searchable database of Physicians</li>
+              <li>Consultation calendar booking system</li>
+              <li>Integrated medical records</li>
+              <li>Live Doctor to patient communication</li>
             </ul>
           </div>
         </div>
@@ -58,17 +56,39 @@ const Home = () => {
           <div className="col-l">
             <h2>About</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora
-              debitis voluptate aspernatur, nobis repudiandae sequi distinctio
-              aperiam enim. Perferendis similique incidunt temporibus doloremque
-              sed error!
+              CloudClinic is the capstone project of Harry Buisman, Duke Nguyen
+              & Hugh Greethead in the{' '}
+              <a href="https://coderacademy.edu.au/" target="_blank">
+                Coder Academy
+              </a>{' '}
+              Web Development Bootcamp, 2020. It is built in the MERN stack,
+              using modern technologies and methods, such as React Hooks and
+              Context API. If you have any questions, please get in touch!
             </p>
             <ul>
-              <li>Lorem ipsum dolor sit amet consectetur.</li>
-              <li>Lorem ipsum dolor sit amet consectetur.</li>
-              <li>Lorem ipsum dolor sit amet.</li>
-              <li>Lorem, ipsum dolor sit amet consectetur adipisicing.</li>
-              <li>Lorem ipsum dolor sit amet consectetur.</li>
+              <li>
+                <a
+                  href="https://github.com/dukeraphaelng/CloudClinic"
+                  target="_blank"
+                >
+                  Github Repository
+                </a>
+              </li>
+              <li>
+                <a href="https://harrybuisman.com/" target="_blank">
+                  Harry Buisman Portfolio
+                </a>
+              </li>
+              <li>
+                <a href="https://duke-nguyen.netlify.app/" target="_blank">
+                  Duke Nguyen Portfolio
+                </a>
+              </li>
+              <li>
+                <a href="https://hughgreethead.dev/" target="_blank">
+                  Hugh Greethead Portfolio
+                </a>
+              </li>
             </ul>
             <div className="auth-button-wrapper">
               <Link to="authentication" state={{ signIn: true }}>
