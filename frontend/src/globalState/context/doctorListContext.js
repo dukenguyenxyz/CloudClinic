@@ -10,12 +10,7 @@ export const DoctorListContextProvider = ({ children }) => {
       if (doctorList.length === 0) {
         try {
           const response = await viewDoctors();
-          const doctorsResult = response.data.map(doctor => {
-            const mappedDoctor = { ...doctor };
-            delete mappedDoctor.workSchedule;
-            return mappedDoctor;
-          });
-          setDoctorList(doctorsResult);
+          setDoctorList(response.data);
         } catch (error) {
           console.log(error);
         }
