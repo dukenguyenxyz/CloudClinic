@@ -27,6 +27,7 @@ import Public from './components/Home/Public/Public';
 import ViewDoctor from './components/Home/ViewDoctor/ViewDoctor';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import LoadingWrapper from './components/LoadingWrapper/LoadingWrapper';
+import SearchResults from './components/SearchResults/SearchResults';
 
 function App() {
   const routeVariants = {
@@ -99,7 +100,6 @@ function App() {
                       <Router location={location}>
                         <Public path="/">
                           <Home path="home" />
-                          <SearchDoctors path="search" />
                           <ViewDoctor path=":id" />
                         </Public>
                         <PrivateRoute as={Profile} path="/profile" />

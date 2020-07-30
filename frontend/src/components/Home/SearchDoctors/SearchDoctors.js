@@ -28,12 +28,7 @@ const SearchDoctors = () => {
         <ul>
           {doctors.map(doctor => (
             <li key={uuidv4()}>
-              <DoctorListItem
-                name={`${doctor.firstName} ${doctor.lastName}`}
-                id={doctor._id}
-                state={doctor}
-                image={''}
-              />
+              <DoctorListItem doctor={doctor} />
             </li>
           ))}
         </ul>

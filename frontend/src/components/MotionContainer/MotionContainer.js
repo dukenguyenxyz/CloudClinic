@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
+import { SearchContext } from '../../globalState/index';
+import SearchResults from '../SearchResults/SearchResults';
 
 const MotionContainer = ({
   children,
@@ -9,6 +11,8 @@ const MotionContainer = ({
   initialAnimation,
   variants,
 }) => {
+  const { searchValue } = useContext(SearchContext);
+
   return (
     <motion.div
       variants={variants}
@@ -17,7 +21,7 @@ const MotionContainer = ({
       exit={outAnimation}
       transition={transition}
     >
-      {children}
+      {searchValue ? <SearchResults /> : children}
     </motion.div>
   );
 };
