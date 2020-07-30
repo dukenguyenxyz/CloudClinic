@@ -30,6 +30,7 @@ const CalendarForm = ({
   handleUnavailabilityModifiers,
   handleDoctorAvailabilitySubmit,
   doctorList,
+  handleSubmit,
 }) => {
   const [tabState, setTabState] = useState({
     activeTab: 'availability',
@@ -39,8 +40,6 @@ const CalendarForm = ({
   let handleColor = time => {
     return time.getHours() > 12 ? 'text-success' : 'text-error';
   };
-
-  const handleSubmit = () => {};
 
   const displaySessionTime = () => {
     if (clientFormState.startTime) {
@@ -574,11 +573,11 @@ const CalendarForm = ({
             </div>
             <div className="auth-error-wrapper">
               <ul>
-                {/* {clientFormState.errors.map((errorMessage, i) => (
-              <li key={i} className="auth-error-message">
-                {errorMessage}
-              </li>
-            ))} */}
+                {clientFormState.errors.map((errorMessage, i) => (
+                  <li key={i} className="auth-error-message">
+                    {errorMessage}
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="form-button-wrapper">
