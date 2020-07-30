@@ -15,6 +15,7 @@ const schema = Joi.object({
   address: Joi.object(),
   isDoctor: Joi.boolean(),
   doctorInfo: Joi.object({
+    profileImage: Joi.string(),
     licence: Joi.string(),
     accreditations: Joi.array(),
     specialtyField: Joi.string(),

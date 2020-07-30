@@ -252,7 +252,7 @@ const userSeed = () => {
       user = { ...user, ...roleInfo };
 
       // Add image
-      user.s3Image = `https://s3-cloudclinic.s3-ap-southeast-2.amazonaws.com/avatars/${key}-${k}.jpg`;
+      user.profileImage = `https://s3-cloudclinic.s3-ap-southeast-2.amazonaws.com/avatars/${key}-${k}.jpg`;
 
       // Push
       userDocs[0].documents.push(user);

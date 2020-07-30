@@ -11,6 +11,9 @@ dotenv.config({ path: '../../config/.env' });
 // Add validation for each of these fields with Joi later
 
 const userSchema = new mongoose.Schema({
+  profileImage: {
+    type: String, // Link
+  },
   firstName: {
     type: String,
     required: [true, 'first name can not be blank'],

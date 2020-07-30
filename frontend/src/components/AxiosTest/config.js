@@ -35,6 +35,8 @@ export const JSONHeader = {
 };
 
 export const newUserClient = {
+  profileImage:
+    'https://static-media-prod-cdn.itsre-sumo.mozilla.net/static/sumo/img/default-FFA-avatar.png',
   firstName: 'Hasadfasdi',
   lastName: 'Doctorson',
   title: 'Sir',
@@ -104,6 +106,8 @@ export const newUserClient = {
 };
 
 export const newUserDoctor = {
+  profileImage:
+    'https://static-media-prod-cdn.itsre-sumo.mozilla.net/static/sumo/img/default-FFA-avatar.png',
   firstName: 'Lisa',
   lastName: 'asdfsdf',
   title: 'Dr',
@@ -123,6 +127,19 @@ export const newUserDoctor = {
     postcode: '2149',
   },
   doctorInfo: {
+    schedule: {
+      openingTime: '2020-07-30T08:00:53+10:00',
+      closingTime: '2020-07-30T21:00:53+10:00',
+      lunchBreakStart: '2020-07-30T13:00:53+10:00',
+      lunchBreakEnd: '2020-07-30T14:00:53+10:00',
+      unavailableDateTimes: [
+        {
+          startDateTime: '2020-07-30T15:00:53+10:00',
+          endDateTime: '2020-07-30T17:00:53+10:00',
+          modifier: 2,
+        },
+      ],
+    },
     licence: 'MIT',
     accreditations: ['USyd', 'UNSW'],
     specialtyField: 'Dentistry',
