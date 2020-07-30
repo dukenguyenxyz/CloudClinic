@@ -18,6 +18,7 @@ const AuthSelect = ({
   icon,
   options,
   directive,
+  doctorList,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -67,6 +68,14 @@ const AuthSelect = ({
     );
   };
 
+  const selectDoctors = (item, id) => {
+    return (
+      <option value={item} key={id} id={id}>
+        {item}
+      </option>
+    );
+  };
+
   return (
     <div className="auth-select-wrapper">
       {options && (
@@ -76,7 +85,14 @@ const AuthSelect = ({
             <option value="" defaultValue disabled hidden>
               {getDirective()}
             </option>
-            {options.map(makeSelectItem)}
+            {doctorList
+              ? options.map(item =>
+                  selectDoctors(
+                    `Dr. ${item.firstName} ${item.lastName}`,
+                    item._id
+                  )
+                )
+              : options.map(makeSelectItem)}
           </select>
         </React.Fragment>
       )}

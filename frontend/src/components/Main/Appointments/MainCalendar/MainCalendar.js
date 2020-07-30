@@ -33,7 +33,13 @@ const mapToRBCFormat = e => {
 
 const mappedData = mockRealEvents.map(mapToRBCFormat);
 
-const MainCalendar = ({ unavailabilities, doctorAvailability, user }) => {
+const MainCalendar = ({
+  unavailabilities,
+  doctorAvailability,
+  user,
+  doctorList,
+  selectedDoctor,
+}) => {
   const [calendarState, setCalendarState] = useState([]);
 
   const renderClientCalendar = () => {

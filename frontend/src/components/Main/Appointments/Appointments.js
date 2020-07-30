@@ -6,6 +6,8 @@ import _ from 'lodash';
 import omitDeep from 'omit-deep-lodash';
 
 import { AuthContext } from '../../../globalState/index';
+import { DoctorListContext } from '../../../globalState/index';
+
 // import { viewSessions } from '../../AxiosTest/sessionRoutes';
 import { updateProfile } from '../../AxiosTest/userRoutes';
 import {
@@ -20,7 +22,9 @@ import './Appointments.scss';
 const Appointments = () => {
   // Setting States
   const { user, setUser } = useContext(AuthContext);
+  const { doctorList } = useContext(DoctorListContext);
   const [unavailabilities, setUnavailabilities] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState({});
   const [clientFormState, setClientFormState] = useState({
     doctor: '',
     client: user.firstName,
@@ -50,6 +54,24 @@ const Appointments = () => {
     ],
     errors: [],
   });
+
+  useEffect(() => {
+    if (!_.isEmpty(selectedDoctor)) {
+      const selectedDoctorUnavailabilites =
+        selectedDoctor.doctorInfo.workSchedule;
+
+      console.log(selectedDoctorUnavailabilites);
+
+      // const sanitizedUnavailabilities = sanitizeDoctorSessions(
+      //   selectedDoctorUnavailabilites
+      // );
+
+      // // const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
+
+      // // Form has already been filled
+      // setUnavailabilities(sanitizedDataObj); // Displaying data
+    }
+  }, [selectedDoctor]);
 
   // Unavailability processing
   // Fetch workschedule from doctor
@@ -139,7 +161,7 @@ const Appointments = () => {
   // If user already has unavaiblitiy data then prefill them
   // Component Mounts
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
 
     // Set the doctor unavails from fetching
     if (
@@ -283,6 +305,12 @@ const Appointments = () => {
       ...clientFormState,
       [key]: e.target.value,
     });
+
+    const id = e.target.selectedOptions[0].id;
+
+    const doctor = doctorList.find(el => el._id === id);
+
+    setSelectedDoctor(doctor);
   };
 
   const handleAddClick = (key, formFieldsObject) => {
@@ -403,12 +431,14 @@ const Appointments = () => {
             handleUnavailabilityModifiers={handleUnavailabilityModifiers}
             round={round}
             handleDoctorAvailabilitySubmit={handleDoctorAvailabilitySubmit}
+            doctorList={doctorList}
           />
         </section>
         <MainCalendar
           user={user}
           doctorAvailability={doctorAvailability}
           unavailabilities={unavailabilities}
+          doctorList={doctorList}
         />
       </div>
     );
@@ -424,12 +454,16 @@ const Appointments = () => {
             handleSelect={handleSelect}
             handleSessionDuration={handleSessionDuration}
             user={user}
+            doctorList={doctorList}
+            selectedDoctor={selectedDoctor}
           />
         </section>
         <MainCalendar
           user={user}
           clientFormState={clientFormState}
           unavailabilities={unavailabilities}
+          doctorList={doctorList}
+          selectedDoctor={selectedDoctor}
         />
       </div>
     );
