@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
@@ -7,7 +6,6 @@ import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 import faker from 'faker';
 import { signUpUser } from '../../../AxiosTest/userRoutes';
 
@@ -399,6 +397,8 @@ const Signup = () => {
         ...formState,
         errors: ['Please include a valid licence number'],
       });
+
+      return null;
     }
 
     if (!formState.accreditations && formState.isDoctor) {
@@ -406,6 +406,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include a valid accreditation'],
       });
+      return null;
     }
 
     if (!formState.specialtyField && formState.isDoctor) {
@@ -413,6 +414,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include a specialty field'],
       });
+      return null;
     }
 
     if (!formState.educations && formState.isDoctor) {
@@ -420,6 +422,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include your education'],
       });
+      return null;
     }
 
     if (!formState.yearsExp && formState.isDoctor) {
@@ -427,6 +430,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include your years of experience'],
       });
+      return null;
     }
 
     if (!formState.languages && formState.isDoctor) {
@@ -434,6 +438,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include the languages you speak'],
       });
+      return null;
     }
 
     if (!formState.bloodType && !formState.isDoctor) {
@@ -441,6 +446,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include your blood type'],
       });
+      return null;
     }
 
     if (!formState.weight && !formState.isDoctor) {
@@ -448,6 +454,7 @@ const Signup = () => {
         ...formState,
         errors: ['Please include your weight'],
       });
+      return null;
     }
 
     // const developmentUrl = 'http://localhost:5000';
@@ -465,32 +472,6 @@ const Signup = () => {
         errors: [`${error.response.data}`, ...formState.errors],
       })
     );
-
-    // // Make axios post request to backend
-    // axios
-    //   .post(endpoint, /*sanitizedForm*/ mockForm2, {
-    //     headers: {
-    //       'Content-Type': 'application/json; charset=utf-8',
-    //     },
-    //   })
-    //   .then(response => {
-    //     console.log(response.data.user);
-
-    //     const jwt = response.data.token;
-    //     const user = response.data.user;
-    //     localStorage.setItem('jwt', jwt);
-
-    //     setUser(user);
-
-    //     navigate('/profile');
-    //   })
-    //   .catch(error => {
-    //     console.log(error.response);
-    //     setFormState({
-    //       ...formState,
-    //       errors: [`${error.response.data}`, ...formState.errors],
-    //     });
-    //   });
   };
 
   // Handle enter key callback to advance the form - placed on last input field of each form step

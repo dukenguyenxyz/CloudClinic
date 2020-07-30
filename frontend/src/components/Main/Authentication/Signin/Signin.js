@@ -38,11 +38,13 @@ const Signin = () => {
         ...formState,
         errors: ['Please fill in all fields'],
       });
+      return null;
     } else if (!emailRegex.test(formState.email)) {
       setFormState({
         ...formState,
         errors: ['Please enter a valid email'],
       });
+      return null;
     } else {
       try {
         const res = await signInUser({

@@ -163,6 +163,8 @@ const UpdateProfile = () => {
 
   //handler for submitting form
   const handleSubmit = () => {
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
     if (
       !user.firstName ||
       !user.lastName ||
@@ -193,7 +195,7 @@ const UpdateProfile = () => {
       return null;
     }
 
-    if (!user.email.includes('@')) {
+    if (!emailRegex.test(user.email)) {
       setUser({
         ...user,
         errors: ['Please enter a valid email'],
