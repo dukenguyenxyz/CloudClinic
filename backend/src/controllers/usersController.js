@@ -240,3 +240,14 @@ exports.viewDoctor = async (req, res) => {
     res.status(500).send();
   }
 };
+
+// exports.createUpload = async (req, res) => {
+//   try {
+//     console.log(req.file);
+//     res.send({
+//       message: 'Hello World',
+//     });
+//   } catch (e) {
+//     res.status(500).send();
+//   }
+// };
