@@ -13,6 +13,7 @@ import {
 } from '../../../AxiosTest/userRoutes';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { request } from '../../../AxiosTest/config.js';
 import { signOutAll, deleteProfile } from '../../../AxiosTest/userRoutes.js';
 import Card from '../../../Card/Card';
 
@@ -24,6 +25,7 @@ const UpdateProfile = () => {
   const severityOptions = [1, 2, 3, 4, 5];
 
   const [uploadedImage, setUploadedImage] = useState({});
+  const [loadingState, setLoadingState] = useState('');
 
   const sanitizeForm = () => {
     const formFormRequest = Object.assign({}, user);
@@ -329,26 +331,39 @@ const UpdateProfile = () => {
   const handleImageUpload = async e => {
     e.preventDefault();
 
-    // const file = e.target.file;
+    if (uploadedImage.size > 1000000) {
+      setUser({
+        ...user,
+        errors: [
+          `'${uploadedImage.name}' is too large, please pick a file under 1mb`,
+        ],
+      });
+      return null;
+    }
 
-    // // File path needs to get access to the HTML upload file
+    const fd = new FormData();
 
-    // if (file.size > 150000) {
-    //   setUser({
-    //     ...user,
-    //     errors: [`'${file.name}' is too large, please pick a smaller file`],
-    //   });
-    // }
+    fd.append('image', uploadedImage, uploadedImage.name);
 
     // hit s3 bucket
     // await response
     if (user.errors.length === 0) {
       try {
-        const responseFile = await axios.post('/api/uploads', uploadedImage);
+        const responseFile = await request.post('/uploads', fd, {
+          onUploadProgress: progressEvent => {
+            setLoadingState(
+              `${Math.round(progressEvent.loaded / progressEvent.total) * 100}`
+            );
+            console.log(
+              'Upload Progress: ' +
+                Math.round(progressEvent.loaded / progressEvent.total) * 100
+            );
+          },
+        });
         console.log(responseFile);
 
         const responseUpdateUser = await updateProfile({
-          profileImage: responseFile,
+          profileImage: responseFile.link,
         });
         console.log(responseUpdateUser);
         setUser(responseUpdateUser.data);
