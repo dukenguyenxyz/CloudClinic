@@ -20,13 +20,13 @@ const localizer = momentLocalizer(moment);
 //     end: moment(e.end, moment.ISO_8601).toDate(),
 //   });
 
-const mapToRBCFormat = e =>
-  Object.assign({}, e, {
+const mapToRBCFormat = e => {
+  const newDateObj = Object.assign({}, e, {
     start: moment(e.start)._d,
     end: moment(e.end)._d,
   });
 
-  delete newDateObj.same;
+  // delete newDateObj.same;
 
   return newDateObj;
 };
@@ -49,9 +49,9 @@ const MainCalendar = ({ unavailabilities, doctorAvailability }) => {
       >
         <Calendar
           // events={mockEvents}
-          events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
+          // events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
           // events={calendarState}
-          // events={unavailabilities.map(mapToRBCFormat)}
+          events={unavailabilities.map(mapToRBCFormat)}
           startAccessor="start"
           endAccessor="end"
           defaultDate={moment().toDate()}
