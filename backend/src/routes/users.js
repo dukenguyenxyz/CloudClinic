@@ -13,6 +13,7 @@ const {
   viewClient,
   viewDoctors,
   viewDoctor,
+  // createUpload,
 } = require('../controllers/usersController');
 
 const { createBooking } = require('../controllers/sessionsController');
@@ -56,5 +57,8 @@ router.get('/:id', viewDoctor);
 
 // Book a session (NEW Route)
 router.post('/:id/book', verifyToken, createBooking);
+
+// Upload an image to S3
+// router.post('/upload', verifyToken, createUpload);
 
 module.exports = router;

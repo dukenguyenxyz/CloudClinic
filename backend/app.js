@@ -13,6 +13,7 @@ dotenv.config({ path: './config/.env' });
 
 // Import Routes
 const usersRoute = require('./src/routes/users');
+const uploadsRoute = require('./src/routes/uploads');
 const sessionsRoute = require('./src/routes/sessions');
 const samplePrivateRoute = require('./src/routes/samplePrivate');
 
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
 // Route Middlewares
 app.use('/api/users', usersRoute);
 app.use('/api/sessions', sessionsRoute);
+app.use('/api/uploads', uploadsRoute);
 app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route
