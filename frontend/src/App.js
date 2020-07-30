@@ -100,8 +100,7 @@ function App() {
                       <Router location={location}>
                         <Public path="/">
                           <Home path="home" />
-                          {/* <SearchDoctors path="search" />
-                          <ViewDoctor path=":id" /> */}
+                          <ViewDoctor path=":id" />
                         </Public>
                         <PrivateRoute as={Profile} path="/profile" />
                         <PrivateDoctorRoute as={Patients} path="/patients">
