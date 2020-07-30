@@ -62,21 +62,21 @@ const Appointments = () => {
 
       console.log(selectedDoctorUnavailabilites);
 
-      // const sanitizedUnavailabilities = sanitizeDoctorSessions(
-      //   selectedDoctorUnavailabilites
-      // );
+      const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
+        selectedDoctorUnavailabilites
+      );
 
-      // // const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
-
-      // // Form has already been filled
-      // setUnavailabilities(sanitizedDataObj); // Displaying data
+      // Form has already been filled
+      setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
     }
   }, [selectedDoctor]);
 
   // Unavailability processing
   // Fetch workschedule from doctor
 
-  const normalScheduleAggregrates = () => {
+  const normalScheduleAggregrates = availability => {
+    // doctorAvailability = availability
+
     const unavailableSession = (startDateTime, endDateTime, byweekday) => {
       return {
         startDateTime: startDateTime.toDate(),
@@ -87,20 +87,20 @@ const Appointments = () => {
     };
 
     const unavailableMorning = unavailableSession(
-      moment.utc(doctorAvailability.openingTime).startOf('day'),
-      moment.utc(doctorAvailability.openingTime),
+      moment.utc(availability.openingTime).startOf('day'),
+      moment.utc(availability.openingTime),
       workingDays
     );
 
     const unavailableLunch = unavailableSession(
-      moment.utc(doctorAvailability.lunchBreakStart),
-      moment.utc(doctorAvailability.lunchBreakEnd),
+      moment.utc(availability.lunchBreakStart),
+      moment.utc(availability.lunchBreakEnd),
       workingDays
     );
 
     const unavailableAfternoon = unavailableSession(
-      moment.utc(doctorAvailability.closingTime),
-      moment.utc(doctorAvailability.closingTime).endOf('day'),
+      moment.utc(availability.closingTime),
+      moment.utc(availability.closingTime).endOf('day'),
       workingDays
     );
 
@@ -119,6 +119,21 @@ const Appointments = () => {
 
     //Available Times
     return standardUnavailabilities;
+  };
+
+  const convertWorkScheduleToCalendarEvents = availability => {
+    // doctorAvailability = availability
+    const unavailsAggregate = _.flattenDeep(
+      normalScheduleAggregrates(availability),
+      availability.unavailableDateTimes
+    );
+
+    const sanitizedUnavailabilities = sanitizeDoctorSessions(unavailsAggregate);
+
+    const sanitizedDataObjReturn = convertAPIdataToJS(
+      sanitizedUnavailabilities
+    );
+    return sanitizedDataObjReturn;
   };
 
   // When doctorAvailability updates / mounts
@@ -142,16 +157,9 @@ const Appointments = () => {
       console.log('Use Effect 1');
       // Use piping here is also good
 
-      const unavailsAggregate = _.flattenDeep(
-        normalScheduleAggregrates(),
-        doctorAvailability.unavailableDateTimes
+      const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
+        doctorAvailability
       );
-
-      const sanitizedUnavailabilities = sanitizeDoctorSessions(
-        unavailsAggregate
-      );
-
-      const sanitizedDataObj = convertAPIdataToJS(sanitizedUnavailabilities);
 
       // Form has already been filled
       setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
