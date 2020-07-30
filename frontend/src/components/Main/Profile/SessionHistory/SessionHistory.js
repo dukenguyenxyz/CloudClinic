@@ -28,19 +28,16 @@ const SessionHistory = ({ user }) => {
             </div>
             <div className="visit-notes">
               <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Corrupti, sequi necessitatibus! Qui deserunt, neque est porro
-                minima mollitia temporibus et, provident nemo aliquid voluptate
-                iusto? Facilis, perferendis iusto modi accusantium veniam earum
-                iure perspiciatis excepturi commodi nam possimus a tempora,
-                tempore pariatur quam hic harum! Voluptatem saepe veniam eos
-                soluta eius sed accusamus aperiam itaque, cumque odio ab natus
-                tempora consequuntur ex suscipit impedit numquam iure.
-                Praesentium quae iusto quod minima consequatur porro deserunt ex
-                quam tempore distinctio, recusandae labore inventore corporis
-                assumenda voluptates consequuntur! Voluptatibus, non harum
-                temporibus saepe corrupti maxime fugiat ab aperiam similique ad
-                optio ratione beatae.
+                A previously healthy 56-year-old gentleman who presents with a
+                four day history of shortness of breath, hemoptysis, and
+                right-sided chest pain. He works as a truck driver, and the
+                symptoms began four days prior to admission, where worsening of
+                his dyspnea and pain prompted him to go to the emergency room.
+                There, he was diagnosed with pneumonia and placed on Levaquin
+                500 mg daily and Benzonatate 200 mg TID, which he has been
+                taking for two days with only slight improvement. He continues
+                to experience shortness of breath, right sided chest pain, and
+                hemoptysis.
               </p>
             </div>
           </div>
