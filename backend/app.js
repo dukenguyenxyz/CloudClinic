@@ -6,10 +6,6 @@ const morgan = require('morgan');
 // Subimportant packages
 const dotenv = require('dotenv');
 const path = require('path');
-// S3 image uploading
-const multer = require('multer');
-const AWS = require('aws-sdk');
-const { uuid } = require('uuidv4');
 const connectDB = require('./config/mongodb');
 
 // Access dotenv
@@ -17,17 +13,12 @@ dotenv.config({ path: './config/.env' });
 
 // Import Routes
 const usersRoute = require('./src/routes/users');
+const uploadsRoute = require('./src/routes/uploads');
 const sessionsRoute = require('./src/routes/sessions');
 const samplePrivateRoute = require('./src/routes/samplePrivate');
 
 // Create instance of express
 const app = express();
-
-// Create S3 instance
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ID,
-  secretAccessKey: process.env.AWS_SECRET,
-});
 
 // Connect to MongoDB with Mongoose
 connectDB();
@@ -57,6 +48,7 @@ app.use((req, res, next) => {
 // Route Middlewares
 app.use('/api/users', usersRoute);
 app.use('/api/sessions', sessionsRoute);
+app.use('/api/uploads', uploadsRoute);
 app.use('/api/sample-private', samplePrivateRoute);
 
 // Default Route
@@ -72,34 +64,5 @@ if (process.env.NODE_ENV === 'production') {
     )
   );
 }
-
-// s3 storage
-// NOT SURE where this is meant to go
-const storage = multer.memoryStorage({
-  destination: (req, file, callback) => {
-    callback(null, '');
-  },
-});
-
-const upload = multer({ storage }).single('image');
-
-app.post('/api/upload', upload, (req, res) => {
-  const myFile = req.file.originalname.split('.');
-  const fileType = myFile[myFile.length - 1];
-
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${uuid()}.${fileType}`,
-    Body: req.file.buffer,
-  };
-
-  s3.upload(params, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-
-    res.status(200).send(data);
-  });
-});
 
 module.exports = app;
