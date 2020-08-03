@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SearchContext, DoctorListContext } from '../../globalState/index';
 import { v4 as uuidv4 } from 'uuid';
-import { Link } from '@reach/router';
 import DoctorListItem from '../Home/DoctorListItem/DoctorListItem';
 
 const SearchResults = () => {
@@ -13,8 +12,8 @@ const SearchResults = () => {
     // Parse the e.target.value by response.data
     if (doctorList.length > 0) {
       const searchDoctorResults = doctorList.filter(doctor => {
-        const doctorName = `${doctor.firstName} ${doctor.lastName}`;
-        return doctorName.includes(searchValue);
+        const doctorName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
+        return doctorName.includes(searchValue.toLowerCase());
       });
       setSearchResults(searchDoctorResults);
     }

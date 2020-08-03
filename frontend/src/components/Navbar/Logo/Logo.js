@@ -5,7 +5,7 @@ import LogoFramer from './LogoFramer';
 
 const Logo = ({ isOpen, isMobile }) => {
   return (
-    <Link to="/home">
+    <Link to="/">
       <div className="logo-wrapper">
         <LogoFramer isOpen={isOpen} isMobile={isMobile} />
       </div>

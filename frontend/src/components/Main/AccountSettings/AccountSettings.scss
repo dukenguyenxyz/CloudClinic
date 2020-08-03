@@ -44,3 +44,25 @@
     }
   }
 }
+
+.image-upload-container {
+  margin-right: 15%;
+
+  @media all and (max-width: 810px) {
+    margin-right: 0;
+  }
+}
+
+.preview-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr;
+
+  .preview {
+    background-position: 'center';
+    background-size: cover;
+    background-repeat: 'no-repeat';
+    width: 100px;
+    height: 100px;
+    margin-left: 24px;
+  }
+}

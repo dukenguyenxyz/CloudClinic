@@ -98,10 +98,8 @@ function App() {
                     >
                       <ViewNavigation location={location} />
                       <Router location={location}>
-                        <Public path="/">
-                          <Home path="home" />
-                          <ViewDoctor path=":id" />
-                        </Public>
+                        <Home path="/" />
+                        <ViewDoctor path="/doctors/:id" />
                         <PrivateRoute as={Profile} path="/profile" />
                         <PrivateDoctorRoute as={Patients} path="/patients">
                           <PatientList path="/" />

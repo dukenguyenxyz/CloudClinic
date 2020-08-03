@@ -223,7 +223,7 @@ const addRoleInfo = {
       doctorInfo: {
         workSchedule: generateWorkSchedule(),
         licence: 'AustDocL'.concat(_.random(1, 50)).toString(),
-        accreditation: ['Doctor of Medicine'],
+        accreditations: ['Doctor of Medicine'],
         specialtyField: _.sample(doctorInfo.specialtyFields),
         subSpecialtyField: _.sample(doctorInfo.specialtyFields),
         education: [_.sample(doctorInfo.educations)],

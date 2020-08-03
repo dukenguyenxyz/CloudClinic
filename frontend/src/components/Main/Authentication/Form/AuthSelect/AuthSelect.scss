@@ -31,6 +31,21 @@
       transform: scale(0.8) translateY(-24px);
       padding: 0 4px;
       background-color: var(--white);
+      margin-left: 36px;
+      font-size: 0.875rem;
+      color: var(--mid-grey);
+      pointer-events: none;
     }
+  }
+
+  label {
+    transform: scale(0.8) translateY(-24px);
+    padding: 0 4px;
+    background-color: var(--white);
+    margin-left: 36px;
+    font-size: 0.875rem;
+    color: var(--mid-grey);
+    pointer-events: none;
+    position: absolute;
   }
 }

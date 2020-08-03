@@ -19,6 +19,7 @@ const AuthSelect = ({
   options,
   directive,
   doctorList,
+  isDate,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -77,10 +78,13 @@ const AuthSelect = ({
   };
 
   return (
-    <div className="auth-select-wrapper">
+    <div className={`auth-select-wrapper ${isDate ? 'auth-date' : ''}`}>
       {options && (
         <React.Fragment>
           <i>{getIcon()}</i>
+          <label className={value ? 'active' : null} htmlFor={placeholder}>
+            {placeholder}
+          </label>
           <select name={placeholder} value={value} onChange={onValueChange}>
             <option value="" defaultValue disabled hidden>
               {getDirective()}

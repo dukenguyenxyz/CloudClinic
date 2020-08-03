@@ -14,10 +14,10 @@ const Home = () => {
       <div className="circle-wrapper">
         <div className="home-wrapper">
           <div>
-            <h1>CloudClinic - a holistic healthcare consultation service.</h1>
+            <h1>CloudClinic — a holistic healthcare consultation service.</h1>
             <p>
               Quality patient care organised and delivered remotely by partnered
-              Doctors.
+              doctors.
             </p>
             <div className="auth-button-wrapper">
               <Link to="/authentication" state={{ signIn: true }}>
@@ -43,10 +43,10 @@ const Home = () => {
               communities in reducing the need to travel for medical advice.
             </p>
             <ul>
-              <li>Searchable database of Physicians</li>
-              <li>Consultation calendar booking system</li>
+              <li>Searchable database of medical professionals</li>
+              <li>Consultation booking system</li>
               <li>Integrated medical records</li>
-              <li>Live Doctor to patient communication</li>
+              <li>Live doctor to patient communication</li>
             </ul>
           </div>
         </div>
@@ -57,13 +57,14 @@ const Home = () => {
             <h2>About</h2>
             <p>
               CloudClinic is the capstone project of Harry Buisman, Duke Nguyen
-              & Hugh Greethead in the{' '}
+              & Hugh Greethead in the&nbsp;
               <a href="https://coderacademy.edu.au/" target="_blank">
-                Coder Academy
-              </a>{' '}
-              Web Development Bootcamp, 2020. It is built in the MERN stack,
-              using modern technologies and methods, such as React Hooks and
-              Context API. If you have any questions, please get in touch!
+                Coder Academy&nbsp;
+              </a>
+              Web Development Bootcamp, 2020. <br />
+              <br /> The application is built on the MERN stack, using modern
+              technologies and methods, such as React Hooks and the Context API.
+              If you have any questions, please get in touch!
             </p>
             <ul>
               <li>
@@ -156,6 +157,8 @@ const Home = () => {
               </a>
             </div>
           </div>
+          <div className="circle-r" />
+
           <small>
             &copy; Copyright {new Date().getFullYear()}, CloudClinic
           </small>

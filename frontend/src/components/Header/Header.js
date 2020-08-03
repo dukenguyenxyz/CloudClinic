@@ -31,6 +31,10 @@ const Header = ({
       return `Your Profile`;
     }
 
+    if (location.pathname.includes('doctors') && user) {
+      return `Doctors`;
+    }
+
     if (location.state !== null) {
       let viewLocation = location.pathname.replace(/[^a-z]/g, '');
       return viewLocation.charAt(0).toUpperCase() + viewLocation.slice(1);

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
@@ -6,11 +6,7 @@ import Button from '../../../Button/Button';
 import languages from '../../Authentication/Form/languages';
 import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
-import axios from 'axios';
-import {
-  updateProfile,
-  updateProfileTesting,
-} from '../../../AxiosTest/userRoutes';
+import { updateProfile } from '../../../AxiosTest/userRoutes';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { request } from '../../../AxiosTest/config.js';
@@ -25,6 +21,7 @@ const UpdateProfile = () => {
   const severityOptions = [1, 2, 3, 4, 5];
 
   const [uploadedImage, setUploadedImage] = useState({});
+  const [imgSrc, setImgSrc] = useState(null);
   const [loadingState, setLoadingState] = useState('');
 
   const sanitizeForm = () => {
@@ -167,7 +164,7 @@ const UpdateProfile = () => {
   };
 
   //handler for submitting form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
     if (
@@ -279,11 +276,43 @@ const UpdateProfile = () => {
       }
     }
 
+    if (uploadedImage) {
+      if (uploadedImage.size > 1000000) {
+        setUser({
+          ...user,
+          errors: [
+            `'${uploadedImage.name}' is too large, please pick a file under 1mb`,
+          ],
+        });
+        return null;
+      } else {
+        const fd = new FormData();
+
+        fd.append('image', uploadedImage, uploadedImage.name);
+        if (fd) {
+          try {
+            const responseFile = await request.post('/uploads', fd, {});
+            console.log(responseFile);
+            const responseUpdateUser = await updateProfile({
+              profileImage: responseFile.data.Location,
+            });
+            console.log(responseUpdateUser);
+            setUser(responseUpdateUser.data);
+          } catch (err) {
+            console.log(err);
+            setUser({
+              ...user,
+              errors: ['network error'],
+            });
+          }
+        }
+      }
+    }
     // console.log(user);
     if (user.errors.length === 0) {
       const updateData = async () => {
         const cloneForm = sanitizeForm();
-        console.log(cloneForm);
+        // console.log(cloneForm);
         try {
           const response = await updateProfile(cloneForm);
           console.log(response);
@@ -325,13 +354,31 @@ const UpdateProfile = () => {
   };
 
   const handleChange = event => {
-    setUploadedImage(event.target.files[0]);
+    const file = event.target.files[0];
+    if (
+      file.type === 'image/gif' ||
+      file.type === 'image/png' ||
+      file.type === 'image/bmp' ||
+      file.type === 'image/jpeg' ||
+      file.type === 'image/jpg'
+    ) {
+      const reader = new FileReader();
+      reader.addEventListener(
+        'load',
+        () => {
+          setImgSrc(reader.result);
+        },
+        false
+      );
+      reader.readAsDataURL(file);
+      setUploadedImage(file);
+    } else {
+      alert('Please upload a valid image type');
+    }
   };
 
   const handleImageUpload = async e => {
     e.preventDefault();
-
-    // console.log(uploadedImage);
 
     if (
       Object.keys(uploadedImage).length === 0 &&
@@ -357,9 +404,6 @@ const UpdateProfile = () => {
     const fd = new FormData();
 
     fd.append('image', uploadedImage, uploadedImage.name);
-
-    // hit s3 bucket
-    // await response
 
     if (fd) {
       try {
@@ -392,10 +436,22 @@ const UpdateProfile = () => {
     }
   };
 
+  const previewImage = {
+    // backgroundImage: uploadedImage ? `url(${uploadedImage})` : null,
+    backgroundImage: `url(${uploadedImage})`,
+  };
+
+  // useEffect(() => {
+
+  //   const previewImage = {
+  //     backgroundImage: `url(${uploadedImage})`,
+  //   };
+  // }, [uploadedImage]);
+
   if (user) {
     return (
       <div className="update-profile-wrapper">
-        <h1 className="account-settings-heading">Update Profile</h1>
+        <h1 className="account-settings-heading">Update your profile</h1>
         <div className="account-control">
           <Button
             action="Delete your account"
@@ -414,31 +470,38 @@ const UpdateProfile = () => {
             }}
           />
         </div>
-        <Card>
-          <div className="image-upload-wrapper">
-            <form>
-              <label htmlFor="img">Upload your profile image</label>
-              <AuthInput
-                type="file"
-                id="img"
-                name="img"
-                accept="image/*"
-                onValueChange={handleChange}
-                icon="upload"
-              />
-              <Button
-                action="Upload"
-                icon="uploadCloud"
-                onClick={handleImageUpload}
-                color="mid"
-              />
-            </form>
-            <div className="ui-display">
-              <span>{loadingState}</span>
+        <div className="image-upload-container">
+          <Card>
+            <div className="image-upload-wrapper">
+              <form>
+                <label htmlFor="img">Upload your profile image</label>
+                <div className="preview-wrapper">
+                  <div>
+                    <AuthInput
+                      type="file"
+                      id="img"
+                      name="img"
+                      accept="image/*"
+                      onValueChange={handleChange}
+                      icon="upload"
+                    />
+                    <Button
+                      action="Upload"
+                      icon="uploadCloud"
+                      onClick={handleImageUpload}
+                      color="mid"
+                    />
+                  </div>
+                  <div className="preview-container">
+                    <div className="progress"></div>
+                    {/* <div className="preview" style={previewImage} /> */}
+                    {imgSrc ? <img className="preview" src={imgSrc} /> : null}
+                  </div>
+                </div>
+              </form>
             </div>
-            <div className="image-upload"></div>
-          </div>
-        </Card>
+          </Card>
+        </div>
         <div className="form-wrapper">
           <div className="trim" />
           <div className="form-container">
@@ -792,7 +855,7 @@ const UpdateProfile = () => {
                       />
                       <AuthInput
                         name="conditionStartDate"
-                        value={val.startDate}
+                        value={moment(val.startDate).format('YYYY-MM-DD')}
                         type="date"
                         icon="calendar"
                         placeholder="Start date"
@@ -843,7 +906,11 @@ const UpdateProfile = () => {
                         {user.clientInfo.medicalHistory.length - 1 === i && (
                           <Button
                             onClick={() =>
-                              user.clientInfo.medicalHistory[i] !== '' &&
+                              user.clientInfo.medicalHistory[i].condition !==
+                                '' &&
+                              user.clientInfo.medicalHistory[i].startDate !==
+                                '' &&
+                              user.clientInfo.medicalHistory[i].notes !== '' &&
                               handleAddMultiClick(
                                 'clientInfo',
                                 'medicalHistory',
@@ -892,6 +959,7 @@ const UpdateProfile = () => {
                         placeholder="Severity"
                         type="text"
                         icon="hash"
+                        isDate
                         directive="allergy"
                         options={severityOptions}
                         onValueChange={e =>
@@ -917,7 +985,8 @@ const UpdateProfile = () => {
                         {user.clientInfo.allergies.length - 1 === i && (
                           <Button
                             onClick={() =>
-                              user.clientInfo.medicalHistory[i] !== '' &&
+                              user.clientInfo.allergies[i].name !== '' &&
+                              user.clientInfo.allergies[i].severity !== '' &&
                               handleAddMultiClick('clientInfo', 'allergies', {
                                 name: '',
                                 severity: '',
@@ -1003,7 +1072,10 @@ const UpdateProfile = () => {
                         {user.clientInfo.medication.length - 1 === i && (
                           <Button
                             onClick={() =>
-                              user.clientInfo.medicalHistory[i] !== '' &&
+                              user.clientInfo.medication[i].name !== '' &&
+                              user.clientInfo.medication[i].dosage !== '' &&
+                              user.clientInfo.medication[i].manufacturer !==
+                                '' &&
                               handleAddMultiClick('clientInfo', 'medication', {
                                 name: '',
                                 dosage: '',

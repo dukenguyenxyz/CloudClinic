@@ -14,7 +14,7 @@ const DoctorListItem = ({ doctor }) => {
 
   return (
     <Link
-      to={`/${doctor._id}`}
+      to={`doctors/${doctor._id}`}
       state={doctor}
       onClick={() => handleNavigation()}
     >
@@ -29,6 +29,7 @@ const DoctorListItem = ({ doctor }) => {
               {doctor.firstName} {doctor.lastName}
             </div>
           </div>
+          <span className="speciality">{doctor.doctorInfo.specialtyField}</span>
         </div>
       </div>
     </Link>

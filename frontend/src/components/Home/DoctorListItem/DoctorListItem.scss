@@ -21,7 +21,45 @@
         height: $size;
         border-radius: 50%;
         background-color: grey;
+        @media all and (max-width: 666px) {
+          $size: 48px;
+          width: $size;
+          max-width: $size;
+          min-width: $size;
+          max-height: $size;
+          min-height: $size;
+          height: $size;
+        }
       }
+    }
+    .speciality {
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-self: end;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      line-height: 1;
+      width: fit-content;
+      align-self: center;
+      color: var(--mid-grey);
+
+      @media all and (max-width: 666px) {
+        font-size: 10px;
+      }
+    }
+
+    @media all and (max-width: 666px) {
+      font-size: 1.5rem;
+    }
+
+    @media all and (max-width: 500px) {
+      font-size: 1.25rem;
     }
   }
 

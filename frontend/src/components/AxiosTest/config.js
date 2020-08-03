@@ -41,8 +41,8 @@ const link = faker.image.imageUrl();
 
 export const newUserClient = {
   profileImage: link,
-  firstName: 'Hasadfasdi',
-  lastName: 'Doctorson',
+  firstName: 'Harry',
+  lastName: 'Buisman',
   title: 'Sir',
   sex: 'male',
   dateOfBirth: '05/11/1999',
@@ -95,14 +95,14 @@ export const newUserClient = {
     ],
     medication: [
       {
-        name: 'Magic mushroom',
+        name: 'Augmentin',
         dosage: '200',
-        manufacturer: 'Brazil',
+        manufacturer: 'GlaxoSmithKline',
       },
       {
-        name: 'Cannabis',
+        name: 'Entresto',
         dosage: '100',
-        manufacturer: 'Australia',
+        manufacturer: 'Novartis',
       },
     ],
     bloodType: 'A+',

@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import './Search.scss';
-import { SearchContext, DoctorListContext } from '../../globalState/index';
+import { SearchContext } from '../../globalState/index';
 import { Search as SearchIcon } from 'react-feather';
-import { viewDoctors } from '../AxiosTest/userRoutes';
 
 const Search = () => {
   const { searchValue, setSearchValue } = useContext(SearchContext);
