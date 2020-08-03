@@ -11,6 +11,7 @@ import Address from '../Address/Address';
 import DoctorInfo from '../DoctorInfo/DoctorInfo';
 import Contact from '../Contact/Contact';
 import { AuthContext } from '../../../../globalState/index';
+import Upcoming from '../Upcoming/Upcoming';
 
 const UserProfile = props => {
   const { user, setUser } = useContext(AuthContext);
@@ -36,7 +37,7 @@ const UserProfile = props => {
             <Contact user={user} />
           </div>
         </div>
-        {/* <h1>Something here</h1> */}
+        <Upcoming user={user} />
       </div>
     );
   };

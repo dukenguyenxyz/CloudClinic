@@ -4,6 +4,7 @@ import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 import Bio from '../../Main/Profile/Bio/Bio';
 import DoctorInfo from '../../Main/Profile/DoctorInfo/DoctorInfo';
 import Contact from '../../Main/Profile/Contact/Contact';
+import Upcoming from '../../Main/Profile/Upcoming/Upcoming';
 
 const ViewDoctor = props => {
   const [doctor, setDoctor] = useState(null);
@@ -12,6 +13,7 @@ const ViewDoctor = props => {
     if (props.location.state !== null) {
       const doctor = props.location.state;
       setDoctor(doctor);
+      return undefined;
     }
 
     const getDoctor = async () => {
@@ -36,6 +38,7 @@ const ViewDoctor = props => {
             <Contact user={doctor} />
           </div>
         </div>
+        <Upcoming user={doctor} />
       </div>
     );
   };
