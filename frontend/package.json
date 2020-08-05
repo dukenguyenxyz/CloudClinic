@@ -21,6 +21,7 @@
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.0",
     "faker": "^4.1.0",
+    "flow-bin": "^0.130.0",
     "framer-motion": "^2.0.1",
     "install": "^0.13.0",
     "lodash": "^4.17.19",
@@ -45,7 +46,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "flow": "flow"
   },
   "eslintConfig": {
     "extends": "react-app"

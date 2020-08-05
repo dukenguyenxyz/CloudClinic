@@ -1,0 +1,14 @@
+[ignore]
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]
+
+[options]
++ module.name_mapper='^\([^\.].*\)$' -> '<PROJECT_ROOT>/src/\1'
