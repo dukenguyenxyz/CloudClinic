@@ -38,7 +38,6 @@ const MainCalendar = ({
   unavailabilities,
   doctorAvailability,
   user,
-  doctorList,
   selectedDoctor,
 }) => {
   const [calendarState, setCalendarState] = useState([]);

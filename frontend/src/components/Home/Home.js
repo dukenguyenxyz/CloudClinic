@@ -58,7 +58,11 @@ const Home = () => {
             <p>
               CloudClinic is the capstone project of Harry Buisman, Duke Nguyen
               & Hugh Greethead in the&nbsp;
-              <a href="https://coderacademy.edu.au/" target="_blank">
+              <a
+                href="https://coderacademy.edu.au/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Coder Academy&nbsp;
               </a>
               Web Development Bootcamp, 2020. <br />
@@ -71,22 +75,35 @@ const Home = () => {
                 <a
                   href="https://github.com/dukeraphaelng/CloudClinic"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Github Repository
                 </a>
               </li>
               <li>
-                <a href="https://harrybuisman.com/" target="_blank">
+                <a
+                  href="https://harrybuisman.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Harry Buisman Portfolio
                 </a>
               </li>
               <li>
-                <a href="https://duke-nguyen.netlify.app/" target="_blank">
+                <a
+                  href="https://duke-nguyen.netlify.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Duke Nguyen Portfolio
                 </a>
               </li>
               <li>
-                <a href="https://hughgreethead.dev/" target="_blank">
+                <a
+                  href="https://hughgreethead.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Hugh Greethead Portfolio
                 </a>
               </li>

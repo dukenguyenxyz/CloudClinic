@@ -31,7 +31,7 @@ const Header = ({
       return `Your Profile`;
     }
 
-    if (location.pathname.includes('doctors') && user) {
+    if (location.pathname.includes('doctors')) {
       return `Doctors`;
     }
 

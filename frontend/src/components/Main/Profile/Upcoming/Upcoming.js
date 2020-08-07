@@ -17,8 +17,8 @@ const Upcoming = ({ user }) => {
           <div className="user-info">
             <span>Openning Time </span>
             <span>
-              {moment(user.doctorInfo.workSchedule.openningTime).format(
-                'hh:mm a'
+              {moment(user.doctorInfo.workSchedule.openingTime).format(
+                'hh:mm A'
               )}
             </span>
           </div>
@@ -26,7 +26,7 @@ const Upcoming = ({ user }) => {
             <span>Closing Time </span>
             <span>
               {moment(user.doctorInfo.workSchedule.closingTime).format(
-                'hh:mm a'
+                'hh:mm A'
               )}
             </span>
           </div>
@@ -39,17 +39,7 @@ const Upcoming = ({ user }) => {
           localizer={localizer}
           defaultView="work_week"
           views={['work_week']}
-          // min={
-          //   user.doctorInfo.workSchedule.openningTime
-          //     ? moment(user.doctorInfo.workSchedule.openningTime).toDate()
-          //     : undefined
-          // }
-          // max={
-          //   user.doctorInfo.workSchedule.closingTime
-          //     ? moment(user.doctorInfo.workSchedule.closingTime).toDate()
-          //     : undefined
-          // }
-          min={moment(user.doctorInfo.workSchedule.openningTime).toDate()}
+          min={moment(user.doctorInfo.workSchedule.openingTime).toDate()}
           max={moment(user.doctorInfo.workSchedule.closingTime).toDate()}
         />
       </div>

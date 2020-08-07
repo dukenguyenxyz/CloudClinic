@@ -26,6 +26,8 @@ export const sanitizeDoctorSessions = sessions => {
       interval: 1,
     };
 
+    console.log(newRRule);
+
     if (bluePrint.modifier) newRRule.freq = bluePrint.modifier;
     if (bluePrint.byweekday) newRRule.byweekday = bluePrint.byweekday;
 

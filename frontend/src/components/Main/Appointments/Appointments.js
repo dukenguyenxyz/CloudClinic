@@ -1,20 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import MainCalendar from './MainCalendar/MainCalendar';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { RRule } from 'rrule';
+import { v4 } from 'uuid';
 import moment from 'moment';
-import _ from 'lodash';
+import _, { difference } from 'lodash';
 import omitDeep from 'omit-deep-lodash';
-
 import { AuthContext } from '../../../globalState/index';
 import { DoctorListContext } from '../../../globalState/index';
 import { request } from '../../AxiosTest/config';
-// import { viewSessions } from '../../AxiosTest/sessionRoutes';
 import { updateProfile } from '../../AxiosTest/userRoutes';
 import {
   round,
   workingDays,
   sanitizeDoctorSessions,
   convertAPIdataToJS,
+  convertUTC,
 } from './helpers';
 import CalendarForm from './CalendarForm/CalendarForm';
 import './Appointments.scss';
@@ -55,163 +55,87 @@ const Appointments = () => {
     errors: [],
   });
 
+  // 1. Set selected doctor in state when user chooses
+  // 2. Grab that doctors lunch break and unavailability
+  // 3. Create new RRule from unavailability
+  // 4.
+
+  // Actions
+
   useEffect(() => {
     if (!_.isEmpty(selectedDoctor)) {
       const selectedDoctorUnavailabilites =
         selectedDoctor.doctorInfo.workSchedule;
 
+      delete selectedDoctorUnavailabilites.openingTime;
+      delete selectedDoctorUnavailabilites.closingTime;
+      delete selectedDoctorUnavailabilites.unavailableDateTimes;
+
       console.log(selectedDoctorUnavailabilites);
 
-      const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
+      const lunchBreakDifference = moment(
+        selectedDoctorUnavailabilites.lunchBreakEnd
+      ).diff(moment(selectedDoctorUnavailabilites.lunchBreakStart), 'minutes');
+
+      // console.log(lunchBreakDifference);
+
+      const lunchBreakRRule = convertLunchBreakToCalendarEvents(
         selectedDoctorUnavailabilites
       );
+      // console.log(lunchBreakRRule);
 
-      // Form has already been filled
-      setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
+      const events = convertLunchBreakRruleToCalendarDates(
+        lunchBreakRRule,
+        lunchBreakDifference
+      );
+
+      setUnavailabilities(events);
+      console.log(events);
+
+      // const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
+      //   selectedDoctorUnavailabilites
+      // );
+      // console.log(sanitizedDataObj);
+
+      // // Form has already been filled
+      // setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
     }
   }, [selectedDoctor]);
 
-  // Unavailability processing
-  // Fetch workschedule from doctor
+  const convertLunchBreakToCalendarEvents = lunchBreak => {
+    const lunchBreakRRule = new RRule({
+      freq: RRule.DAILY,
+      dtstart: convertUTC(lunchBreak.lunchBreakStart),
+      until: convertUTC(
+        moment(lunchBreak.lunchBreakEnd).add(1, 'year').toDate()
+      ),
+      interval: 1,
+    });
 
-  const normalScheduleAggregrates = availability => {
-    // doctorAvailability = availability
+    return lunchBreakRRule;
+  };
 
-    const unavailableSession = (startDateTime, endDateTime, byweekday) => {
+  const convertLunchBreakRruleToCalendarDates = (
+    lunchBreakRRule,
+    difference
+  ) => {
+    const ruleAll = lunchBreakRRule.all();
+
+    return ruleAll.map(startTime => {
+      const start = moment(startTime).toDate();
+      const end = moment(start).add({ minutes: difference }).toDate();
+
       return {
-        startDateTime: startDateTime.toDate(),
-        endDatetime: endDateTime.toDate(),
-        byweekday: byweekday,
-        modifier: RRule.WEEKLY,
+        id: v4(),
+        title: 'Lunch Break',
+        start: start,
+        end: end,
+        same: moment(start).isSame(moment(end)),
       };
-    };
-
-    const unavailableMorning = unavailableSession(
-      moment.utc(availability.openingTime).startOf('day'),
-      moment.utc(availability.openingTime),
-      workingDays
-    );
-
-    const unavailableLunch = unavailableSession(
-      moment.utc(availability.lunchBreakStart),
-      moment.utc(availability.lunchBreakEnd),
-      workingDays
-    );
-
-    const unavailableAfternoon = unavailableSession(
-      moment.utc(availability.closingTime),
-      moment.utc(availability.closingTime).endOf('day'),
-      workingDays
-    );
-
-    const unavailableWeekends = unavailableSession(
-      moment().day(6).startOf('day'),
-      moment().day(7).endOf('day'),
-      [RRule.SA]
-    );
-
-    const standardUnavailabilities = [
-      unavailableMorning,
-      unavailableLunch,
-      unavailableAfternoon,
-      unavailableWeekends,
-    ];
-
-    //Available Times
-    return standardUnavailabilities;
+    });
   };
 
-  const convertWorkScheduleToCalendarEvents = availability => {
-    // doctorAvailability = availability
-    const unavailsAggregate = _.flattenDeep(
-      normalScheduleAggregrates(availability),
-      availability.unavailableDateTimes
-    );
-
-    const sanitizedUnavailabilities = sanitizeDoctorSessions(unavailsAggregate);
-
-    const sanitizedDataObjReturn = convertAPIdataToJS(
-      sanitizedUnavailabilities
-    );
-    return sanitizedDataObjReturn;
-  };
-
-  // When doctorAvailability updates / mounts
-  useEffect(() => {
-    // if (user.isDoctor) {
-    //   // const workSchedule = user.doctorInfo.workSchedule;
-    //   // Sanitize workSchedule (remove _id) => _.omitDeep
-    //   // setDoctorAvailability(workSchedule);
-    // }
-
-    // First time the doctor creates the unavails or when the doctor updates
-    if (
-      doctorAvailability.openingTime &&
-      doctorAvailability.closingTime &&
-      doctorAvailability.lunchBreakStart &&
-      doctorAvailability.lunchBreakEnd &&
-      doctorAvailability.unavailableDateTimes[0] &&
-      doctorAvailability.unavailableDateTimes[0].startDateTime &&
-      doctorAvailability.unavailableDateTimes[0].endDateTime
-    ) {
-      // console.log('Use Effect 1');
-      // Use piping here is also good
-
-      const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
-        doctorAvailability
-      );
-
-      // Form has already been filled
-      setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
-    }
-  }, [doctorAvailability]);
-
-  // If user already has unavaiblitiy data then prefill them
-  // Component Mounts
-  useEffect(() => {
-    // console.log(user);
-
-    // Set the doctor unavails from fetching
-    if (
-      user.isDoctor &&
-      user.doctorInfo.workSchedule
-      // && user.doctorInfo.workSchedule.unavailableDateTimes > 0
-    ) {
-      // console.log('Use Effect 2');
-      // Problem number 2 why schedule.unavailabilities ?
-
-      // Getting the unavailabilities of the doctor
-      const unavailsRules = user.doctorInfo.workSchedule; // Form Data
-
-      // Conversion (no longer need openingTime losingTime for displaying for RRule, if anything happens ask Harry)
-      // Get lunch break
-      const lunchBreak = {
-        startDateTime: unavailsRules.lunchBreakStart,
-        endDateTime: unavailsRules.lunchBreakEnd,
-        modifier: RRule.WEEKLY,
-        byweekday: workingDays,
-      };
-
-      // Spread lunch break with unavails
-      const convertedArray = [
-        ...unavailsRules.unavailableDateTimes,
-        lunchBreak,
-      ];
-
-      // console.log(convertedArray);
-
-      // Convert unavailsRules using sanitizeDoctorSessions
-      const unavailsRealDatesData = sanitizeDoctorSessions(convertedArray); // Calendar Display Data
-
-      // Set the unavailibities to the unavailsRealDatesData
-      setUnavailabilities(unavailsRealDatesData); // Displaying the calendar with data
-
-      // Prefilling the form
-      setDoctorAvailability(unavailsRules);
-    }
-  }, []);
-
-  // Actions
+  // const convertWorkScheduleToCalendarEvents = () => {};
 
   const handleDoctorAvailabilitySubmit = async () => {
     //validations - no empty or dodgy fields
@@ -309,38 +233,18 @@ const Appointments = () => {
   };
 
   const handleSelect = (e, key) => {
+    const id = e.target.selectedOptions[0].id;
+    const doctor = doctorList.find(el => el._id === id);
     setClientFormState({
       ...clientFormState,
-      [key]: e.target.selectedOptions[0].id,
+      // [key]: e.target.selectedOptions[0].id,
+      [key]: `Dr. ${doctor.firstName} ${doctor.lastName}`,
     });
-
-    const id = e.target.selectedOptions[0].id;
-
-    const doctor = doctorList.find(el => el._id === id);
 
     setSelectedDoctor(doctor);
   };
 
   const handleSubmit = async () => {
-    // //validations
-    // pending
-
-    // unavailabilities.forEach(unavailability => {
-    //   if (
-    //     moment(clientFormState.startTime).isBetween(
-    //       moment(unavailability.start),
-    //       moment(unavailability.end)
-    //     )
-    //   ) {
-    //     setClientFormState({
-    //       ...clientFormState,
-    //       errors: ['Sorry, the booking you select is unavailable'],
-    //     });
-
-    //     return null;
-    //   }
-    // });
-
     try {
       const sessionToBook = {
         startTime: moment(clientFormState.startTime).format('YYYY-MM-DD hh:mm'),

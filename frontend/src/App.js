@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.scss';
 import { Router, Location } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
@@ -17,17 +17,12 @@ import Home from './components/Home/Home';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PrivateDoctorRoute from './components/PrivateDoctorRoute/PrivateDoctorRoute';
 import AccountSettings from './components/Main/AccountSettings/AccountSettings';
-import UserProfile from './components/Main/Profile/UserProfile/UserProfile';
 import PatientList from './components/Main/Patients/PatientList/PatientList';
 import ViewNavigation from './components/ViewNavigation/ViewNavigation';
 import MotionContainer from './components/MotionContainer/MotionContainer';
 import PatientProfile from './components/Main/Patients/PatientProfile/PatientProfile';
-import SearchDoctors from './components/Home/SearchDoctors/SearchDoctors';
-import Public from './components/Home/Public/Public';
 import ViewDoctor from './components/Home/ViewDoctor/ViewDoctor';
-import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import LoadingWrapper from './components/LoadingWrapper/LoadingWrapper';
-import SearchResults from './components/SearchResults/SearchResults';
 
 function App() {
   const routeVariants = {
