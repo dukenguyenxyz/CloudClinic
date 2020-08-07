@@ -60,7 +60,7 @@ const MainCalendar = ({
             defaultDate={moment().toDate()}
             localizer={localizer}
             defaultView="work_week"
-            views={['month', 'day', 'work_week']}
+            views={['day', 'work_week']}
             min={
               !_.isEmpty(selectedDoctor) &&
               selectedDoctor.doctorInfo.workSchedule.openingTime
@@ -101,7 +101,7 @@ const MainCalendar = ({
             defaultDate={moment().toDate()}
             localizer={localizer}
             defaultView="work_week"
-            views={['month', 'day', 'work_week']}
+            views={['day', 'work_week']}
             min={
               doctorAvailability.openingTime
                 ? moment(doctorAvailability.openingTime).toDate()

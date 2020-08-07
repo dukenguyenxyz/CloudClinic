@@ -55,11 +55,6 @@ const Appointments = () => {
     errors: [],
   });
 
-  // 1. Set selected doctor in state when user chooses
-  // 2. Grab that doctors lunch break and unavailability
-  // 3. Create new RRule from unavailability
-  // 4.
-
   // Actions
 
   useEffect(() => {
@@ -67,42 +62,49 @@ const Appointments = () => {
       const selectedDoctorUnavailabilites =
         selectedDoctor.doctorInfo.workSchedule;
 
-      delete selectedDoctorUnavailabilites.openingTime;
-      delete selectedDoctorUnavailabilites.closingTime;
-      delete selectedDoctorUnavailabilites.unavailableDateTimes;
+      // Separate lunch break
+      const lunchBreakStart = selectedDoctorUnavailabilites.lunchBreakStart;
+      const lunchBreakEnd = selectedDoctorUnavailabilites.lunchBreakEnd;
+      const lunchBreak = { lunchBreakStart, lunchBreakEnd };
 
-      console.log(selectedDoctorUnavailabilites);
-
-      const lunchBreakDifference = moment(
-        selectedDoctorUnavailabilites.lunchBreakEnd
-      ).diff(moment(selectedDoctorUnavailabilites.lunchBreakStart), 'minutes');
-
-      // console.log(lunchBreakDifference);
-
-      const lunchBreakRRule = convertLunchBreakToCalendarEvents(
-        selectedDoctorUnavailabilites
+      const lunchBreakDifference = moment(lunchBreakEnd).diff(
+        moment(lunchBreakStart),
+        'minutes'
       );
+
+      const lunchBreakRRule = convertLunchBreakToRRule(lunchBreak);
       // console.log(lunchBreakRRule);
 
-      const events = convertLunchBreakRruleToCalendarDates(
+      const lunchBreakEvents = convertLunchBreakRruleToCalendarDates(
         lunchBreakRRule,
         lunchBreakDifference
       );
 
-      setUnavailabilities(events);
-      console.log(events);
+      console.log(lunchBreakEvents);
+      // Unavailabilities Array -
+      const doctorUnavailabilities =
+        selectedDoctorUnavailabilites.unavailableDateTimes;
 
-      // const sanitizedDataObj = convertWorkScheduleToCalendarEvents(
-      //   selectedDoctorUnavailabilites
-      // );
-      // console.log(sanitizedDataObj);
+      const unavailabilitiesRRules = convertUnavailabilitiesToRRule(
+        doctorUnavailabilities
+      );
 
-      // // Form has already been filled
-      // setUnavailabilities(sanitizedDataObj); // Displaying data to calendar
+      // console.log(unavailabilitiesRRules);
+
+      const unavailableEvents = convertDoctorUnavailabilityToCalendarDates(
+        unavailabilitiesRRules
+      );
+      // console.log(unavailableEvents);
+
+      const calendarEvents = lunchBreakEvents.concat(
+        _.flattenDeep(unavailableEvents)
+      );
+
+      setUnavailabilities(calendarEvents);
     }
   }, [selectedDoctor]);
 
-  const convertLunchBreakToCalendarEvents = lunchBreak => {
+  const convertLunchBreakToRRule = lunchBreak => {
     const lunchBreakRRule = new RRule({
       freq: RRule.DAILY,
       dtstart: convertUTC(lunchBreak.lunchBreakStart),
@@ -113,6 +115,43 @@ const Appointments = () => {
     });
 
     return lunchBreakRRule;
+  };
+
+  const convertUnavailabilitiesToRRule = unavailabilitiesArr => {
+    return unavailabilitiesArr.map(el => {
+      const difference = moment(el.endDateTime).diff(
+        moment(el.startDateTime),
+        'minutes'
+      );
+
+      return [
+        new RRule({
+          freq: parseInt(el.modifier), // must be an integer
+          dtstart: convertUTC(el.startDateTime),
+          until: convertUTC(moment(el.endDateTime).add(1, 'year').toDate()),
+          interval: 1,
+        }),
+        difference,
+      ];
+    });
+  };
+
+  const convertDoctorUnavailabilityToCalendarDates = unavailabilitiesRRuleArr => {
+    return unavailabilitiesRRuleArr.map(el => {
+      const ruleAll = el[0].all();
+      return ruleAll.map(startTime => {
+        const start = moment(startTime).toDate();
+        const end = moment(start).add({ minutes: el[1] }).toDate();
+
+        return {
+          id: v4(),
+          title: 'Unavailable',
+          start: start,
+          end: end,
+          same: moment(start).isSame(moment(end)),
+        };
+      });
+    });
   };
 
   const convertLunchBreakRruleToCalendarDates = (
@@ -237,7 +276,6 @@ const Appointments = () => {
     const doctor = doctorList.find(el => el._id === id);
     setClientFormState({
       ...clientFormState,
-      // [key]: e.target.selectedOptions[0].id,
       [key]: `Dr. ${doctor.firstName} ${doctor.lastName}`,
     });
 
