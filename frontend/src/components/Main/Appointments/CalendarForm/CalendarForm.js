@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import DatePicker from 'react-datepicker';
 import { Clock, Calendar } from 'react-feather';
+import _ from 'lodash';
 import { DoctorListContext } from '../../../../globalState/index';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../Authentication/Form/Form.scss';
@@ -31,6 +32,8 @@ const CalendarForm = ({
   handleDoctorAvailabilitySubmit,
   doctorList,
   handleSubmit,
+  unavailabilities,
+  selectedDoctor,
 }) => {
   const [tabState, setTabState] = useState({
     activeTab: 'availability',
@@ -51,6 +54,11 @@ const CalendarForm = ({
     } else {
       return '';
     }
+  };
+
+  const isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0 && day !== 6;
   };
 
   const DoctorForm = () => {
@@ -119,6 +127,7 @@ const CalendarForm = ({
                             minTime={moment().hours(5).minutes(0)._d}
                             maxTime={moment().hours(22).minutes(0)._d}
                             timeIntervals={15}
+                            filterDate={isWeekday}
                             timeCaption="Time"
                             dateFormat="h:mm aa"
                           />
@@ -155,6 +164,7 @@ const CalendarForm = ({
                             }
                             maxTime={moment().hours(23).minutes(0)._d}
                             timeIntervals={15}
+                            filterDate={isWeekday}
                             timeCaption="Time"
                             dateFormat="h:mm aa"
                           />
@@ -261,6 +271,7 @@ const CalendarForm = ({
                                     showTimeSelect
                                     minDate={moment().toDate()}
                                     maxDate={moment().add(3, 'year').toDate()}
+                                    filterDate={isWeekday}
                                     // // Format ?
                                     minTime={
                                       doctorAvailability
@@ -319,6 +330,7 @@ const CalendarForm = ({
                                       .toDate()}
                                     timeIntervals={15}
                                     timeCaption="Time"
+                                    filterDate={isWeekday}
                                     dateFormat="MMMM d, h:mm aa"
                                   />
                                 </div>
@@ -498,11 +510,18 @@ const CalendarForm = ({
                   selected={clientFormState.startTime}
                   minDate={moment().toDate()}
                   maxDate={moment().add(1, 'year').toDate()}
-                  minTime={moment().hours(8).minutes(0)._d}
-                  maxTime={moment().hours(17).minutes(0)._d}
-                  // excludeDates={[new Date(), subDays(new Date(), 1)]}
-                  excludeTimes={[moment().add(1, 'hour').toDate()]}
-                  // excludeTimes={santizeDoctorSessions()}
+                  minTime={
+                    !_.isEmpty(selectedDoctor) &&
+                    moment(
+                      selectedDoctor.doctorInfo.workSchedule.openingTime
+                    ).toDate()
+                  }
+                  maxTime={
+                    !_.isEmpty(selectedDoctor) &&
+                    moment(
+                      selectedDoctor.doctorInfo.workSchedule.closingTime
+                    ).toDate()
+                  }
                   onChange={date =>
                     setClientFormState({
                       ...clientFormState,
@@ -513,6 +532,7 @@ const CalendarForm = ({
                     })
                   }
                   timeClassName={handleColor}
+                  filterDate={isWeekday}
                   dateFormat="MMMM d, h:mm aa"
                 />
               </div>

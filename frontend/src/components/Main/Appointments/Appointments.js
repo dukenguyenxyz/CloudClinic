@@ -79,8 +79,6 @@ const Appointments = () => {
         lunchBreakRRule,
         lunchBreakDifference
       );
-
-      console.log(lunchBreakEvents);
       // Unavailabilities Array -
       const doctorUnavailabilities =
         selectedDoctorUnavailabilites.unavailableDateTimes;
@@ -149,6 +147,7 @@ const Appointments = () => {
           start: start,
           end: end,
           same: moment(start).isSame(moment(end)),
+          unavailable: 'unavailable',
         };
       });
     });
@@ -170,6 +169,7 @@ const Appointments = () => {
         start: start,
         end: end,
         same: moment(start).isSame(moment(end)),
+        unavailable: 'unavailable',
       };
     });
   };
@@ -448,6 +448,7 @@ const Appointments = () => {
             doctorList={doctorList}
             selectedDoctor={selectedDoctor}
             handleSubmit={handleSubmit}
+            unavailabilities={unavailabilities}
           />
         </section>
         <MainCalendar
@@ -456,6 +457,7 @@ const Appointments = () => {
           unavailabilities={unavailabilities}
           doctorList={doctorList}
           selectedDoctor={selectedDoctor}
+          setUnavailabilities={setUnavailabilities}
         />
       </div>
     );

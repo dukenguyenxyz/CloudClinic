@@ -65,7 +65,8 @@ const generateWorkSchedule = () => {
   const openingTimes = [5, 6, 7, 8, 9]; // _.random(5, 9);
   const closingTimes = [17, 18, 19, 20, 21, 22, 23];
   const lunchBreakStartTimes = [11, 12, 13, 14, 15];
-  const randomHours = [1, 2];
+  const randomHours = [1, 2, 3];
+  const randomDays = [1, 2, 3, 4];
 
   const openingTime = moment()
     .set({ hour: _.sample(openingTimes), minute: 0 })
@@ -81,11 +82,25 @@ const generateWorkSchedule = () => {
 
   const lunchBreakEnd = moment(lunchBreakStart).add(1, 'hour').format();
 
-  const unavailableStartDateTime = moment(lunchBreakEnd)
-    .add(1, 'hour')
+  // Post lunch random unavail
+  const unavailableStartDateTimePostLunch = moment(lunchBreakEnd)
+    .add({ hour: _.sample(randomHours), days: _.sample(randomDays) })
     .format();
 
-  const unavailableEndDateTime = moment(unavailableStartDateTime)
+  const unavailableEndDateTimePostLunch = moment(
+    unavailableStartDateTimePostLunch
+  )
+    .add(_.sample(randomHours), 'hour')
+    .format();
+
+  // Pre lunch random unavail
+  const unavailableStartDateTimePreLunch = moment(openingTime)
+    .add({ hour: _.sample(randomHours), days: _.sample(randomDays) })
+    .format();
+
+  const unavailableEndDateTimePreLunch = moment(
+    unavailableStartDateTimePreLunch
+  )
     .add(_.sample(randomHours), 'hour')
     .format();
 
@@ -96,8 +111,13 @@ const generateWorkSchedule = () => {
     lunchBreakEnd,
     unavailableDateTimes: [
       {
-        startDateTime: unavailableStartDateTime,
-        endDateTime: unavailableEndDateTime,
+        startDateTime: unavailableStartDateTimePostLunch,
+        endDateTime: unavailableEndDateTimePostLunch,
+        modifier: RRule.WEEKLY,
+      },
+      {
+        startDateTime: unavailableStartDateTimePreLunch,
+        endDateTime: unavailableEndDateTimePreLunch,
         modifier: RRule.WEEKLY,
       },
     ],

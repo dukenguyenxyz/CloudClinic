@@ -39,8 +39,40 @@ const MainCalendar = ({
   doctorAvailability,
   user,
   selectedDoctor,
+  setUnavailabilities,
 }) => {
   const [calendarState, setCalendarState] = useState([]);
+
+  const handleSelect = ({ start, end }) => {
+    console.log('hello', start, end);
+    // const title = window.prompt('New Event name');
+    // if (title)
+    //   setUnavailabilities([
+    //     ...unavailabilities,
+    //     {
+    //       start,
+    //       end,
+    //       title,
+    //     },
+    //   ]);
+  };
+
+  const handleEventStyle = event => {
+    // console.log(event);
+    const newStyle = {
+      backgroundColor: '#cccccc',
+      color: '#cccccc',
+      // borderRadius: "0px",
+      // border: "none"
+    };
+
+    if (event.unavailable) {
+      return {
+        className: '',
+        style: newStyle,
+      };
+    }
+  };
 
   const renderClientCalendar = () => {
     return (
@@ -51,9 +83,10 @@ const MainCalendar = ({
           }}
         >
           <Calendar
-            // events={mockEvents}
-            // events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
-            // events={calendarState}
+            onSelectEvent={event => alert('Unavailable')}
+            onSelectSlot={e => handleSelect(e)}
+            selectable
+            eventPropGetter={event => handleEventStyle(event)}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"
@@ -92,9 +125,6 @@ const MainCalendar = ({
           }}
         >
           <Calendar
-            // events={mockEvents}
-            // events={mockReal2Events.map(mapToRBCFormat)} // mockEvents
-            // events={calendarState}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"
