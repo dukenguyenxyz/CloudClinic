@@ -7,7 +7,7 @@ import moment from 'moment';
 import { request } from '../../../AxiosTest/config'; // config.js
 import { v4 as uuidv4 } from 'uuid';
 
-const Schedule = ({ user }) => {
+const Schedule = ({ user, sessions, setSessions }) => {
   const styles = {
     backgroundImage: `url(${Image})`,
     backgroundPosition: 'center',
@@ -16,8 +16,6 @@ const Schedule = ({ user }) => {
     width: '50px',
     height: '50px',
   };
-
-  const [sessions, setSessions] = useState([]);
 
   const handleAccept = async () => {
     // try {
@@ -32,18 +30,24 @@ const Schedule = ({ user }) => {
   };
 
   useEffect(() => {
-    // axios call here
-    const getSessions = async () => {
-      try {
-        const response = await request.get('sessions');
-        console.log(response);
-        setSessions(response.data);
-      } catch (e) {
-        console.log(e);
-        // spread the error
-      }
-    };
-    getSessions();
+    if (sessions.length === 0) {
+      const getSessions = async () => {
+        try {
+          const response = await request.get('sessions');
+
+          const sorted = response.data.sort((a, b) =>
+            moment(a.createDate).isBefore(moment(b.createDate)) ? 1 : -1
+          );
+
+          console.log(sorted);
+          setSessions(sorted);
+        } catch (e) {
+          console.log(e);
+          // spread the error
+        }
+      };
+      getSessions();
+    }
   }, []);
 
   const DoctorSchedule = () => {
@@ -63,7 +67,7 @@ const Schedule = ({ user }) => {
                         <div className="avatar" style={styles} />
                       </div>
                       <div className="middle">
-                        {/* <div className="name">{`${session.user.firstName} ${session.user.lastName}`}</div> */}
+                        <div className="name">{`${session.user.firstName} ${session.user.lastName}`}</div>
                         <div className="booking">
                           Mon 26th Jul 11:30 - 12:00pm
                         </div>
@@ -112,7 +116,9 @@ const Schedule = ({ user }) => {
                       <div className="middle">
                         <div className="name">{`Dr. ${session.user.firstName} ${session.user.lastName}`}</div>
                         <div className="booking">
-                          Mon 26th Jul 11:30 - 12:00pm
+                          {`${moment(session.startTime).format(
+                            'ddd Mo MMM hh:mm'
+                          )} - ${moment(session.endTime).format('hh:mm A')}`}
                         </div>
                       </div>
                     </div>

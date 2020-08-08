@@ -24,6 +24,10 @@ const Appointments = () => {
   const { user, setUser } = useContext(AuthContext);
   const { doctorList } = useContext(DoctorListContext);
   const [unavailabilities, setUnavailabilities] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [tabState, setTabState] = useState({
+    activeTab: 'availability',
+  });
   const [selectedDoctor, setSelectedDoctor] = useState({});
   const [clientFormState, setClientFormState] = useState({
     doctor: '',
@@ -318,17 +322,29 @@ const Appointments = () => {
 
     try {
       const sessionToBook = {
-        startTime: moment(clientFormState.startTime).format('YYYY-MM-DD hh:mm'),
-        endTime: moment(clientFormState.endTime).format('YYYY-MM-DD hh:mm'),
+        startTime: moment(clientFormState.startTime).format(
+          'YYYY-MM-DD hh:mm a'
+        ),
+        endTime: moment(clientFormState.endTime).format('YYYY-MM-DD hh:mm a'),
       };
-
-      console.log(sessionToBook);
 
       const response = await request.post(
         `users/${selectedDoctor._id}/book`,
         sessionToBook
       );
-      console.log(response);
+
+      const clonedSessions = sessions.slice();
+
+      console.log([
+        { ...response.data, user: selectedDoctor },
+        ...clonedSessions,
+      ]);
+
+      setSessions([{ ...response.data, user: selectedDoctor }, ...sessions]);
+
+      setTabState({
+        activeTab: 'schedule',
+      });
     } catch (error) {
       setClientFormState({
         ...clientFormState,
@@ -456,6 +472,10 @@ const Appointments = () => {
             round={round}
             handleDoctorAvailabilitySubmit={handleDoctorAvailabilitySubmit}
             doctorList={doctorList}
+            sessions={sessions}
+            setSessions={setSessions}
+            tabState={tabState}
+            setTabState={setTabState}
           />
         </section>
         <MainCalendar
@@ -482,6 +502,10 @@ const Appointments = () => {
             selectedDoctor={selectedDoctor}
             handleSubmit={handleSubmit}
             unavailabilities={unavailabilities}
+            sessions={sessions}
+            setSessions={setSessions}
+            tabState={tabState}
+            setTabState={setTabState}
           />
         </section>
         <MainCalendar

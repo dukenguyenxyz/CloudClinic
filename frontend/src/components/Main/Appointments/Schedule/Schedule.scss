@@ -1,4 +1,7 @@
 .schedule-wrapper {
+  li:not(:first-child) {
+    border-top: 1px solid var(--light-grey);
+  }
   .client-wrapper {
     display: flex;
     justify-content: space-between;
@@ -9,13 +12,17 @@
       display: flex;
       align-items: center;
 
-      // .name {
-      //   margin-left: 16px;
-      // }
+      img {
+        $size: 56px;
+        width: $size;
+        max-width: $size;
+        min-width: $size;
+        max-height: $size;
+        min-height: $size;
+        height: $size;
+        border-radius: 50%;
+      }
     }
-
-    // .middle {
-    // }
 
     .booking {
       color: var(--mid-grey);
@@ -65,6 +72,7 @@
 .session-container {
   display: flex;
   flex-direction: column;
+  padding: 24px;
   .status {
     margin-bottom: 24px;
     span {
