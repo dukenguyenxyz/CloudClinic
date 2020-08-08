@@ -13,7 +13,7 @@ const Session = require('../../models/Session');
 // Ensure date is always in the future
 const schema = Joi.object({
   startTime: Joi.date().min('now').required(),
-  endTime: Joi.date().required(),
+  endTime: Joi.date().min('now').required(),
 });
 
 const sessionValidation = async (req, session) => {
@@ -35,7 +35,7 @@ const sessionValidation = async (req, session) => {
   // // console.log({ startTime, endTime });
   // // console.log(timeDiff);
 
-  if (!(timeDiff === 15 || timeDiff === 30 || timeDiff === 60)) {
+  if (!(timeDiff === 30 || timeDiff === 60)) {
     throw new Error('invalid time range');
   }
 

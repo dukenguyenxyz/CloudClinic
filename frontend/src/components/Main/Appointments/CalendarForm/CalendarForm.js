@@ -535,29 +535,13 @@ const CalendarForm = ({
               </div>
               <h4>Select a duration</h4>
               <fieldset className="appointment-time-slot-wrapper">
-                {/* <div className="time-slot">
-                  <div>
-                    <input
-                      type="radio"
-                      name="duration"
-                      id=""
-                      value="15"
-                      onChange={e => handleSessionDuration(e, '15')}
-                    />
-                    <span>15 min</span>
-                  </div>
-                  <span className="appointment-time">
-                    {clientFormState.sessionDuration === '15'
-                      ? displaySessionTime()
-                      : ''}
-                  </span>
-                </div> */}
                 <div className="time-slot">
                   <div>
                     <input
                       type="radio"
                       name="duration"
                       id=""
+                      checked={clientFormState.sessionDuration === '30'}
                       value="30"
                       onChange={e => handleSessionDuration(e, '30')}
                     />
@@ -575,6 +559,7 @@ const CalendarForm = ({
                       type="radio"
                       name="duration"
                       id=""
+                      checked={clientFormState.sessionDuration === '60'}
                       value="60"
                       onChange={e => handleSessionDuration(e, '60')}
                     />

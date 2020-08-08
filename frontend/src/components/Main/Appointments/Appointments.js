@@ -59,6 +59,7 @@ const Appointments = () => {
 
   useEffect(() => {
     if (!_.isEmpty(selectedDoctor)) {
+      // get sessions
       const selectedDoctorUnavailabilites =
         selectedDoctor.doctorInfo.workSchedule;
 
@@ -283,6 +284,28 @@ const Appointments = () => {
   };
 
   const handleSubmit = async () => {
+    //validations
+
+    if (moment(clientFormState.startTime).isSameOrBefore(moment())) {
+      setClientFormState({
+        ...clientFormState,
+        errors: ["session booking start time can't be in the past"],
+      });
+      return null;
+    }
+
+    if (
+      moment(clientFormState.endTime).isSameOrBefore(
+        moment(clientFormState.startTime)
+      )
+    ) {
+      setClientFormState({
+        ...clientFormState,
+        errors: ["session booking start time can't be in the past"],
+      });
+      return null;
+    }
+
     try {
       const sessionToBook = {
         startTime: moment(clientFormState.startTime).format('YYYY-MM-DD hh:mm'),
@@ -292,7 +315,7 @@ const Appointments = () => {
       console.log(sessionToBook);
 
       const response = await request.post(
-        `users/${clientFormState.doctor}/book`,
+        `users/${selectedDoctor._id}/book`,
         sessionToBook
       );
       console.log(response);

@@ -59,18 +59,22 @@ const MainCalendar = ({
         (moment(end).isSameOrAfter(unavailabilities[el].start) &&
           moment(start).isSameOrBefore(unavailabilities[el].start))
       ) {
-        alert('Appointments cannot overlap with doctor unavailability');
+        alert(
+          "Appointments cannot overlap with your doctor's unavailability or exisiting time slot"
+        );
         setClientFormState({
           ...clientFormState,
-          errors: ['Appointments cannot overlap with doctor unavailability'],
+          errors: [
+            "Appointments cannot overlap with your doctor's unavailability or exisiting time slot",
+          ],
         });
         return null;
       }
     }
 
     if (moment(end).diff(start, 'minutes') <= 60) {
-      const title = window.prompt('New Event name');
-      if (title) {
+      const name = window.prompt('Please enter your name');
+      if (name) {
         if (
           unavailabilities[unavailabilities.length - 1].unavailable !==
           'unavailable'
@@ -83,7 +87,7 @@ const MainCalendar = ({
             {
               start,
               end,
-              title,
+              title: name,
             },
           ]);
 
@@ -91,7 +95,8 @@ const MainCalendar = ({
             ...clientFormState,
             startTime: start,
             endTime: end,
-            sessionDuration: moment(end).diff(start, 'minutes'),
+            sessionDuration: moment(end).diff(start, 'minutes').toString(),
+            errors: [],
           });
         } else {
           setUnavailabilities([
@@ -99,7 +104,7 @@ const MainCalendar = ({
             {
               start,
               end,
-              title,
+              title: name,
             },
           ]);
 
@@ -107,9 +112,12 @@ const MainCalendar = ({
             ...clientFormState,
             startTime: start,
             endTime: end,
-            sessionDuration: moment(end).diff(start, 'minutes'),
+            sessionDuration: moment(end).diff(start, 'minutes').toString(),
+            errors: [],
           });
         }
+      } else if (!name && moment(end).diff(start, 'minutes') <= 60) {
+        alert('Please enter your name for the appointment');
       } else {
         alert('Please only select an appoitnment time between 30 and 60 mins');
       }
@@ -146,6 +154,14 @@ const MainCalendar = ({
     return moment().toDate();
   };
 
+  const handleSelectedEvent = event => {
+    if (event.title === 'unavailable') {
+      alert('unavailable');
+    } else {
+      console.log('hello world');
+    }
+  };
+
   const renderClientCalendar = () => {
     return (
       <div>
@@ -155,9 +171,8 @@ const MainCalendar = ({
           }}
         >
           <Calendar
-            onSelectEvent={event => alert('Unavailable')}
-            onSelectSlot={e => handleSelect(e)}
-            // onSelectSlot={e => console.log(e)}
+            onSelectEvent={event => handleSelectedEvent(event)}
+            onSelectSlot={e => !_.isEmpty(selectedDoctor) && handleSelect(e)}
             selectable="ignoreEvents"
             ignoreEvents
             defaultDate={handleShowMonday()}
