@@ -46,6 +46,28 @@ const MainCalendar = ({
   const [calendarState, setCalendarState] = useState([]);
 
   const handleSelect = ({ start, end }) => {
+    for (let el in unavailabilities) {
+      if (
+        moment(end).isBetween(
+          moment(unavailabilities[el].start),
+          moment(unavailabilities[el].end)
+        ) ||
+        moment(start).isBetween(
+          moment(unavailabilities[el].start),
+          moment(unavailabilities[el].end)
+        ) ||
+        (moment(end).isSameOrAfter(unavailabilities[el].start) &&
+          moment(start).isSameOrBefore(unavailabilities[el].start))
+      ) {
+        alert('Appointments cannot overlap with doctor unavailability');
+        setClientFormState({
+          ...clientFormState,
+          errors: ['Appointments cannot overlap with doctor unavailability'],
+        });
+        return null;
+      }
+    }
+
     if (moment(end).diff(start, 'minutes') <= 60) {
       const title = window.prompt('New Event name');
       if (title) {
@@ -135,9 +157,9 @@ const MainCalendar = ({
           <Calendar
             onSelectEvent={event => alert('Unavailable')}
             onSelectSlot={e => handleSelect(e)}
+            // onSelectSlot={e => console.log(e)}
             selectable="ignoreEvents"
             ignoreEvents
-            // date={handleShowMonday()}
             defaultDate={handleShowMonday()}
             eventPropGetter={event => handleEventStyle(event)}
             events={unavailabilities.map(mapToRBCFormat)}
