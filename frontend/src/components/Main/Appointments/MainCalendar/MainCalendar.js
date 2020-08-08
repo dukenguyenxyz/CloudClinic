@@ -40,21 +40,58 @@ const MainCalendar = ({
   user,
   selectedDoctor,
   setUnavailabilities,
+  setClientFormState,
+  clientFormState,
 }) => {
   const [calendarState, setCalendarState] = useState([]);
 
   const handleSelect = ({ start, end }) => {
-    console.log('hello', start, end);
-    // const title = window.prompt('New Event name');
-    // if (title)
-    //   setUnavailabilities([
-    //     ...unavailabilities,
-    //     {
-    //       start,
-    //       end,
-    //       title,
-    //     },
-    //   ]);
+    if (moment(end).diff(start, 'minutes') <= 60) {
+      const title = window.prompt('New Event name');
+      if (title) {
+        if (
+          unavailabilities[unavailabilities.length - 1].unavailable !==
+          'unavailable'
+        ) {
+          const oldUnavailabilities = unavailabilities.slice();
+          oldUnavailabilities.pop();
+
+          setUnavailabilities([
+            ...oldUnavailabilities,
+            {
+              start,
+              end,
+              title,
+            },
+          ]);
+
+          setClientFormState({
+            ...clientFormState,
+            startTime: start,
+            endTime: end,
+            sessionDuration: moment(end).diff(start, 'minutes'),
+          });
+        } else {
+          setUnavailabilities([
+            ...unavailabilities,
+            {
+              start,
+              end,
+              title,
+            },
+          ]);
+
+          setClientFormState({
+            ...clientFormState,
+            startTime: start,
+            endTime: end,
+            sessionDuration: moment(end).diff(start, 'minutes'),
+          });
+        }
+      } else {
+        alert('Please only select an appoitnment time between 30 and 60 mins');
+      }
+    }
   };
 
   const handleEventStyle = event => {
@@ -62,8 +99,6 @@ const MainCalendar = ({
     const newStyle = {
       backgroundColor: '#cccccc',
       color: '#cccccc',
-      // borderRadius: "0px",
-      // border: "none"
     };
 
     if (event.unavailable) {
@@ -72,6 +107,21 @@ const MainCalendar = ({
         style: newStyle,
       };
     }
+  };
+
+  const handleShowMonday = () => {
+    const monday = 1;
+    const today = moment().isoWeekday();
+
+    if (today === 6) {
+      return moment().add({ day: 2 }).toDate();
+    }
+
+    if (today === 7) {
+      return moment().add({ day: 1 }).toDate();
+    }
+
+    return moment().toDate();
   };
 
   const renderClientCalendar = () => {
@@ -85,7 +135,10 @@ const MainCalendar = ({
           <Calendar
             onSelectEvent={event => alert('Unavailable')}
             onSelectSlot={e => handleSelect(e)}
-            selectable
+            selectable="ignoreEvents"
+            ignoreEvents
+            // date={handleShowMonday()}
+            defaultDate={handleShowMonday()}
             eventPropGetter={event => handleEventStyle(event)}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"

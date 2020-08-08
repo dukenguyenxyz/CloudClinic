@@ -27,7 +27,7 @@ const Appointments = () => {
   const [selectedDoctor, setSelectedDoctor] = useState({});
   const [clientFormState, setClientFormState] = useState({
     doctor: '',
-    startTime: round(moment(), moment.duration(15, 'minutes'), 'ceil').toDate(),
+    startTime: round(moment(), moment.duration(30, 'minutes'), 'ceil').toDate(),
     endTime: '',
     sessionDuration: '',
     errors: [],
@@ -41,12 +41,12 @@ const Appointments = () => {
       {
         startDateTime: round(
           moment(),
-          moment.duration(15, 'minutes'),
+          moment.duration(30, 'minutes'),
           'ceil'
         ).toDate(),
         endDateTime: round(
           moment(),
-          moment.duration(15, 'minutes'),
+          moment.duration(30, 'minutes'),
           'ceil'
         ).toDate(),
         modifier: RRule.WEEKLY,
@@ -458,6 +458,8 @@ const Appointments = () => {
           doctorList={doctorList}
           selectedDoctor={selectedDoctor}
           setUnavailabilities={setUnavailabilities}
+          setClientFormState={setClientFormState}
+          clientFormState={clientFormState}
         />
       </div>
     );

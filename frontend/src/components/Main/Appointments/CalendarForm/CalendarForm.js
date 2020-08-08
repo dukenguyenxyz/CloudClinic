@@ -498,9 +498,6 @@ const CalendarForm = ({
               />
               <h4>Select an appointment date and time</h4>
               <div className="react-datepicker-master-wrapper">
-                {/* <label htmlFor="date" className="date-label">
-              Select an appointment
-            </label> */}
                 <Clock color="#212429" size={14} />
                 <DatePicker
                   name="date"
@@ -538,7 +535,7 @@ const CalendarForm = ({
               </div>
               <h4>Select a duration</h4>
               <fieldset className="appointment-time-slot-wrapper">
-                <div className="time-slot">
+                {/* <div className="time-slot">
                   <div>
                     <input
                       type="radio"
@@ -554,7 +551,7 @@ const CalendarForm = ({
                       ? displaySessionTime()
                       : ''}
                   </span>
-                </div>
+                </div> */}
                 <div className="time-slot">
                   <div>
                     <input
