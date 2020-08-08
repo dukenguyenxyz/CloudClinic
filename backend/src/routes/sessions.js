@@ -3,6 +3,7 @@ const router = require('express').Router();
 const verifyToken = require('./verifyToken');
 const {
   viewSessions,
+  viewDoctorSessions,
   createSession,
   createSessions,
   acceptBooking,
@@ -16,6 +17,9 @@ const {
 
 // Get all sessions
 router.get('/', verifyToken, viewSessions);
+
+// Get Doctor's Book Sessions Routes
+router.get('/:id/sessions', verifyToken, viewDoctorSessions);
 
 // // Doctor Routes
 // Create available session

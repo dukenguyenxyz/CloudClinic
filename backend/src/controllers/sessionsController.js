@@ -1,4 +1,8 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
+const { v4 } = require('uuid');
+
 const Session = require('../models/Session');
+const User = require('../models/User');
 const {
   sessionValidation,
   sessionsValidationMethod2,
@@ -7,21 +11,91 @@ const {
   isDoctorValidation,
 } = require('../utils/validations/sessions');
 
-// // Doctor Actions
+// User Routes
 // Get all sessions
 exports.viewSessions = async (req, res) => {
   try {
-    let sessions = null;
-
-    sessions = req.user.isDoctor
+    const sessions = req.user.isDoctor
       ? await Session.find({ doctor: req.user.id })
       : await Session.find({ client: req.user.id });
 
-    res.send(sessions);
+    const getSessions = async () => {
+      let sanitizedSessions;
+      if (!req.user.isDoctor) {
+        sanitizedSessions = sessions.map(async (session) => {
+          const returnedDoctor = await User.findOne({ _id: session.doctor });
+          const returnedSession = { ...session._doc };
+          returnedSession.user = { ...returnedDoctor._doc };
+          return returnedSession;
+        });
+      } else {
+        sanitizedSessions = sessions.map(async (session) => {
+          const returnedClient = await User.findOne({ _id: session.client });
+          const returnedSession = { ...session._doc };
+          returnedSession.user = { ...returnedClient._doc };
+          return returnedSession;
+        });
+      }
+      return Promise.all(sanitizedSessions);
+    };
+
+    const awaitedSessions = await getSessions();
+
+    console.log(awaitedSessions);
+
+    res.send(awaitedSessions);
   } catch (e) {
     res.status(400).send(e);
   }
 };
+
+// // Get Doctor's Book Sessions Routes
+exports.viewDoctorSessions = async (req, res) => {
+  try {
+    // const res = await axios.get(`/${doctorID}/sessions`)
+
+    // Check if the doctor exists
+    const doctor = await User.findOne({ _id: req.params.id, isDoctor: true });
+
+    if (!doctor) res.status(400).send({ error: 'Doctor does not exist' });
+
+    const sessions = await Session.find({
+      doctor: doctor.id,
+      status: 'accepted',
+    });
+
+    let sanitizedSessions = null;
+
+    if (doctor.id === req.user.id) {
+      // Sanitize sessions if user is doctor themself
+      sanitizedSessions = sessions.map(async (session) => {
+        const client = await User.findById(session.client);
+        return {
+          id: v4(),
+          title: client,
+          start: session.startTime,
+          end: session.endTime,
+          status: 'accepted',
+        };
+      });
+    } else {
+      // Sanitize session if user is client
+      sanitizedSessions = sessions.map((session) => ({
+        id: v4(),
+        title: 'Unavailable',
+        start: session.startTime,
+        end: session.endTime,
+        status: 'unavailable',
+      }));
+    }
+
+    res.send(sanitizedSessions);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+// // Doctor Actions
 
 // Deprecated
 // Create available session
@@ -163,7 +237,7 @@ exports.createBooking = async (req, res) => {
     // Check if creator is client
     isDoctorValidation(req, false);
 
-    const { startTime, endTime } = await sessionValidation(req, req.body, true);
+    const { startTime, endTime } = await sessionValidation(req, req.body);
 
     const session = new Session({
       startTime,

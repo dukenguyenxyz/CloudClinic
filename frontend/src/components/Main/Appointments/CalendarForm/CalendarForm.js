@@ -467,7 +467,7 @@ const CalendarForm = ({
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Schedule />
+                <Schedule user={user} />
               </React.Fragment>
             )}
           </div>
@@ -479,117 +479,149 @@ const CalendarForm = ({
   const ClientForm = () => {
     return (
       <div className="tab-wrapper">
+        <div className="tab-container">
+          <h5
+            className={
+              tabState.activeTab === 'availability' ? 'active' : undefined
+            }
+            onClick={() =>
+              setTabState({
+                activeTab: 'availability',
+              })
+            }
+          >
+            Bookings
+          </h5>
+          <h5
+            className={tabState.activeTab === 'schedule' ? 'active' : undefined}
+            onClick={() =>
+              setTabState({
+                activeTab: 'schedule',
+              })
+            }
+          >
+            Schedule
+          </h5>
+        </div>
         <div className="form-wrapper">
           <div className="trim" />
           <div className="form-container">
-            <div className="form-header">
-              <h1>Make an appointment</h1>
-            </div>
-            <div>
-              <AuthSelect
-                value={clientFormState.doctor}
-                placeholder="Doctor"
-                type="text"
-                icon="userPlus"
-                directive="doctor"
-                options={doctorList}
-                onValueChange={e => handleSelect(e, 'doctor')}
-                doctorList={doctorList}
-              />
-              <h4>Select an appointment date and time</h4>
-              <div className="react-datepicker-master-wrapper">
-                <Clock color="#212429" size={14} />
-                <DatePicker
-                  name="date"
-                  popperPlacement="bottom-end"
-                  placeholderText="Click to select a date and time"
-                  showTimeSelect
-                  selected={clientFormState.startTime}
-                  minDate={moment().toDate()}
-                  maxDate={moment().add(1, 'year').toDate()}
-                  minTime={
-                    !_.isEmpty(selectedDoctor) &&
-                    moment(
-                      selectedDoctor.doctorInfo.workSchedule.openingTime
-                    ).toDate()
-                  }
-                  maxTime={
-                    !_.isEmpty(selectedDoctor) &&
-                    moment(
-                      selectedDoctor.doctorInfo.workSchedule.closingTime
-                    ).toDate()
-                  }
-                  onChange={date =>
-                    setClientFormState({
-                      ...clientFormState,
-                      startTime: date,
-                      endTime: moment(date)
-                        .add(clientFormState.sessionDuration, 'minutes')
-                        .toDate(),
-                    })
-                  }
-                  timeClassName={handleColor}
-                  filterDate={isWeekday}
-                  dateFormat="MMMM d, h:mm aa"
-                />
-              </div>
-              <h4>Select a duration</h4>
-              <fieldset className="appointment-time-slot-wrapper">
-                <div className="time-slot">
-                  <div>
-                    <input
-                      type="radio"
-                      name="duration"
-                      id=""
-                      checked={clientFormState.sessionDuration === '30'}
-                      value="30"
-                      onChange={e => handleSessionDuration(e, '30')}
-                    />
-                    <span>30 min</span>
-                  </div>
-                  <span className="appointment-time">
-                    {clientFormState.sessionDuration === '30'
-                      ? displaySessionTime()
-                      : ''}
-                  </span>
+            {tabState.activeTab === 'availability' ? (
+              <React.Fragment>
+                <div className="form-header">
+                  <h1>Make an appointment</h1>
                 </div>
-                <div className="time-slot">
-                  <div>
-                    <input
-                      type="radio"
-                      name="duration"
-                      id=""
-                      checked={clientFormState.sessionDuration === '60'}
-                      value="60"
-                      onChange={e => handleSessionDuration(e, '60')}
+                <div>
+                  <AuthSelect
+                    value={clientFormState.doctor}
+                    placeholder="Doctor"
+                    type="text"
+                    icon="userPlus"
+                    directive="doctor"
+                    options={doctorList}
+                    onValueChange={e => handleSelect(e, 'doctor')}
+                    doctorList={doctorList}
+                  />
+                  <h4>Select an appointment date and time</h4>
+                  <div className="react-datepicker-master-wrapper">
+                    <Clock color="#212429" size={14} />
+                    <DatePicker
+                      name="date"
+                      popperPlacement="bottom-end"
+                      placeholderText="Click to select a date and time"
+                      showTimeSelect
+                      selected={clientFormState.startTime}
+                      minDate={moment().toDate()}
+                      maxDate={moment().add(1, 'year').toDate()}
+                      minTime={
+                        !_.isEmpty(selectedDoctor) &&
+                        moment(
+                          selectedDoctor.doctorInfo.workSchedule.openingTime
+                        ).toDate()
+                      }
+                      maxTime={
+                        !_.isEmpty(selectedDoctor) &&
+                        moment(
+                          selectedDoctor.doctorInfo.workSchedule.closingTime
+                        ).toDate()
+                      }
+                      onChange={date =>
+                        setClientFormState({
+                          ...clientFormState,
+                          startTime: date,
+                          endTime: moment(date)
+                            .add(clientFormState.sessionDuration, 'minutes')
+                            .toDate(),
+                        })
+                      }
+                      timeClassName={handleColor}
+                      filterDate={isWeekday}
+                      dateFormat="MMMM d, h:mm aa"
                     />
-                    <span>60 min</span>
                   </div>
-                  <span className="appointment-time">
-                    {clientFormState.sessionDuration === '60'
-                      ? displaySessionTime()
-                      : ''}
-                  </span>
+                  <h4>Select a duration</h4>
+                  <fieldset className="appointment-time-slot-wrapper">
+                    <div className="time-slot">
+                      <div>
+                        <input
+                          type="radio"
+                          name="duration"
+                          id=""
+                          checked={clientFormState.sessionDuration === '30'}
+                          value="30"
+                          onChange={e => handleSessionDuration(e, '30')}
+                        />
+                        <span>30 min</span>
+                      </div>
+                      <span className="appointment-time">
+                        {clientFormState.sessionDuration === '30'
+                          ? displaySessionTime()
+                          : ''}
+                      </span>
+                    </div>
+                    <div className="time-slot">
+                      <div>
+                        <input
+                          type="radio"
+                          name="duration"
+                          id=""
+                          checked={clientFormState.sessionDuration === '60'}
+                          value="60"
+                          onChange={e => handleSessionDuration(e, '60')}
+                        />
+                        <span>60 min</span>
+                      </div>
+                      <span className="appointment-time">
+                        {clientFormState.sessionDuration === '60'
+                          ? displaySessionTime()
+                          : ''}
+                      </span>
+                    </div>
+                  </fieldset>
                 </div>
-              </fieldset>
-            </div>
-            <div className="auth-error-wrapper">
-              <ul>
-                {clientFormState.errors.map((errorMessage, i) => (
-                  <li key={i} className="auth-error-message">
-                    {errorMessage}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="form-button-wrapper">
-              <Button
-                action="Confirm"
-                color="pink"
-                onClick={handleSubmit}
-                icon="check"
-              />
-            </div>
+                <div className="auth-error-wrapper">
+                  <ul>
+                    {clientFormState.errors.map((errorMessage, i) => (
+                      <li key={i} className="auth-error-message">
+                        {errorMessage}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="form-button-wrapper">
+                  <Button
+                    action="Confirm"
+                    color="pink"
+                    onClick={handleSubmit}
+                    icon="check"
+                  />
+                </div>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Schedule user={user} />
+              </React.Fragment>
+            )}
           </div>
         </div>
       </div>

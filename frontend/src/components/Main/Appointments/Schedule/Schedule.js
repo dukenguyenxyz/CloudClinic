@@ -7,7 +7,7 @@ import moment from 'moment';
 import { request } from '../../../AxiosTest/config'; // config.js
 import { v4 as uuidv4 } from 'uuid';
 
-const Schedule = () => {
+const Schedule = ({ user }) => {
   const styles = {
     backgroundImage: `url(${Image})`,
     backgroundPosition: 'center',
@@ -17,14 +17,7 @@ const Schedule = () => {
     height: '50px',
   };
 
-  const [sessions, setSessions] = useState([
-    {
-      client: 'E. Osborne',
-      startTime: moment().toDate(),
-      endTime: moment().add({ minutes: 30 }).toDate(),
-      status: 'pending',
-    },
-  ]);
+  const [sessions, setSessions] = useState([]);
 
   const handleAccept = async () => {
     // try {
@@ -42,8 +35,7 @@ const Schedule = () => {
     // axios call here
     const getSessions = async () => {
       try {
-        // const response = await request.get('sessions');
-        const response = await axios.get('sessions');
+        const response = await request.get('sessions');
         console.log(response);
         setSessions(response.data);
       } catch (e) {
@@ -54,44 +46,89 @@ const Schedule = () => {
     getSessions();
   }, []);
 
-  return (
-    <div className="schedule-wrapper">
-      <ul>
-        {sessions.map(session => {
-          return (
-            <li key={uuidv4()}>
-              <div className="session-container">
-                <div className="status">
-                  <span>pending</span>
-                </div>
-                <div className="client-wrapper">
-                  <div className="client">
-                    <div className="avatar" style={styles} />
+  const DoctorSchedule = () => {
+    return (
+      <div className="schedule-wrapper">
+        <ul>
+          {sessions.length > 0 &&
+            sessions.map(session => {
+              return (
+                <li key={uuidv4()}>
+                  <div className="session-container">
+                    <div className="status">
+                      <span>pending</span>
+                    </div>
+                    <div className="client-wrapper">
+                      <div className="client">
+                        <div className="avatar" style={styles} />
+                      </div>
+                      <div className="middle">
+                        {/* <div className="name">{`${session.user.firstName} ${session.user.lastName}`}</div> */}
+                        <div className="booking">
+                          Mon 26th Jul 11:30 - 12:00pm
+                        </div>
+                      </div>
+                      <div className="process">
+                        <Button
+                          action="accept"
+                          color="pink"
+                          onClick={() => handleAccept()}
+                        />
+                        <Button
+                          action="decline"
+                          color="dark"
+                          onClick={() => handleDecline()}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="middle">
-                    <div className="name">{session.client}</div>
-                    <div className="booking">Mon 26th Jul 11:30 - 12:00pm</div>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
+    );
+  };
+
+  const ClientSchedule = () => {
+    return (
+      <div className="schedule-wrapper">
+        <ul>
+          {sessions.length > 0 &&
+            sessions.map(session => {
+              return (
+                <li key={uuidv4()}>
+                  <div className="session-container">
+                    <div className="status">
+                      <span>pending</span>
+                    </div>
+                    <div className="client-wrapper">
+                      <div className="client">
+                        <img
+                          className="avatar"
+                          src={session.user.profileImage}
+                        />
+                      </div>
+                      <div className="middle">
+                        <div className="name">{`Dr. ${session.user.firstName} ${session.user.lastName}`}</div>
+                        <div className="booking">
+                          Mon 26th Jul 11:30 - 12:00pm
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="process">
-                    <Button
-                      action="accept"
-                      color="pink"
-                      onClick={() => handleAccept()}
-                    />
-                    <Button
-                      action="decline"
-                      color="dark"
-                      onClick={() => handleDecline()}
-                    />
-                  </div>
-                </div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+                </li>
+              );
+            })}
+        </ul>
+      </div>
+    );
+  };
+
+  const showSchedule = () => {
+    return user.isDoctor ? DoctorSchedule() : ClientSchedule();
+  };
+  return showSchedule();
 };
 
 export default Schedule;

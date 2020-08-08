@@ -59,7 +59,6 @@ const Appointments = () => {
 
   useEffect(() => {
     if (!_.isEmpty(selectedDoctor)) {
-      // get sessions
       const selectedDoctorUnavailabilites =
         selectedDoctor.doctorInfo.workSchedule;
 
@@ -148,7 +147,7 @@ const Appointments = () => {
           start: start,
           end: end,
           same: moment(start).isSame(moment(end)),
-          unavailable: 'unavailable',
+          status: 'unavailable',
         };
       });
     });
@@ -170,7 +169,7 @@ const Appointments = () => {
         start: start,
         end: end,
         same: moment(start).isSame(moment(end)),
-        unavailable: 'unavailable',
+        status: 'unavailable',
       };
     });
   };
@@ -252,8 +251,6 @@ const Appointments = () => {
 
     delete unavailabilityObj.doctorInfo.workSchedule.errors;
 
-    // console.log(unavailabilityObj);
-
     try {
       const response = await updateProfile(unavailabilityObj);
       console.log(response);
@@ -285,6 +282,19 @@ const Appointments = () => {
 
   const handleSubmit = async () => {
     //validations
+
+    if (
+      !clientFormState.startTime ||
+      !clientFormState.endTime ||
+      !clientFormState.doctor ||
+      !clientFormState.sessionDuration
+    ) {
+      setClientFormState({
+        ...clientFormState,
+        errors: ['Please fill in all fields'],
+      });
+      return null;
+    }
 
     if (moment(clientFormState.startTime).isSameOrBefore(moment())) {
       setClientFormState({

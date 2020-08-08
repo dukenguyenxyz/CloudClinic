@@ -9,25 +9,13 @@ import mockEvents from '../Samples/sampleEvents';
 import mockRealEvents from '../Samples/sampleEventsReal';
 import mockReal2Events from '../Samples/sampledata';
 
-// import { sampleArr as mockAPISessions, convertAPIdataToJS } from '../helpers';
-// import { viewSessions } from '../../../AxiosTest/sessionRoutes';
-
 const localizer = momentLocalizer(moment);
-
-// events = unavailabilities.map(mapToRBCFormat)
-// const mapToRBCFormat = e =>
-//   Object.assign({}, e, {
-//     start: moment(e.start, moment.ISO_8601).toDate(),
-//     end: moment(e.end, moment.ISO_8601).toDate(),
-//   });
 
 const mapToRBCFormat = e => {
   const newDateObj = Object.assign({}, e, {
     start: moment(e.start)._d,
     end: moment(e.end)._d,
   });
-
-  // delete newDateObj.same;
 
   return newDateObj;
 };
@@ -43,7 +31,18 @@ const MainCalendar = ({
   setClientFormState,
   clientFormState,
 }) => {
-  const [calendarState, setCalendarState] = useState([]);
+  const [currentDay, setCurrentDay] = useState(moment().toDate());
+
+  useEffect(() => {
+    // if current day is saturday or sunday add 1 or 2 days
+    if (moment(currentDay).isoWeekday() === 6) {
+      setCurrentDay(moment().add({ day: 2 }).toDate());
+    }
+
+    if (moment(currentDay).isoWeekday() === 7) {
+      setCurrentDay(moment().add({ day: 1 }).toDate());
+    }
+  }, []);
 
   const handleSelect = ({ start, end }) => {
     for (let el in unavailabilities) {
@@ -125,13 +124,13 @@ const MainCalendar = ({
   };
 
   const handleEventStyle = event => {
-    // console.log(event);
+    // unavailable grey block
     const newStyle = {
       backgroundColor: '#cccccc',
       color: '#cccccc',
     };
 
-    if (event.unavailable) {
+    if (event.status === 'unavailable') {
       return {
         className: '',
         style: newStyle,
@@ -155,7 +154,11 @@ const MainCalendar = ({
   };
 
   const handleSelectedEvent = event => {
-    if (event.title === 'unavailable') {
+    console.log(event);
+    if (
+      event.title.toLowerCase() === 'unavailable' ||
+      event.title.toLowerCase() === 'lunch break'
+    ) {
       alert('unavailable');
     } else {
       console.log('hello world');
@@ -171,6 +174,8 @@ const MainCalendar = ({
           }}
         >
           <Calendar
+            date={currentDay}
+            onNavigate={date => setCurrentDay(date)}
             onSelectEvent={event => handleSelectedEvent(event)}
             onSelectSlot={e => !_.isEmpty(selectedDoctor) && handleSelect(e)}
             selectable="ignoreEvents"

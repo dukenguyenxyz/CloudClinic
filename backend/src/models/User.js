@@ -285,10 +285,11 @@ userSchema.pre('remove', async function (next) {
   if (user.isDoctor) {
     await Session.deleteMany({ doctor: user._id });
   } else {
-    await Session.updateMany(
-      { client: user._id, startDate: { $gt: Date.now() } },
-      { client: null }
-    );
+    // await Session.updateMany(
+    //   { client: user._id, startDate: { $gt: Date.now() } },
+    //   { client: null }
+    // );
+    await Session.deleteMany({ client: user._id });
   }
 
   next();
