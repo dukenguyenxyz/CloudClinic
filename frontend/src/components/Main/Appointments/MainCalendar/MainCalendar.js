@@ -44,7 +44,7 @@ const MainCalendar = ({
     }
   }, []);
 
-  const handleSelect = ({ start, end }) => {
+  const handleSelectClient = ({ start, end }) => {
     for (let el in unavailabilities) {
       if (
         moment(end).isBetween(
@@ -123,6 +123,34 @@ const MainCalendar = ({
     }
   };
 
+  const handleSelectDoctor = ({ start, end }) => {
+    // for (let el in unavailabilities) {
+    //   if (
+    //     moment(end).isBetween(
+    //       moment(unavailabilities[el].start),
+    //       moment(unavailabilities[el].end)
+    //     ) ||
+    //     moment(start).isBetween(
+    //       moment(unavailabilities[el].start),
+    //       moment(unavailabilities[el].end)
+    //     ) ||
+    //     (moment(end).isSameOrAfter(unavailabilities[el].start) &&
+    //       moment(start).isSameOrBefore(unavailabilities[el].start))
+    //   ) {
+    //     alert(
+    //       "Unavailabilities cannot overlap with exisiting time slot"
+    //     );
+    //     setClientFormState({
+    //       ...clientFormState,
+    //       errors: [
+    //         "Appointments cannot overlap with your doctor's unavailability or exisiting time slot",
+    //       ],
+    //     });
+    //     return null;
+    //   }
+    // }
+  };
+
   const handleEventStyle = event => {
     // unavailable grey block
     const newStyle = {
@@ -177,7 +205,9 @@ const MainCalendar = ({
             date={currentDay}
             onNavigate={date => setCurrentDay(date)}
             onSelectEvent={event => handleSelectedEvent(event)}
-            onSelectSlot={e => !_.isEmpty(selectedDoctor) && handleSelect(e)}
+            onSelectSlot={e =>
+              !_.isEmpty(selectedDoctor) && handleSelectClient(e)
+            }
             selectable="ignoreEvents"
             ignoreEvents
             defaultDate={handleShowMonday()}
@@ -220,6 +250,14 @@ const MainCalendar = ({
           }}
         >
           <Calendar
+            date={currentDay}
+            onNavigate={date => setCurrentDay(date)}
+            onSelectEvent={event => handleSelectedEvent(event)}
+            onSelectSlot={e => handleSelectDoctor(e)}
+            selectable="ignoreEvents"
+            ignoreEvents
+            defaultDate={handleShowMonday()}
+            // eventPropGetter={event => handleEventStyle(event)}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"

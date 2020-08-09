@@ -404,7 +404,7 @@ const CalendarForm = ({
                                         moment.duration(15, 'minutes'),
                                         'ceil'
                                       ).toDate(),
-                                      modifier: '',
+                                      modifier: RRule.WEEKLY,
                                     })
                                   }
                                   icon="plus"

@@ -62,49 +62,75 @@ const Appointments = () => {
   // Actions
 
   useEffect(() => {
-    if (!_.isEmpty(selectedDoctor)) {
-      const selectedDoctorUnavailabilites =
-        selectedDoctor.doctorInfo.workSchedule;
-
-      // Separate lunch break
-      const lunchBreakStart = selectedDoctorUnavailabilites.lunchBreakStart;
-      const lunchBreakEnd = selectedDoctorUnavailabilites.lunchBreakEnd;
-      const lunchBreak = { lunchBreakStart, lunchBreakEnd };
-
-      const lunchBreakDifference = moment(lunchBreakEnd).diff(
-        moment(lunchBreakStart),
-        'minutes'
-      );
-
-      const lunchBreakRRule = convertLunchBreakToRRule(lunchBreak);
-      // console.log(lunchBreakRRule);
-
-      const lunchBreakEvents = convertLunchBreakRruleToCalendarDates(
-        lunchBreakRRule,
-        lunchBreakDifference
-      );
-      // Unavailabilities Array -
-      const doctorUnavailabilities =
-        selectedDoctorUnavailabilites.unavailableDateTimes;
-
-      const unavailabilitiesRRules = convertUnavailabilitiesToRRule(
-        doctorUnavailabilities
-      );
-
-      // console.log(unavailabilitiesRRules);
-
-      const unavailableEvents = convertDoctorUnavailabilityToCalendarDates(
-        unavailabilitiesRRules
-      );
-      // console.log(unavailableEvents);
-
-      const calendarEvents = lunchBreakEvents.concat(
-        _.flattenDeep(unavailableEvents)
-      );
-
-      setUnavailabilities(calendarEvents);
+    if (!_.isEmpty(selectedDoctor) && !user.isDoctor) {
+      renderUnavailabilities(selectedDoctor);
     }
-  }, [selectedDoctor]);
+
+    if (user.isDoctor && !_.isEmpty(user.doctorInfo.workSchedule)) {
+      renderUnavailabilities(user.doctorInfo.workSchedule);
+    }
+
+    if (
+      user.isDoctor &&
+      !_.has(user.doctorInfo.workSchedule, 'openingTime') &&
+      !_.has(user.doctorInfo.workSchedule, 'closingTime') &&
+      !_.has(user.doctorInfo.workSchedule, 'lunchBreakStart') &&
+      !_.has(user.doctorInfo.workSchedule, 'lunchBreakEnd') &&
+      user.doctorInfo.workSchedule.unavailableDateTimes.length === 0
+    ) {
+      renderUnavailabilities(doctorAvailability);
+    }
+  }, [selectedDoctor, doctorAvailability]);
+
+  const renderUnavailabilities = doctor => {
+    let selectedDoctorUnavailabilites;
+
+    if (doctor.doctorInfo && doctor.doctorInfo.workSchedule) {
+      selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
+    } else {
+      selectedDoctorUnavailabilites = doctor;
+    }
+
+    // const selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
+
+    // Separate lunch break
+    const lunchBreakStart = selectedDoctorUnavailabilites.lunchBreakStart;
+    const lunchBreakEnd = selectedDoctorUnavailabilites.lunchBreakEnd;
+    const lunchBreak = { lunchBreakStart, lunchBreakEnd };
+
+    const lunchBreakDifference = moment(lunchBreakEnd).diff(
+      moment(lunchBreakStart),
+      'minutes'
+    );
+
+    const lunchBreakRRule = convertLunchBreakToRRule(lunchBreak);
+    // console.log(lunchBreakRRule);
+
+    const lunchBreakEvents = convertLunchBreakRruleToCalendarDates(
+      lunchBreakRRule,
+      lunchBreakDifference
+    );
+    // Unavailabilities Array -
+    const doctorUnavailabilities =
+      selectedDoctorUnavailabilites.unavailableDateTimes;
+
+    const unavailabilitiesRRules = convertUnavailabilitiesToRRule(
+      doctorUnavailabilities
+    );
+
+    // console.log(unavailabilitiesRRules);
+
+    const unavailableEvents = convertDoctorUnavailabilityToCalendarDates(
+      unavailabilitiesRRules
+    );
+    // console.log(unavailableEvents);
+
+    const calendarEvents = lunchBreakEvents.concat(
+      _.flattenDeep(unavailableEvents)
+    );
+
+    setUnavailabilities(calendarEvents);
+  };
 
   const convertLunchBreakToRRule = lunchBreak => {
     const lunchBreakRRule = new RRule({
@@ -125,6 +151,8 @@ const Appointments = () => {
         moment(el.startDateTime),
         'minutes'
       );
+
+      console.log(el.modifier, el);
 
       return [
         new RRule({
@@ -177,8 +205,6 @@ const Appointments = () => {
       };
     });
   };
-
-  // const convertWorkScheduleToCalendarEvents = () => {};
 
   const handleDoctorAvailabilitySubmit = async () => {
     //validations - no empty or dodgy fields
@@ -332,13 +358,6 @@ const Appointments = () => {
         `users/${selectedDoctor._id}/book`,
         sessionToBook
       );
-
-      const clonedSessions = sessions.slice();
-
-      console.log([
-        { ...response.data, user: selectedDoctor },
-        ...clonedSessions,
-      ]);
 
       setSessions([{ ...response.data, user: selectedDoctor }, ...sessions]);
 

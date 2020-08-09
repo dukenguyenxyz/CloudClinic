@@ -120,9 +120,6 @@ const Signup = () => {
         weight: '55',
       },
     };
-
-    // console.log(newEmail);
-    // console.log('mounted');
   }, []);
 
   const maxLengthCheck = el => {
@@ -297,6 +294,13 @@ const Signup = () => {
     });
   };
 
+  const handleAddLanguage = key => {
+    setFormState({
+      ...formState,
+      [key]: [...formState[key], ''],
+    });
+  };
+
   const sanitizedDoctorForm = () => {
     return {
       firstName: formState.firstName,
@@ -381,16 +385,38 @@ const Signup = () => {
             ...formState,
             errors: ['Please fill in all fields'],
           });
+
+          return null;
         }
       }
     });
   };
 
+  const ValidateElementsInArrayAreStrings = key => {
+    let isNotValid;
+    formState[key].forEach(el => {
+      if (el === '') isNotValid = true;
+    });
+
+    return isNotValid;
+  };
+
   //handler for submitting form
   const handleSubmit = async () => {
-    checkEmptyInputFields('existingConditions');
-    checkEmptyInputFields('allergies');
-    checkEmptyInputFields('medication');
+    if (!formState.isDoctor) {
+      checkEmptyInputFields('existingConditions');
+      checkEmptyInputFields('allergies');
+      checkEmptyInputFields('medication');
+    }
+
+    if (formState.isDoctor && ValidateElementsInArrayAreStrings('languages')) {
+      setFormState({
+        ...formState,
+        errors: ['Please include all languages'],
+      });
+
+      return null;
+    }
 
     if (!formState.licence && formState.isDoctor) {
       setFormState({
@@ -457,19 +483,14 @@ const Signup = () => {
       return null;
     }
 
-    // const developmentUrl = 'http://localhost:5000';
-    // const productionUrl = 'http://cloudclinic.tech';
-    // const endpoint = `${developmentUrl}/api/users/signup`;
-    // axios.defaults.headers.post['Content-Type'] = 'application/json';
-
     const sanitizedForm = formState.isDoctor
       ? sanitizedDoctorForm()
       : sanitizedClientForm();
 
-    signUpUser(sanitizedForm, setUser, '/profile', error =>
+    signUpUser(sanitizedForm, setUser, '/profile', errors =>
       setFormState({
         ...formState,
-        errors: [`${error.response.data}`, ...formState.errors],
+        errors: [`${errors.message}`, ...formState.errors],
       })
     );
   };
@@ -622,6 +643,7 @@ const Signup = () => {
                 onArrValueChange={onArrValueChange}
                 handleLanguages={handleLanguages}
                 onInput={maxLengthCheck}
+                handleAddLanguage={handleAddLanguage}
               />
               <div className="auth-error-wrapper">
                 <ul>

@@ -13,6 +13,7 @@ const StepThree = ({
   onArrValueChange,
   handleLanguages,
   onInput,
+  handleAddLanguage,
 }) => {
   const { isDoctor } = formState;
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -367,12 +368,20 @@ const StepThree = ({
                 />
               )}
               {formState.languages.length - 1 === i && (
+                // <Button
+                //   onClick={() =>
+                //     formState.languages[i] !== '' &&
+                //     handleAddClick('languages', {
+                //       language: '',
+                //     })
+                //   }
+                //   icon="plus"
+                //   color="mid"
+                // />
                 <Button
                   onClick={() =>
                     formState.languages[i] !== '' &&
-                    handleAddClick('languages', {
-                      language: '',
-                    })
+                    handleAddLanguage('languages')
                   }
                   icon="plus"
                   color="mid"
