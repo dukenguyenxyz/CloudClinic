@@ -35,6 +35,7 @@ const CalendarForm = ({
   setTabState,
   sessions,
   setSessions,
+  handleShowMonday,
 }) => {
   const [doctorSessions, setDoctorSessions] = useState([]);
 
@@ -290,6 +291,7 @@ const CalendarForm = ({
                                   timeIntervals={15}
                                   timeCaption="Time"
                                   dateFormat="MMMM d, h:mm aa"
+                                  // dateFormat="h:mm aa"
                                 />
                               </div>
                             </div>
@@ -316,6 +318,7 @@ const CalendarForm = ({
                                     )
                                   }
                                   showTimeSelect
+                                  showTimeSelectOnly
                                   minDate={moment().toDate()}
                                   maxDate={moment().add(3, 'year').toDate()}
                                   // // Format ?
@@ -333,7 +336,8 @@ const CalendarForm = ({
                                   timeIntervals={15}
                                   timeCaption="Time"
                                   filterDate={isWeekday}
-                                  dateFormat="MMMM d, h:mm aa"
+                                  // dateFormat="MMMM d, h:mm aa"
+                                  dateFormat="h:mm aa"
                                 />
                               </div>
                             </div>
@@ -345,8 +349,12 @@ const CalendarForm = ({
                                   <input
                                     type="radio"
                                     id="everyWeek"
-                                    name={`condition${i}`}
+                                    name={`weekly${i}`}
                                     value={RRule.WEEKLY} // RRule.WEEKLY
+                                    checked={
+                                      doctorAvailability.unavailableDateTimes[i]
+                                        .modifier == RRule.WEEKLY
+                                    }
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
                                         e,
@@ -355,14 +363,20 @@ const CalendarForm = ({
                                       )
                                     }
                                   />
-                                  <label htmlFor="female">Every Week</label>
+                                  <label htmlFor={`weekly${i}`}>
+                                    Every Week
+                                  </label>
                                 </div>
                                 <div className="option">
                                   <input
                                     type="radio"
                                     id="other"
-                                    name={`condition${i}`}
+                                    name={`daily${i}`}
                                     value={RRule.DAILY} // RRule.DAILY
+                                    checked={
+                                      doctorAvailability.unavailableDateTimes[i]
+                                        .modifier == RRule.DAILY
+                                    }
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
                                         e,
@@ -371,7 +385,27 @@ const CalendarForm = ({
                                       )
                                     }
                                   />
-                                  <label htmlFor="other">Daily</label>
+                                  <label htmlFor={`daily${i}`}>Daily</label>
+                                </div>
+                                <div className="option">
+                                  <input
+                                    type="radio"
+                                    id="other"
+                                    name={`single${i}`}
+                                    value={0} // One off event
+                                    checked={
+                                      doctorAvailability.unavailableDateTimes[i]
+                                        .modifier == 0
+                                    }
+                                    onChange={e =>
+                                      handleUnavailabilityModifiers(
+                                        e,
+                                        i,
+                                        'unavailableDateTimes'
+                                      )
+                                    }
+                                  />
+                                  <label htmlFor={`single${i}`}>Single</label>
                                 </div>
                               </div>
                             </div>
@@ -395,16 +429,16 @@ const CalendarForm = ({
                                       .startDateTime !== '' &&
                                     handleAddClick('unavailableDateTimes', {
                                       startDateTime: round(
-                                        moment(),
+                                        handleShowMonday(),
                                         moment.duration(15, 'minutes'),
                                         'ceil'
                                       ).toDate(),
                                       endDateTime: round(
-                                        moment(),
+                                        handleShowMonday().add({ minutes: 30 }),
                                         moment.duration(15, 'minutes'),
                                         'ceil'
                                       ).toDate(),
-                                      modifier: RRule.WEEKLY,
+                                      modifier: 0,
                                     })
                                   }
                                   icon="plus"
@@ -432,7 +466,7 @@ const CalendarForm = ({
                                 moment.duration(15, 'minutes'),
                                 'ceil'
                               ).toDate(),
-                              modifier: '',
+                              modifier: 0,
                             })
                           }
                           icon="plus"

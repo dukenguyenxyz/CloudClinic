@@ -1,14 +1,12 @@
 // prettier-ignore
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import mockEvents from '../Samples/sampleEvents';
-import mockRealEvents from '../Samples/sampleEventsReal';
-import mockReal2Events from '../Samples/sampledata';
 
+import { RRule } from 'rrule';
 const localizer = momentLocalizer(moment);
 
 const mapToRBCFormat = e => {
@@ -20,16 +18,15 @@ const mapToRBCFormat = e => {
   return newDateObj;
 };
 
-const mappedData = mockRealEvents.map(mapToRBCFormat);
-
 const MainCalendar = ({
   unavailabilities,
-  doctorAvailability,
   user,
   selectedDoctor,
   setUnavailabilities,
   setClientFormState,
   clientFormState,
+  setDoctorAvailability,
+  doctorAvailability,
 }) => {
   const [currentDay, setCurrentDay] = useState(moment().toDate());
 
@@ -64,7 +61,7 @@ const MainCalendar = ({
         setClientFormState({
           ...clientFormState,
           errors: [
-            "Appointments cannot overlap with your doctor's unavailability or exisiting time slot",
+            'Appointments cannot overlap with your unavailability or an exisiting time slot',
           ],
         });
         return null;
@@ -124,44 +121,97 @@ const MainCalendar = ({
   };
 
   const handleSelectDoctor = ({ start, end }) => {
-    // for (let el in unavailabilities) {
-    //   if (
-    //     moment(end).isBetween(
-    //       moment(unavailabilities[el].start),
-    //       moment(unavailabilities[el].end)
-    //     ) ||
-    //     moment(start).isBetween(
-    //       moment(unavailabilities[el].start),
-    //       moment(unavailabilities[el].end)
-    //     ) ||
-    //     (moment(end).isSameOrAfter(unavailabilities[el].start) &&
-    //       moment(start).isSameOrBefore(unavailabilities[el].start))
-    //   ) {
-    //     alert(
-    //       "Unavailabilities cannot overlap with exisiting time slot"
-    //     );
-    //     setClientFormState({
-    //       ...clientFormState,
-    //       errors: [
-    //         "Appointments cannot overlap with your doctor's unavailability or exisiting time slot",
-    //       ],
-    //     });
-    //     return null;
-    //   }
-    // }
+    for (let el in unavailabilities) {
+      if (
+        moment(end).isBetween(
+          moment(unavailabilities[el].start),
+          moment(unavailabilities[el].end)
+        ) ||
+        moment(start).isBetween(
+          moment(unavailabilities[el].start),
+          moment(unavailabilities[el].end)
+        ) ||
+        (moment(end).isSameOrAfter(unavailabilities[el].start) &&
+          moment(start).isSameOrBefore(unavailabilities[el].start))
+      ) {
+        alert('Unavailabilities cannot overlap with exisiting time slot');
+        setDoctorAvailability({
+          ...doctorAvailability,
+          errors: [
+            "Appointments cannot overlap with your doctor's unavailability or exisiting time slot",
+          ],
+        });
+        return null;
+      }
+    }
+
+    if (moment(end).diff(start, 'minutes') > 0) {
+      const unavailability = window.prompt('Please enter your unavailability');
+      if (unavailability) {
+        if (
+          unavailabilities[unavailabilities.length - 1].unavailable !==
+          'unavailable'
+        ) {
+          setUnavailabilities([
+            ...unavailabilities,
+            {
+              start,
+              end,
+              title: unavailability,
+            },
+          ]);
+
+          setDoctorAvailability({
+            ...doctorAvailability,
+            unavailableDateTimes: [
+              ...doctorAvailability['unavailableDateTimes'],
+              {
+                startDateTime: start,
+                endDateTime: end,
+                modifier: 0,
+                title: unavailability,
+              },
+            ],
+            errors: [],
+          });
+        } else {
+          setUnavailabilities([
+            ...unavailabilities,
+            {
+              start,
+              end,
+              title: unavailability,
+            },
+          ]);
+        }
+      } else if (!unavailability && moment(end).diff(start, 'minutes') <= 60) {
+        alert('Please enter an unavailability title');
+      }
+    }
   };
 
   const handleEventStyle = event => {
     // unavailable grey block
-    const newStyle = {
+    const clientStyle = {
       backgroundColor: '#cccccc',
       color: '#cccccc',
     };
 
-    if (event.status === 'unavailable') {
+    const doctorStyle = {
+      backgroundColor: '#aaaaaa',
+    };
+
+    if (event.status === 'unavailable' && !user.isDoctor) {
       return {
         className: '',
-        style: newStyle,
+        style: clientStyle,
+      };
+    }
+
+    if (event.title.toLowerCase() === 'unavailable' && user.isDoctor) {
+      return {
+        className: '',
+        style: doctorStyle,
       };
     }
   };
@@ -257,7 +307,7 @@ const MainCalendar = ({
             selectable="ignoreEvents"
             ignoreEvents
             defaultDate={handleShowMonday()}
-            // eventPropGetter={event => handleEventStyle(event)}
+            eventPropGetter={event => handleEventStyle(event)}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"

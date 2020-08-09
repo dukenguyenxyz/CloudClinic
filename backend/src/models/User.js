@@ -50,9 +50,9 @@ const userSchema = new mongoose.Schema({
   },
   address: {
     number: {
-      type: Number,
-      min: 1,
-      max: 5000,
+      type: String,
+      minlength: 1,
+      maxlength: 255,
     },
     street: {
       type: String,

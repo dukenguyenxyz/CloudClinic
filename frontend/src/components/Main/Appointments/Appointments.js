@@ -20,7 +20,21 @@ import CalendarForm from './CalendarForm/CalendarForm';
 import './Appointments.scss';
 
 const Appointments = () => {
-  // Setting States
+  const handleShowMonday = () => {
+    const monday = 1;
+    const today = moment().isoWeekday();
+
+    if (today === 6) {
+      return moment().add({ day: 2 });
+    }
+
+    if (today === 7) {
+      return moment().add({ day: 1 });
+    }
+
+    return moment();
+  };
+
   const { user, setUser } = useContext(AuthContext);
   const { doctorList } = useContext(DoctorListContext);
   const [unavailabilities, setUnavailabilities] = useState([]);
@@ -37,22 +51,16 @@ const Appointments = () => {
     errors: [],
   });
   const [doctorAvailability, setDoctorAvailability] = useState({
-    openingTime: moment().set({ hour: 5, minutes: 0 }).toDate(),
-    closingTime: moment().set({ hour: 23, minutes: 0 }).toDate(),
-    lunchBreakStart: moment().set({ hour: 11, minutes: 0 }).toDate(),
-    lunchBreakEnd: moment().set({ hour: 16, minutes: 0 }).toDate(),
+    openingTime: handleShowMonday().set({ hour: 5, minutes: 0 }).toDate(),
+    closingTime: handleShowMonday().set({ hour: 23, minutes: 0 }).toDate(),
+    lunchBreakStart: handleShowMonday().set({ hour: 11, minutes: 0 }).toDate(),
+    lunchBreakEnd: handleShowMonday().set({ hour: 13, minutes: 0 }).toDate(),
     unavailableDateTimes: [
       {
-        startDateTime: round(
-          moment(),
-          moment.duration(30, 'minutes'),
-          'ceil'
-        ).toDate(),
-        endDateTime: round(
-          moment(),
-          moment.duration(30, 'minutes'),
-          'ceil'
-        ).toDate(),
+        startDateTime: handleShowMonday()
+          .set({ hour: 17, minutes: 0 })
+          .toDate(),
+        endDateTime: handleShowMonday().set({ hour: 18, minutes: 0 }).toDate(),
         modifier: RRule.WEEKLY,
       },
     ],
@@ -63,14 +71,25 @@ const Appointments = () => {
 
   useEffect(() => {
     if (!_.isEmpty(selectedDoctor) && !user.isDoctor) {
+      // client view of appointments
       renderUnavailabilities(selectedDoctor);
     }
 
-    if (user.isDoctor && !_.isEmpty(user.doctorInfo.workSchedule)) {
+    if (
+      //existing doctor (Double check and test the last condition here)
+      user.isDoctor &&
+      _.has(user.doctorInfo.workSchedule, 'openingTime') &&
+      _.has(user.doctorInfo.workSchedule, 'closingTime') &&
+      _.has(user.doctorInfo.workSchedule, 'lunchBreakStart') &&
+      _.has(user.doctorInfo.workSchedule, 'lunchBreakEnd') &&
+      user.doctorInfo.workSchedule.unavailableDateTimes.length >= 0
+    ) {
+      console.log('here');
       renderUnavailabilities(user.doctorInfo.workSchedule);
     }
 
     if (
+      // doctor first signs up
       user.isDoctor &&
       !_.has(user.doctorInfo.workSchedule, 'openingTime') &&
       !_.has(user.doctorInfo.workSchedule, 'closingTime') &&
@@ -80,7 +99,7 @@ const Appointments = () => {
     ) {
       renderUnavailabilities(doctorAvailability);
     }
-  }, [selectedDoctor, doctorAvailability]);
+  }, [selectedDoctor, doctorAvailability, user]);
 
   const renderUnavailabilities = doctor => {
     let selectedDoctorUnavailabilites;
@@ -152,13 +171,18 @@ const Appointments = () => {
         'minutes'
       );
 
-      console.log(el.modifier, el);
+      // if modifier is not 3 or 2 e.g weekly or daily, it is therefore a one-off unavailability
+      // for now these events are set with a modifier of 0
+      const until =
+        parseInt(el.modifier) === 3 || parseInt(el.modifier) == 2
+          ? convertUTC(moment(el.endDateTime).add(1, 'year').toDate())
+          : convertUTC(moment(el.endDateTime).toDate());
 
       return [
         new RRule({
           freq: parseInt(el.modifier), // must be an integer
           dtstart: convertUTC(el.startDateTime),
-          until: convertUTC(moment(el.endDateTime).add(1, 'year').toDate()),
+          until,
           interval: 1,
         }),
         difference,
@@ -209,8 +233,26 @@ const Appointments = () => {
   const handleDoctorAvailabilitySubmit = async () => {
     //validations - no empty or dodgy fields
 
-    checkEmptyDateFields('unavailableDateTimes');
-    checkValidSubDateFields('unavailableDateTimes');
+    if (checkEmptyDateFields('unavailableDateTimes')) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: [
+          'Please fill in all fields and only include valid dates and times',
+        ],
+      });
+
+      return null;
+    }
+
+    if (checkValidSubDateFields('unavailableDateTimes')) {
+      setDoctorAvailability({
+        ...doctorAvailability,
+        errors: [
+          'Please select a valid start/end date time for your unavailability',
+        ],
+      });
+      return null;
+    }
 
     if (
       !moment(doctorAvailability.openingTime).isValid() ||
@@ -224,9 +266,9 @@ const Appointments = () => {
           'Please fill in all fields and only include valid dates and times',
         ],
       });
-    }
 
-    // console.log('here');
+      return null;
+    }
 
     // check that end date & times must be greater than start date & times
     if (
@@ -238,6 +280,8 @@ const Appointments = () => {
         ...doctorAvailability,
         errors: ['Please select a valid closing time'],
       });
+
+      return null;
     }
 
     if (
@@ -249,6 +293,8 @@ const Appointments = () => {
         ...doctorAvailability,
         errors: ['Please select a valid opening time'],
       });
+
+      return null;
     }
 
     if (
@@ -260,6 +306,8 @@ const Appointments = () => {
         ...doctorAvailability,
         errors: ['Please select a valid lunch break start time'],
       });
+
+      return null;
     }
 
     if (
@@ -271,6 +319,8 @@ const Appointments = () => {
         ...doctorAvailability,
         errors: ['Please select a valid lunch break end time'],
       });
+
+      return null;
     }
 
     const unavailabilityObj = {
@@ -294,7 +344,7 @@ const Appointments = () => {
       console.log(err);
       setUser({
         ...user,
-        errors: [`Something went wrong, ${err}`],
+        errors: [`Something went wrong, ${err.message}`],
       });
     }
   };
@@ -432,6 +482,8 @@ const Appointments = () => {
   };
 
   const checkEmptyDateFields = key => {
+    let isNotValid;
+
     doctorAvailability[key].forEach(el => {
       const inputValues = Object.values(el);
       for (let i = 0; i < inputValues.length; i++) {
@@ -439,41 +491,29 @@ const Appointments = () => {
           typeof inputValues[i] !== 'string' &&
           !moment(inputValues[i]).isValid()
         ) {
-          setDoctorAvailability({
-            ...doctorAvailability,
-            errors: [
-              'Please fill in all fields and only include valid dates and times',
-            ],
-          });
+          isNotValid = true;
         }
       }
     });
+
+    return isNotValid;
   };
 
   const checkValidSubDateFields = key => {
+    let isNotValid;
+
     doctorAvailability[key].forEach(el => {
       const clone = (({ modifier, ...o }) => o)(el);
-
-      // clone.startDateTime
-      // clone.endDateTime
       if (moment(clone.endDateTime).isSameOrBefore(clone.startDateTime)) {
-        setDoctorAvailability({
-          ...doctorAvailability,
-          errors: [
-            'Please select a valid end date time for your unavailability',
-          ],
-        });
+        isNotValid = true;
       }
 
       if (moment(clone.startDateTime).isSameOrAfter(clone.endDateTime)) {
-        setDoctorAvailability({
-          ...doctorAvailability,
-          errors: [
-            'Please select a valid start date time for your unavailability',
-          ],
-        });
+        isNotValid = true;
       }
     });
+
+    return isNotValid;
   };
 
   const renderDoctorAppointments = () => {
@@ -495,13 +535,17 @@ const Appointments = () => {
             setSessions={setSessions}
             tabState={tabState}
             setTabState={setTabState}
+            handleShowMonday={handleShowMonday}
           />
         </section>
         <MainCalendar
           user={user}
           doctorAvailability={doctorAvailability}
           unavailabilities={unavailabilities}
+          setUnavailabilities={setUnavailabilities}
           doctorList={doctorList}
+          doctorAvailability={doctorAvailability}
+          setDoctorAvailability={setDoctorAvailability}
         />
       </div>
     );
@@ -525,6 +569,7 @@ const Appointments = () => {
             setSessions={setSessions}
             tabState={tabState}
             setTabState={setTabState}
+            handleShowMonday={handleShowMonday}
           />
         </section>
         <MainCalendar
