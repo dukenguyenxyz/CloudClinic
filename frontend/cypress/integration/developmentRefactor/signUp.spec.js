@@ -1,7 +1,6 @@
-const faker = require('faker');
-const newEmail = faker.internet.email();
-
 const populateStep0 = () => {
+  const faker = require('faker');
+  const newEmail = faker.internet.email();
   cy.get('[data-cy=email]').type(newEmail).should('have.value', newEmail);
   cy.get('[data-cy=password]')
     .type('password')
@@ -122,6 +121,8 @@ describe('Client sign up', () => {
 
   // Validation checks
   it('displays form validation error messages', () => {
+    const faker = require('faker');
+    const newEmail = faker.internet.email();
     cy.get('[data-cy=email]').type(newEmail);
     cy.get('[data-cy=password]').type('password');
     cy.get('button').contains('Next').click();
@@ -161,8 +162,8 @@ describe('Client sign up', () => {
     cy.get('button').contains('Next').click();
     populateStep2Client();
     cy.get('[data-cy=weight]').clear();
-    cy.get('button').contains('Next').click();
-    checkEmptyFieldValidation();
+    cy.get('button').contains('Submit').click();
+    cy.get('.flash-message').should('contain', 'Please include your weight');
     cy.get('[data-cy=weight]').type('75').should('have.value', '75');
 
     cy.get('button').contains('Previous');
@@ -217,6 +218,31 @@ describe('Doctor sign up', () => {
     cy.get('button').contains('Next').click();
 
     populateStep2Doctor();
+    cy.get('button').contains('Submit').click();
+
+    cy.wait(2000);
+    cy.get('.flash-message').should('not.exist');
+    cy.url().should('include', '/profile');
+  });
+
+  it('can display validation and errors', () => {
+    populateStep0();
+    cy.get('button').contains('Next').click();
+
+    populateStep1();
+    cy.get('button').contains('Next').click();
+
+    populateStep2Doctor();
+    cy.get('[data-cy=licence]').clear();
+    cy.get('button').contains('Submit').click();
+    cy.get('.flash-message').should(
+      'contain',
+      'Please include a valid licence number'
+    );
+    cy.get('[data-cy=licence]')
+      .type('8328787AEW')
+      .should('have.value', '8328787AEW');
+    cy.get('button').contains('Submit').click();
 
     cy.wait(2000);
     cy.get('.flash-message').should('not.exist');

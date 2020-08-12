@@ -19,6 +19,7 @@
   display: flex;
   justify-content: center;
   animation: 0.75s ease-out 0s 1 slideInFromTop;
+  pointer-events: none;
 
   .flash-message-container {
     display: grid;
