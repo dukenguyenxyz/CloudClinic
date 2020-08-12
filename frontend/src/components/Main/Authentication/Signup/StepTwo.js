@@ -22,6 +22,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         maxLength="15"
         options={titleOptions}
         onValueChange={e => onValueChange(e, 'title')}
+        dataCypress="title"
       />
       <AuthInput
         value={formState.firstName}
@@ -32,6 +33,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         icon="username"
         onValueChange={e => onValueChange(e, 'firstName')}
         onKeyUp={onKeyUp}
+        dataCypress="firstName"
       />
       <AuthInput
         value={formState.lastName}
@@ -42,6 +44,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         icon="username"
         onValueChange={e => onValueChange(e, 'lastName')}
         onKeyUp={onKeyUp}
+        dataCypress="lastName"
       />
       <AuthSelect
         value={formState.sex}
@@ -51,20 +54,8 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         directive="sex"
         options={sexOptions}
         onValueChange={e => onValueChange(e, 'sex')}
+        dataCypress="sex"
       />
-      {/* Moved to Step Three */}
-      {/* <AuthInput
-        value={formState.weight}
-        placeholder="Weight (kg)"
-        type="number"
-        min="1"
-        max="300"
-        maxLength="3"
-        icon="clipboard"
-        onValueChange={e => onValueChange(e, 'weight')}
-        onKeyUp={onKeyUp}
-        onInput={onInput}
-      /> */}
       <AuthInput
         value={formState.dob}
         placeholder="Date of Birth"
@@ -75,6 +66,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         min="1900-01-01"
         onValueChange={e => onValueChange(e, 'dob')}
         onKeyUp={onKeyUp}
+        dataCypress="dob"
       />
       <AuthInput
         value={formState.phone}
@@ -87,6 +79,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         minLength="9"
         maxLength="12"
         onKeyUp={onKeyUp}
+        dataCypress="phone"
       />
 
       <h3>Address</h3>
@@ -99,6 +92,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         maxLength="28"
         onValueChange={e => onValueChange(e, 'addressNumber')}
         onKeyUp={onKeyUp}
+        dataCypress="addressNumber"
       />
       <AuthInput
         value={formState.street}
@@ -109,6 +103,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         maxLength="95"
         onValueChange={e => onValueChange(e, 'street')}
         onKeyUp={onKeyUp}
+        dataCypress="street"
       />
       <AuthInput
         value={formState.city}
@@ -119,6 +114,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         maxLength="28"
         onValueChange={e => onValueChange(e, 'city')}
         onKeyUp={onKeyUp}
+        dataCypress="city"
       />
       <AuthInput
         value={formState.state}
@@ -129,6 +125,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         maxLength="28"
         onValueChange={e => onValueChange(e, 'state')}
         onKeyUp={onKeyUp}
+        dataCypress="state"
       />
       <AuthSelect
         value={formState.country}
@@ -137,6 +134,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         icon="navArrow"
         options={countries}
         onValueChange={e => onValueChange(e, 'country')}
+        dataCypress="country"
       />
       <AuthInput
         value={formState.postcode}
@@ -149,6 +147,7 @@ const StepTwo = ({ formState, onValueChange, onKeyUp, onInput }) => {
         onValueChange={e => onValueChange(e, 'postcode')}
         onKeyUp={onKeyUp}
         onInput={onInput}
+        dataCypress="postcode"
       />
     </>
   );

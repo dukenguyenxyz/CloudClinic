@@ -40,9 +40,7 @@ const Message = ({ userImage, isSender }) => {
     );
   };
 
-  {
-    return isSender ? senderMessage() : receiverMessage();
-  }
+  return isSender ? senderMessage() : receiverMessage();
 };
 
 export default Message;

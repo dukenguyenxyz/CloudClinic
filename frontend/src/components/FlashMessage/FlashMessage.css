@@ -1,0 +1,67 @@
+@-webkit-keyframes slideInFromTop {
+  0% {
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  0% {
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+.flash-message-wrapper {
+  padding: 32px 24px;
+  position: absolute;
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 14px;
+  z-index: 9999;
+  display: -ms-grid;
+  display: grid;
+  line-height: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-animation: 0.75s ease-out 0s 1 slideInFromTop;
+          animation: 0.75s ease-out 0s 1 slideInFromTop;
+}
+
+.flash-message-wrapper .flash-message-container {
+  display: -ms-grid;
+  display: grid;
+  gap: 0px 12px;
+  -ms-grid-columns: auto auto;
+      grid-template-columns: auto auto;
+}
+
+.flash-message-wrapper .flash-message-container i {
+  -ms-flex-item-align: center;
+      align-self: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.flash-message-wrapper .flash-message-container div {
+  margin-top: 3px;
+}
+
+.error {
+  background-color: #ff4747;
+  color: white;
+}
+/*# sourceMappingURL=FlashMessage.css.map */

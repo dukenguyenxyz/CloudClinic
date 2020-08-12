@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { RRule } from 'rrule';
 import moment from 'moment';
 import _ from 'lodash';
 

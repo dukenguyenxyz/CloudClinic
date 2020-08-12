@@ -2,7 +2,6 @@ import React from 'react';
 import './Feed.scss';
 import Message from './Message/Message';
 import Input from './Input/Input';
-import Card from '../../../Card/Card';
 import Image1 from '../../../../assets/fd-30.jpg';
 import Image2 from '../../../../assets/fd-36.jpg';
 
@@ -12,8 +11,6 @@ const Feed = () => {
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    // width: '50px',
-    // height: '50px',
     alignSelf: 'end',
   };
 
@@ -22,8 +19,6 @@ const Feed = () => {
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    // width: '50px',
-    // height: '50px',
     alignSelf: 'end',
   };
 

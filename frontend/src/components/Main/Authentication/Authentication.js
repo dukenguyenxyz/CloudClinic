@@ -19,7 +19,7 @@ const Authentication = ({ location }) => {
     if (location.state) {
       setAuthAction(location.state.signIn);
     }
-  }, []);
+  }, [jwt, location]);
 
   const handleClick = () => {
     setAuthAction(!authAction);

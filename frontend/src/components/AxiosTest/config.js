@@ -1,6 +1,5 @@
 import axios from 'axios';
 import faker from 'faker';
-import placeholder from '../../assets/md-19.jpg';
 
 const email = () => faker.internet.email();
 const newEmailClient = email();
@@ -15,15 +14,6 @@ export const request = axios.create({
     Authorization: localStorage.getItem('cloudclinicJWT'),
   },
 });
-
-// // Standard call like this
-// const METHOD = async () => {
-//   await request.httpVerb('endpoint/foo/bar', {
-//     body,
-//   });
-// };
-
-const relImagePath = './frontend/src/assets/md-19.jpg';
 
 export const JWTHeader = {
   headers: {

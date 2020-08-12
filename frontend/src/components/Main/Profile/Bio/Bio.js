@@ -12,6 +12,7 @@ const Bio = ({ user }) => {
           <img
             className="avatar"
             src={user.profileImage ? user.profileImage : null}
+            alt=""
           />
           <div className="name">
             {user.isDoctor && 'Dr.'} {user.firstName}

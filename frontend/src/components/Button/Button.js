@@ -14,7 +14,7 @@ import {
   UploadCloud,
 } from 'react-feather';
 
-const Button = ({ action, color, icon, onClick }) => {
+const Button = ({ action, color, icon, onClick, dataCypress }) => {
   const getIcon = () => {
     const iconSize = 20;
     const iconSizeSmall = 16;
@@ -53,7 +53,7 @@ const Button = ({ action, color, icon, onClick }) => {
     <div
       className={`button-wrapper ${color} ${icon === 'minus' ? 'minus' : ''}`}
     >
-      <button type="button" onClick={onClick}>
+      <button type="button" onClick={onClick} data-cy={dataCypress}>
         {icon === 'arrowLeft' && <i>{getIcon()}</i>}
         {icon === 'plus' && <i>{getIcon()}</i>}
         {icon === 'minus' && <i>{getIcon()}</i>}

@@ -1,0 +1,42 @@
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.flash-message-wrapper {
+  padding: 32px 24px;
+  position: absolute;
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 14px;
+  z-index: 9999;
+  display: grid;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  animation: 0.75s ease-out 0s 1 slideInFromTop;
+
+  .flash-message-container {
+    display: grid;
+    gap: 0px 12px;
+    grid-template-columns: auto auto;
+
+    i {
+      align-self: center;
+      display: flex;
+    }
+
+    div {
+      margin-top: 3px;
+    }
+  }
+}
+
+.error {
+  background-color: hsl(0, 100%, 64%);
+  color: white;
+}

@@ -17,7 +17,7 @@ export const DoctorListContextProvider = ({ children }) => {
       }
     };
     getDoctors();
-  }, []);
+  }, [doctorList]);
 
   const doctorListState = {
     doctorList,

@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useContext } from 'react';
-import _ from 'lodash';
+import React, { useState, useContext } from 'react';
 import omitDeep from 'omit-deep-lodash';
 import '../Form/Form.scss';
 import AuthInput from '../Form/AuthInput/AuthInput';
 import Button from '../../../Button/Button';
 import { signInUser } from '../../../AxiosTest/userRoutes';
-import { AuthContext } from '../../../../globalState/index';
+import { AuthContext, MessageContext } from '../../../../globalState/index';
 import { navigate } from '@reach/router';
 
 const Signin = () => {
   const [formState, setFormState] = useState({
     email: '',
     password: '',
-    errors: [],
   });
 
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
+  const { flashMessage, setFlashMessage } = useContext(MessageContext);
 
   const onValueChange = (e, key) => {
     setFormState({
       ...formState,
-      errors: [],
       [key]: e.target.value,
     });
+
+    setFlashMessage(null);
   };
 
   const handleEnterKey = e => {
@@ -34,22 +34,25 @@ const Signin = () => {
   const handleSubmit = async () => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!formState.email || !formState.password) {
-      setFormState({
-        ...formState,
-        errors: ['Please fill in all fields'],
+      setFlashMessage({
+        message: 'Please fill in all inputs',
+        type: 'error',
+        icon: 'alert',
       });
+
       return null;
     } else if (!emailRegex.test(formState.email)) {
-      setFormState({
-        ...formState,
-        errors: ['Please enter a valid email'],
+      setFlashMessage({
+        message: 'Please enter a valid email',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     } else {
       try {
         const res = await signInUser({
-          email: formState.email, // 'w34234asdf@gmail.com',
-          password: formState.password, // '123456789'
+          email: formState.email,
+          password: formState.password,
         });
         localStorage.setItem('cloudclinicJWT', res.data.token);
         const sanitizedUser = omitDeep(res.data.user, [
@@ -62,9 +65,10 @@ const Signin = () => {
         console.log(res);
       } catch (error) {
         console.log(error);
-        setFormState({
-          ...formState,
-          errors: [`Something went wrong`],
+        setFlashMessage({
+          message: `${error.message}`,
+          type: 'error',
+          icon: 'alert',
         });
       }
     }
@@ -87,6 +91,7 @@ const Signin = () => {
             minLength="3"
             onValueChange={e => onValueChange(e, 'email')}
             onKeyUp={handleEnterKey}
+            dataCypress="email"
           />
           <AuthInput
             value={formState.password}
@@ -96,16 +101,8 @@ const Signin = () => {
             minLength="6"
             onValueChange={e => onValueChange(e, 'password')}
             onKeyUp={handleEnterKey}
+            dataCypress="password"
           />
-        </div>
-        <div className="auth-error-wrapper">
-          <ul>
-            {formState.errors.map((errorMessage, i) => (
-              <li key={i} className="auth-error-message">
-                {errorMessage}
-              </li>
-            ))}
-          </ul>
         </div>
         <div className="form-button-wrapper">
           <Button

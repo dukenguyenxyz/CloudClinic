@@ -45,6 +45,7 @@ const AuthInput = ({
   onInput,
   id,
   accept,
+  dataCypress,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -133,6 +134,7 @@ const AuthInput = ({
         onInput={onInput}
         id={id}
         accept={accept}
+        data-cy={dataCypress}
       />
       <i className="icon-validation">{getValidationIcon()}</i>
     </div>

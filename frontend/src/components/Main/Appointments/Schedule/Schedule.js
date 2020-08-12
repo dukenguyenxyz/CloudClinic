@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './Schedule.scss';
 import Button from '../../../Button/Button';
 import Image from '../../../../assets/md-19.jpg';
-import axios from 'axios';
 import moment from 'moment';
 import { request } from '../../../AxiosTest/config'; // config.js
 import { v4 as uuidv4 } from 'uuid';
@@ -38,8 +37,6 @@ const Schedule = ({ user, sessions, setSessions }) => {
           const sorted = response.data.sort((a, b) =>
             moment(a.createDate).isBefore(moment(b.createDate)) ? 1 : -1
           );
-
-          console.log(sorted);
           setSessions(sorted);
         } catch (e) {
           console.log(e);
@@ -54,7 +51,7 @@ const Schedule = ({ user, sessions, setSessions }) => {
     return (
       <div className="schedule-wrapper">
         <ul>
-          {sessions.length > 0 &&
+          {sessions.length > 0 ? (
             sessions.map(session => {
               return (
                 <li key={uuidv4()}>
@@ -64,12 +61,18 @@ const Schedule = ({ user, sessions, setSessions }) => {
                     </div>
                     <div className="client-wrapper">
                       <div className="client">
-                        <div className="avatar" style={styles} />
+                        <img
+                          className="avatar"
+                          src={session.user.profileImage}
+                          alt=""
+                        />
                       </div>
                       <div className="middle">
                         <div className="name">{`${session.user.firstName} ${session.user.lastName}`}</div>
                         <div className="booking">
-                          Mon 26th Jul 11:30 - 12:00pm
+                          {`${moment(session.startTime).format(
+                            'ddd Mo MMM hh:mm'
+                          )} - ${moment(session.endTime).format('hh:mm A')}`}
                         </div>
                       </div>
                       <div className="process">
@@ -88,7 +91,12 @@ const Schedule = ({ user, sessions, setSessions }) => {
                   </div>
                 </li>
               );
-            })}
+            })
+          ) : (
+            <div className="session-container">
+              <h3 className="no-appointments">No appointments scheduled</h3>
+            </div>
+          )}
         </ul>
       </div>
     );
@@ -111,6 +119,7 @@ const Schedule = ({ user, sessions, setSessions }) => {
                         <img
                           className="avatar"
                           src={session.user.profileImage}
+                          alt=""
                         />
                       </div>
                       <div className="middle">

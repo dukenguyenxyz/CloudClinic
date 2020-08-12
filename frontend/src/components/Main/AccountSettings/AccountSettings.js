@@ -1,9 +1,8 @@
 import React from 'react';
 import './AccountSettings.scss';
-import AxiosTest from '../../AxiosTest/AxiosTest';
 import UpdateProfile from './UpdateProfile/UpdateProfile';
 
-const AccountSettings = ({}) => {
+const AccountSettings = () => {
   return (
     <div className="account-settings-wrapper">
       <UpdateProfile />

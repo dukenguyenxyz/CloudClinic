@@ -22,6 +22,14 @@
       border-radius: 50%;
       background-color: grey;
       text-indent: -10000px;
+      color: transparent;
+      font-size: 0;
+    }
+
+    img {
+      border: none;
+      color: transparent;
+      font-size: 0;
     }
 
     .name {

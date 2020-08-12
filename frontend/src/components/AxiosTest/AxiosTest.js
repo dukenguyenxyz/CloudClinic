@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 // import axios from 'axios';
 import Button from '../Button/Button';
 // import { v4 as uuidv4 } from 'uuid';
@@ -13,7 +13,6 @@ import {
   signOut,
   signOutAll,
   viewProfile,
-  updateProfile,
   deleteProfile,
   viewClient,
   viewClients,
@@ -32,8 +31,7 @@ import {
 } from './sessionRoutes';
 
 const AxiosTest = () => {
-  const { user, setUser } = useContext(AuthContext);
-  const [response, setResponse] = useState({});
+  const { setUser } = useContext(AuthContext);
 
   const clientID = null;
   const doctorID = '5f1ce5596be99c5a19d56452';

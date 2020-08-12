@@ -1,11 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import {
-  viewProfile,
-  signUpClient,
-  signUpDoctor,
-} from '../../components/AxiosTest/userRoutes';
-import { navigate } from '@reach/router';
+import React, { useState, useEffect } from 'react';
+import { viewProfile } from '../../components/AxiosTest/userRoutes';
 
 export const AuthContext = React.createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -38,7 +32,7 @@ export const AuthContextProvider = ({ children }) => {
         setIsLoading(false);
       }, 2000);
     }
-  }, []);
+  }, [user]);
 
   // // Client Generator
 

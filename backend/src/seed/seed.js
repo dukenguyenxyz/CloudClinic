@@ -24,19 +24,6 @@ const schemaDocs = (modelName) => {
 const userDocs = schemaDocs('User');
 const sessionDocs = schemaDocs('Session');
 
-// const userDocs = [
-//   {
-//     model: 'User',
-//     documents: [],
-//   },
-// ];
-// const sessionDocs = [
-//   {
-//     model: 'Session',
-//     documents: [],
-//   },
-// ];
-
 const generateUser = () => {
   const sexes = ['male', 'female'];
   const _id = new mongoose.Types.ObjectId();

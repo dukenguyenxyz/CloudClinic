@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Clock, Calendar } from 'react-feather';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ import Button from '../../../Button/Button';
 import moment from 'moment';
 
 import Schedule from '../Schedule/Schedule';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { RRule } from 'rrule';
 
 const CalendarForm = ({
   clientFormState,
@@ -37,8 +37,6 @@ const CalendarForm = ({
   setSessions,
   handleShowMonday,
 }) => {
-  const [doctorSessions, setDoctorSessions] = useState([]);
-
   let handleColor = time => {
     return time.getHours() > 12 ? 'text-success' : 'text-error';
   };
@@ -104,7 +102,7 @@ const CalendarForm = ({
               }
             >
               <div className="form-header">
-                <h1>Set your availability</h1>
+                <h1>Set your unavailability</h1>
               </div>
               <div>
                 <h4>Select your working hours</h4>

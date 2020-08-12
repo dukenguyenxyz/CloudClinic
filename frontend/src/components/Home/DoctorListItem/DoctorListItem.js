@@ -24,6 +24,7 @@ const DoctorListItem = ({ doctor }) => {
             <img
               className="avatar"
               src={doctor.profileImage ? doctor.profileImage : null}
+              alt=""
             />
             <div>
               {doctor.firstName} {doctor.lastName}

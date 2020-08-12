@@ -26,7 +26,7 @@ const ViewDoctor = props => {
       }
     };
     getDoctor();
-  }, []);
+  }, [props]);
 
   const doctorProfile = () => {
     return (

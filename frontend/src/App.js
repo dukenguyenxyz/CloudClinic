@@ -23,6 +23,7 @@ import MotionContainer from './components/MotionContainer/MotionContainer';
 import PatientProfile from './components/Main/Patients/PatientProfile/PatientProfile';
 import ViewDoctor from './components/Home/ViewDoctor/ViewDoctor';
 import LoadingWrapper from './components/LoadingWrapper/LoadingWrapper';
+import FlashMessage from './components/FlashMessage/FlashMessage';
 
 function App() {
   const routeVariants = {
@@ -70,6 +71,7 @@ function App() {
               <Navbar location={location} />
               <LoadingWrapper>
                 <Main>
+                  <FlashMessage />
                   <AnimatePresence exitBeforeEnter>
                     <Header
                       location={location}

@@ -20,6 +20,7 @@ const AuthSelect = ({
   directive,
   doctorList,
   isDate,
+  dataCypress,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -85,7 +86,12 @@ const AuthSelect = ({
           <label className={value ? 'active' : null} htmlFor={placeholder}>
             {placeholder}
           </label>
-          <select name={placeholder} value={value} onChange={onValueChange}>
+          <select
+            name={placeholder}
+            value={value}
+            onChange={onValueChange}
+            data-cy={dataCypress}
+          >
             <option value="" defaultValue disabled hidden>
               {getDirective()}
             </option>

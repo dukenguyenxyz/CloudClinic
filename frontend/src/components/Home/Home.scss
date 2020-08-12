@@ -24,6 +24,13 @@
       padding-right: 0;
     }
   }
+  @media all and (max-width: 425px) {
+    grid-template-columns: 1fr;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
 }
 
 .circle-wrapper {

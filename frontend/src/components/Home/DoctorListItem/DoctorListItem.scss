@@ -21,6 +21,8 @@
         height: $size;
         border-radius: 50%;
         background-color: grey;
+        color: transparent;
+        font-size: 0;
         @media all and (max-width: 666px) {
           $size: 48px;
           width: $size;

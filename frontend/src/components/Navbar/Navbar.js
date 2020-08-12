@@ -16,11 +16,11 @@ const Navbar = ({ location }) => {
     { width: '208px' }
   );
 
-  useEffect(() => {
-    return () => {
-      cycleMenu();
-    };
-  }, [isOpen]);
+  // useEffect(() => {
+  //   return () => {
+  //     cycleMenu();
+  //   };
+  // }, [isOpen]);
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
@@ -54,7 +54,11 @@ const Navbar = ({ location }) => {
           <Logo isOpen={isOpen} />
           <Menu isOpen={isOpen} user={user} location={location} />
           <div>
-            <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
+            <Hamburger
+              setIsOpen={setIsOpen}
+              isOpen={isOpen}
+              cycleMenu={cycleMenu}
+            />
             <Profile isOpen={isOpen} user={user} setUser={setUser} />
           </div>
         </nav>
@@ -63,7 +67,11 @@ const Navbar = ({ location }) => {
   ) : (
     <div className="mobile-hamburger-wrapper">
       <div className="mobile-hamburger-container">
-        <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
+        <Hamburger
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+          cycleMenu={cycleMenu}
+        />
       </div>
     </div>
   );

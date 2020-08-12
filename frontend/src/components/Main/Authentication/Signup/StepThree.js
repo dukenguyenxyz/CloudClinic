@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import AuthInput from '../Form/AuthInput/AuthInput';
@@ -39,6 +39,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'existingConditions', i, 'condition')
               }
+              dataCypress={`condition-${i}`}
             />
             <AuthInput
               name="conditionStartDate"
@@ -52,6 +53,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'existingConditions', i, 'startDate')
               }
+              dataCypress={`conditionStartDate-${i}`}
             />
             <AuthInput
               name="conditionComment"
@@ -63,6 +65,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'existingConditions', i, 'notes')
               }
+              dataCypress={`conditionComment-${i}`}
             />
             <div className="btn-box">
               {formState.existingConditions.length !== 1 && (
@@ -70,6 +73,7 @@ const StepThree = ({
                   onClick={() => handleRemoveClick('existingConditions', i)}
                   icon="minus"
                   color="mid"
+                  dataCypress={`conditionMinus-${i}`}
                 />
               )}
               {formState.existingConditions.length - 1 === i && (
@@ -84,6 +88,7 @@ const StepThree = ({
                   }
                   icon="plus"
                   color="mid"
+                  dataCypress={`conditionAdd-${i}`}
                 />
               )}
             </div>
@@ -104,6 +109,7 @@ const StepThree = ({
               maxLength="30"
               icon="alertCircle"
               onValueChange={e => onArrValueChange(e, 'allergies', i, 'name')}
+              dataCypress={`allergy-${i}`}
             />
 
             <AuthSelect
@@ -117,6 +123,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'allergies', i, 'severity')
               }
+              dataCypress={`severity-${i}`}
             />
             <div className="btn-box">
               {formState.allergies.length !== 1 && (
@@ -124,6 +131,7 @@ const StepThree = ({
                   onClick={() => handleRemoveClick('allergies', i)}
                   icon="minus"
                   color="mid"
+                  dataCypress={`allergyMinus-${i}`}
                 />
               )}
               {formState.allergies.length - 1 === i && (
@@ -131,12 +139,13 @@ const StepThree = ({
                   onClick={() =>
                     formState.allergies[i].name !== '' &&
                     handleAddClick('allergies', {
-                      allergy: '',
+                      name: '',
                       severity: '',
                     })
                   }
                   icon="plus"
                   color="mid"
+                  dataCypress={`allergyAdd-${i}`}
                 />
               )}
             </div>
@@ -157,6 +166,7 @@ const StepThree = ({
               icon="medication"
               maxLength="30"
               onValueChange={e => onArrValueChange(e, 'medication', i, 'name')}
+              dataCypress={`medication-${i}`}
             />
             <AuthInput
               name="dosage"
@@ -171,6 +181,7 @@ const StepThree = ({
                 onArrValueChange(e, 'medication', i, 'dosage')
               }
               onInput={onInput}
+              dataCypress={`dosage-${i}`}
             />
             <AuthInput
               name="manufacturer"
@@ -182,6 +193,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'medication', i, 'manufacturer')
               }
+              dataCypress={`manufacturer-${i}`}
             />
             <div className="btn-box">
               {formState.medication.length !== 1 && (
@@ -189,6 +201,7 @@ const StepThree = ({
                   onClick={() => handleRemoveClick('medication', i)}
                   icon="minus"
                   color="mid"
+                  dataCypress={`medicationMinus-${i}`}
                 />
               )}
               {formState.medication.length - 1 === i && (
@@ -196,13 +209,14 @@ const StepThree = ({
                   onClick={() =>
                     formState.medication[i].name !== '' &&
                     handleAddClick('medication', {
-                      medication: '',
+                      name: '',
                       dosage: '',
                       manufacturer: '',
                     })
                   }
                   icon="plus"
                   color="mid"
+                  dataCypress={`medicationAdd-${i}`}
                 />
               )}
             </div>
@@ -218,6 +232,7 @@ const StepThree = ({
         directive="blood"
         options={bloodTypes}
         onValueChange={e => onValueChange(e, 'bloodType')}
+        dataCypress="bloodType"
       />
       <AuthInput
         value={formState.weight}
@@ -228,13 +243,11 @@ const StepThree = ({
         maxLength="3"
         icon="clipboard"
         onValueChange={e => onValueChange(e, 'weight')}
-        // onKeyUp={onKeyUp}
         onInput={onInput}
+        dataCypress="weight"
       />
     </>
   );
-
-  // const [accredInput, setAccredInput] = useState('');
 
   const doctorSignup = (
     <>
@@ -245,6 +258,7 @@ const StepThree = ({
         maxLength="30"
         icon="licence"
         onValueChange={e => onValueChange(e, 'licence')}
+        dataCypress="licence"
       />
       {formState.accreditations.map((val, i) => {
         return (
@@ -259,6 +273,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'accreditations', i, 'accreditation')
               }
+              dataCypress={`accreditation-${i}`}
             />
             <div className="btn-box">
               {formState.accreditations.length !== 1 && (
@@ -266,6 +281,7 @@ const StepThree = ({
                   onClick={() => handleRemoveClick('accreditations', i)}
                   icon="minus"
                   color="mid"
+                  dataCypress={`accreditationMinus-${i}`}
                 />
               )}
               {formState.accreditations.length - 1 === i && (
@@ -278,6 +294,7 @@ const StepThree = ({
                   }
                   icon="plus"
                   color="mid"
+                  dataCypress={`accreditationAdd-${i}`}
                 />
               )}
             </div>
@@ -291,6 +308,7 @@ const StepThree = ({
         maxLength="30"
         icon="fileText"
         onValueChange={e => onValueChange(e, 'specialtyField')}
+        dataCypress="specialtyField"
       />
       <AuthInput
         value={formState.subSpecialtyField}
@@ -299,6 +317,7 @@ const StepThree = ({
         maxLength="30"
         icon="fileText"
         onValueChange={e => onValueChange(e, 'subSpecialtyField')}
+        dataCypress="subSpecialtyField"
       />
       {formState.educations.map((val, i) => {
         return (
@@ -313,6 +332,7 @@ const StepThree = ({
               onValueChange={e =>
                 onArrValueChange(e, 'educations', i, 'education')
               }
+              dataCypress={`education-${i}`}
             />
             <div className="btn-box">
               {formState.educations.length !== 1 && (
@@ -320,6 +340,7 @@ const StepThree = ({
                   onClick={() => handleRemoveClick('educations', i)}
                   icon="minus"
                   color="mid"
+                  dataCypress={`educationMinus-${i}`}
                 />
               )}
               {formState.educations.length - 1 === i && (
@@ -332,6 +353,7 @@ const StepThree = ({
                   }
                   icon="plus"
                   color="mid"
+                  dataCypress={`educationAdd-${i}`}
                 />
               )}
             </div>
@@ -346,6 +368,7 @@ const StepThree = ({
         maxLength="2"
         onValueChange={e => onValueChange(e, 'yearsExp')}
         onInput={onInput}
+        dataCypress="yearsExp"
       />
       {formState.languages.map((val, i) => {
         return (
@@ -358,6 +381,7 @@ const StepThree = ({
               icon="language"
               options={languages}
               onValueChange={e => handleLanguages(e, i)}
+              dataCypress={`languages-${i}`}
             />
             <div className="btn-box">
               {formState.languages.length !== 1 && (
@@ -365,19 +389,10 @@ const StepThree = ({
                   onClick={() => handleRemoveClick('languages', i)}
                   icon="minus"
                   color="mid"
+                  dataCypress={`languagesMinus-${i}`}
                 />
               )}
               {formState.languages.length - 1 === i && (
-                // <Button
-                //   onClick={() =>
-                //     formState.languages[i] !== '' &&
-                //     handleAddClick('languages', {
-                //       language: '',
-                //     })
-                //   }
-                //   icon="plus"
-                //   color="mid"
-                // />
                 <Button
                   onClick={() =>
                     formState.languages[i] !== '' &&
@@ -385,6 +400,7 @@ const StepThree = ({
                   }
                   icon="plus"
                   color="mid"
+                  dataCypress={`languagesAdd-${i}`}
                 />
               )}
             </div>

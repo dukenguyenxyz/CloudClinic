@@ -39,11 +39,14 @@ exports.viewSessions = async (req, res) => {
       return Promise.all(sanitizedSessions);
     };
 
-    const awaitedSessions = await getSessions();
+    if (sessions) {
+      const awaitedSessions = await getSessions();
+      console.log(awaitedSessions);
 
-    console.log(awaitedSessions);
-
-    res.send(awaitedSessions);
+      res.send(awaitedSessions);
+    } else {
+      res.status(404).send({ error: 'no sessions found' });
+    }
   } catch (e) {
     res.status(400).send(e);
   }

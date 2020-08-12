@@ -27,13 +27,6 @@ const schema = Joi.object({
       lunchBreakStart: Joi.string(),
       lunchBreakEnd: Joi.string(),
       unavailableDateTimes: Joi.array(),
-      // .items(
-      //   Joi.object({
-      //     startDateTime: Date,
-      //     endDateTime: Date,
-      //     modifier: String,
-      //   })
-      // ),
     }),
     yearsExperience: Joi.number().integer(),
     tags: Joi.array(),
@@ -43,22 +36,22 @@ const schema = Joi.object({
     weight: Joi.number(),
     medicalHistory: Joi.array().items(
       Joi.object({
-        startDate: Joi.string(), // Joi.date().format('YYYY-MM-DD'),
-        condition: Joi.string(),
-        notes: Joi.string(),
+        startDate: Joi.string().allow(''), // Joi.date().format('YYYY-MM-DD'),
+        condition: Joi.string().allow(''),
+        notes: Joi.string().allow(''),
       })
     ),
     allergies: Joi.array().items(
       Joi.object({
-        name: Joi.string(),
-        severity: Joi.number().integer(),
+        name: Joi.string().allow(''),
+        severity: Joi.number().integer().empty('').allow(null),
       })
     ),
     medication: Joi.array().items(
       Joi.object({
-        name: Joi.string(),
-        dosage: Joi.number(),
-        manufacturer: Joi.string(),
+        name: Joi.string().allow(''),
+        dosage: Joi.number().empty('').allow(null),
+        manufacturer: Joi.string().allow(''),
       })
     ),
     bloodType: Joi.string(),

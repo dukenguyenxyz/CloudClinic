@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../../../globalState/index';
+import { AuthContext, MessageContext } from '../../../../globalState/index';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
 import { v4 as uuidv4 } from 'uuid';
-import faker from 'faker';
 import { signUpUser } from '../../../AxiosTest/userRoutes';
 
 const Signup = () => {
   const { setUser } = useContext(AuthContext);
+  const { flashMessage, setFlashMessage } = useContext(MessageContext);
+
   const [formState, setFormState] = useState({
     step: 0,
     isDoctor: false,
-    errors: [],
     validationIcon: '',
     firstName: '',
     lastName: '',
@@ -46,82 +46,6 @@ const Signup = () => {
     languages: [''],
   });
 
-  let mockForm2;
-
-  useEffect(() => {
-    const email = () => faker.internet.email();
-    const newEmail = email();
-
-    mockForm2 = {
-      firstName: 'Lisa',
-      lastName: 'Huang',
-      title: 'Mr',
-      sex: 'female',
-      dateOfBirth: '05/11/1999',
-      phoneNumber: '04104820594',
-      email: `${newEmail}`,
-      password: '123456789',
-      confirmPassword: '123456789',
-      isDoctor: 'true',
-      address: {
-        number: '4',
-        street: 'Beamish Street',
-        city: 'Sydney',
-        state: 'New South Wales',
-        country: 'Australia',
-        postcode: '2149',
-      },
-      doctorInfo: {
-        licence: 'MIT',
-        accreditations: ['USyd', 'UNSW'],
-        specialtyField: 'Dentistry',
-        subSpecialtyField: 'Prosthodontics',
-        education: ['ANU', 'Macquarie University'],
-        yearsExperience: '10',
-        tags: ['Orthodontics', 'Prosthodontics'],
-        languagesSpoken: ['Cantonese', 'Mandarin', 'Japanese', 'English'],
-      },
-      clientInfo: {
-        medicalHistory: [
-          {
-            startDate: '03/05/2005',
-            condition: 'High Blood Pressure',
-            notes: 'Due to old age',
-          },
-          {
-            startDate: '11/11/2003',
-            condition: 'Pneumonia',
-            notes: 'Due to travel to Africa',
-          },
-        ],
-        allergies: [
-          {
-            name: 'Dust allergy',
-            severity: '3',
-          },
-          {
-            name: 'Pollen allergy',
-            severity: '2',
-          },
-        ],
-        medication: [
-          {
-            name: 'Magic mushroom',
-            dosage: '200',
-            manufacturer: 'Brazil',
-          },
-          {
-            name: 'Cannabis',
-            dosage: '100',
-            manufacturer: 'Australia',
-          },
-        ],
-        bloodType: 'A+',
-        weight: '55',
-      },
-    };
-  }, []);
-
   const maxLengthCheck = el => {
     if (el.target.value.length > el.target.maxLength) {
       el.target.value = el.target.value.slice(0, el.target.maxLength);
@@ -148,20 +72,33 @@ const Signup = () => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
     if (!formState.password || !formState.confirmPassword || !formState.email) {
-      setFormState({
-        ...formState,
-        errors: ['Please fill in all the inputs'],
+      setFlashMessage({
+        message: 'Please fill in all the inputs',
+        type: 'error',
+        icon: 'alert',
       });
+      return null;
     } else if (formState.password !== formState.confirmPassword) {
-      setFormState({
-        ...formState,
-        errors: ['Passwords do not match'],
+      setFlashMessage({
+        message: 'Passwords do not match',
+        type: 'error',
+        icon: 'alert',
       });
+      return null;
     } else if (!emailRegex.test(formState.email)) {
-      setFormState({
-        ...formState,
-        errors: ['Please enter a valid email'],
+      setFlashMessage({
+        message: 'Please enter a valid email address',
+        type: 'error',
+        icon: 'alert',
       });
+      return null;
+    } else if (formState.password.length < 6) {
+      setFlashMessage({
+        message: 'Passwords must be at least 6 characters',
+        type: 'error',
+        icon: 'alert',
+      });
+      return null;
     } else if (
       formState.password === formState.confirmPassword &&
       formState.password !== ''
@@ -186,20 +123,26 @@ const Signup = () => {
       !formState.country ||
       !formState.postcode
     ) {
-      setFormState({
-        ...formState,
-        errors: ['Please fill in all the inputs'],
+      setFlashMessage({
+        message: 'Please fill in all the inputs',
+        type: 'error',
+        icon: 'alert',
       });
-    } else if (formState.password !== formState.confirmPassword) {
-      setFormState({
-        ...formState,
-        errors: ['Passwords do not match'],
+      return null;
+    } else if (formState.firstName.length <= 1) {
+      setFlashMessage({
+        message: 'Firt name must be at least 2 characters',
+        type: 'error',
+        icon: 'alert',
       });
-    } else if (!formState.email.includes('@')) {
-      setFormState({
-        ...formState,
-        errors: ['Please enter a valid email'],
+      return null;
+    } else if (formState.lastName.length <= 1) {
+      setFlashMessage({
+        message: 'Last name must be at least 2 characters',
+        type: 'error',
+        icon: 'alert',
       });
+      return null;
     } else if (
       formState.password === formState.confirmPassword &&
       formState.password !== ''
@@ -215,15 +158,15 @@ const Signup = () => {
     setFormState({
       ...formState,
       step: formState.step - 1,
-      errors: [''],
     });
+    setFlashMessage(null);
   };
 
   useEffect(() => {
     if (
       //password and confirm password match
       formState.password === formState.confirmPassword &&
-      formState.password.length > 0
+      formState.password.length >= 6
     ) {
       setFormState({
         ...formState,
@@ -237,18 +180,24 @@ const Signup = () => {
     ) {
       setFormState({
         ...formState,
-        errors: ['Passwords do not match'],
         validationIcon: 'error',
       });
+      setFlashMessage({
+        message: 'passwords do not match',
+        type: 'error',
+        icon: 'alert',
+      });
+      return null;
     }
   }, [formState.password, formState.confirmPassword]);
 
   const onValueChange = (e, key) => {
     setFormState({
       ...formState,
-      errors: [],
       [key]: e.target.value,
     });
+
+    setFlashMessage(null);
   };
 
   const onArrValueChange = (e, key, i, subKey) => {
@@ -259,6 +208,8 @@ const Signup = () => {
       ...formState,
       [key]: list,
     });
+
+    setFlashMessage(null);
   };
 
   const handleLanguages = (e, i) => {
@@ -269,6 +220,7 @@ const Signup = () => {
       ...formState,
       ['languages']: list,
     });
+    setFlashMessage(null);
   };
 
   //Handlers for adding/removing extra form fields
@@ -376,20 +328,19 @@ const Signup = () => {
   };
 
   const checkEmptyInputFields = key => {
+    let isNotValid;
+
     formState[key].forEach(el => {
       const inputValues = Object.values(el);
 
       for (let i = 0; i < inputValues.length; i++) {
         if (!inputValues[i]) {
-          setFormState({
-            ...formState,
-            errors: ['Please fill in all fields'],
-          });
-
-          return null;
+          console.log(el, key);
+          isNotValid = true;
         }
       }
     });
+    return isNotValid;
   };
 
   const ValidateElementsInArrayAreStrings = key => {
@@ -403,82 +354,110 @@ const Signup = () => {
 
   //handler for submitting form
   const handleSubmit = async () => {
-    if (!formState.isDoctor) {
-      checkEmptyInputFields('existingConditions');
-      checkEmptyInputFields('allergies');
-      checkEmptyInputFields('medication');
+    if (!formState.isDoctor && checkEmptyInputFields('medication')) {
+      setFlashMessage({
+        message: 'Please fill in all fields that you added',
+        type: 'error',
+        icon: 'alert',
+      });
+      return null;
+    }
+
+    if (!formState.isDoctor && checkEmptyInputFields('existingConditions')) {
+      setFlashMessage({
+        message: 'Please fill in all fields that you added',
+        type: 'error',
+        icon: 'alert',
+      });
+      return null;
+    }
+
+    if (!formState.isDoctor && checkEmptyInputFields('allergies')) {
+      setFlashMessage({
+        message: 'Please fill in all fields that you added',
+        type: 'error',
+        icon: 'alert',
+      });
+      return null;
     }
 
     if (formState.isDoctor && ValidateElementsInArrayAreStrings('languages')) {
-      setFormState({
-        ...formState,
-        errors: ['Please include all languages'],
+      setFlashMessage({
+        message: 'Please include all languages',
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
     if (!formState.licence && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include a valid licence number'],
+      setFlashMessage({
+        message: 'Please include a valid licence number',
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
     if (!formState.accreditations && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include a valid accreditation'],
+      setFlashMessage({
+        message: 'Please include a valid accreditation',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!formState.specialtyField && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include a specialty field'],
+      setFlashMessage({
+        message: 'Please include a speciality field',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!formState.educations && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your education'],
+      setFlashMessage({
+        message: 'Please include your education',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!formState.yearsExp && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your years of experience'],
+      setFlashMessage({
+        message: 'Please include your years of experience',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!formState.languages && formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include the languages you speak'],
+      setFlashMessage({
+        message: 'Please include the languages you speak',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!formState.bloodType && !formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your blood type'],
+      setFlashMessage({
+        message: 'Please include your blood type',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!formState.weight && !formState.isDoctor) {
-      setFormState({
-        ...formState,
-        errors: ['Please include your weight'],
+      setFlashMessage({
+        message: 'Please include your weight',
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
@@ -487,12 +466,15 @@ const Signup = () => {
       ? sanitizedDoctorForm()
       : sanitizedClientForm();
 
-    signUpUser(sanitizedForm, setUser, '/profile', errors =>
-      setFormState({
-        ...formState,
-        errors: [`${errors.message}`, ...formState.errors],
-      })
-    );
+    if (!flashMessage) {
+      signUpUser(sanitizedForm, setUser, '/profile', errors =>
+        setFlashMessage({
+          message: `${errors.message}`,
+          type: 'error',
+          icon: 'alert',
+        })
+      );
+    }
   };
 
   // Handle enter key callback to advance the form - placed on last input field of each form step
@@ -518,15 +500,6 @@ const Signup = () => {
                 <span>1/4</span>
               </div>
               <h3>Are you a Doctor?</h3>
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="No"
@@ -558,15 +531,6 @@ const Signup = () => {
                 onValueChange={onValueChange}
                 onKeyUp={handleEnterKey}
               />
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="Previous"
@@ -600,15 +564,6 @@ const Signup = () => {
                 onKeyUp={handleEnterKey}
                 onInput={maxLengthCheck}
               />
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="Previous"
@@ -645,15 +600,6 @@ const Signup = () => {
                 onInput={maxLengthCheck}
                 handleAddLanguage={handleAddLanguage}
               />
-              <div className="auth-error-wrapper">
-                <ul>
-                  {formState.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="Previous"

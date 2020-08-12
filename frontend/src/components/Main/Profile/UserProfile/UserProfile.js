@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import './UserProfile.scss';
-import Card from '../../../Card/Card';
-import axios from 'axios';
 import SessionHistory from '../SessionHistory/SessionHistory';
 import MedicalHistory from '../MedicalHistory/MedicalHistory';
 import Bio from '../Bio/Bio';
@@ -14,17 +12,7 @@ import { AuthContext } from '../../../../globalState/index';
 import Upcoming from '../Upcoming/Upcoming';
 
 const UserProfile = props => {
-  const { user, setUser } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // if user obj not in state, make axios call the get user info
-    // set user with authcontext callback
-    // creat a user {}
-    // get the user string from local storage
-    // parse the string
-    // passing to the user object
-  }, []);
+  const { user } = useContext(AuthContext);
 
   const doctorProfile = () => {
     return (

@@ -84,7 +84,6 @@ const Appointments = () => {
       _.has(user.doctorInfo.workSchedule, 'lunchBreakEnd') &&
       user.doctorInfo.workSchedule.unavailableDateTimes.length >= 0
     ) {
-      console.log('here');
       renderUnavailabilities(user.doctorInfo.workSchedule);
     }
 
@@ -323,13 +322,22 @@ const Appointments = () => {
       return null;
     }
 
+    // const unavailabilityObj = {
+    //   doctorInfo: {
+
+    //     workSchedule: doctorAvailability, // Need to pass params in
+    //   },
+    // };
+
     const unavailabilityObj = {
       doctorInfo: {
-        workSchedule: doctorAvailability, // Need to pass params in
+        ...user['doctorInfo'],
+        workSchedule: doctorAvailability,
       },
     };
 
     delete unavailabilityObj.doctorInfo.workSchedule.errors;
+    delete unavailabilityObj.doctorInfo.rating;
 
     try {
       const response = await updateProfile(unavailabilityObj);

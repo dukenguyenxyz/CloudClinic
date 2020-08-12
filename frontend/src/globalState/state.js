@@ -4,6 +4,7 @@ import { AuthContextProvider } from './context/authContext';
 import { LoadingContextProvider } from './context/loadingContext';
 import { NavbarContextProvider } from './context/navbarContext';
 import { DoctorListContextProvider } from './context/doctorListContext';
+import { MessageContextProvider } from './context/messageContext';
 
 function ProviderComposer({ contexts, children }) {
   return contexts.reduceRight(
@@ -19,6 +20,7 @@ const ContextProvider = ({ children }) => {
   return (
     <ProviderComposer
       contexts={[
+        <MessageContextProvider />,
         <DoctorListContextProvider />,
         <SearchContextProvider />,
         <AuthContextProvider />,
