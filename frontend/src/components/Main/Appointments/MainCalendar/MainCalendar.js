@@ -18,6 +18,32 @@ const mapToRBCFormat = e => {
   return newDateObj;
 };
 
+export const handleEventStyle = (event, user) => {
+  // unavailable grey block
+  const clientStyle = {
+    backgroundColor: '#cccccc',
+    color: '#cccccc',
+  };
+
+  const doctorStyle = {
+    backgroundColor: '#aaaaaa',
+  };
+
+  if (event.status === 'unavailable' && !user.isDoctor) {
+    return {
+      className: '',
+      style: clientStyle,
+    };
+  }
+
+  if (event.title.toLowerCase() === 'unavailable' && user.isDoctor) {
+    return {
+      className: '',
+      style: doctorStyle,
+    };
+  }
+};
+
 const MainCalendar = ({
   unavailabilities,
   user,
@@ -190,32 +216,6 @@ const MainCalendar = ({
     }
   };
 
-  const handleEventStyle = event => {
-    // unavailable grey block
-    const clientStyle = {
-      backgroundColor: '#cccccc',
-      color: '#cccccc',
-    };
-
-    const doctorStyle = {
-      backgroundColor: '#aaaaaa',
-    };
-
-    if (event.status === 'unavailable' && !user.isDoctor) {
-      return {
-        className: '',
-        style: clientStyle,
-      };
-    }
-
-    if (event.title.toLowerCase() === 'unavailable' && user.isDoctor) {
-      return {
-        className: '',
-        style: doctorStyle,
-      };
-    }
-  };
-
   const handleShowMonday = () => {
     const monday = 1;
     const today = moment().isoWeekday();
@@ -261,7 +261,7 @@ const MainCalendar = ({
             selectable="ignoreEvents"
             ignoreEvents
             defaultDate={handleShowMonday()}
-            eventPropGetter={event => handleEventStyle(event)}
+            eventPropGetter={event => handleEventStyle(event, user)}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"
@@ -307,7 +307,7 @@ const MainCalendar = ({
             selectable="ignoreEvents"
             ignoreEvents
             defaultDate={handleShowMonday()}
-            eventPropGetter={event => handleEventStyle(event)}
+            eventPropGetter={event => handleEventStyle(event, user)}
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"

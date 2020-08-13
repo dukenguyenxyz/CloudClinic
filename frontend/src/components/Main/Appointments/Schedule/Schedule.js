@@ -57,7 +57,7 @@ const Schedule = ({ user, sessions, setSessions }) => {
                 <li key={uuidv4()}>
                   <div className="session-container">
                     <div className="status">
-                      <span>pending</span>
+                      <span>{session.status}</span>
                     </div>
                     <div className="client-wrapper">
                       <div className="client">
@@ -106,13 +106,13 @@ const Schedule = ({ user, sessions, setSessions }) => {
     return (
       <div className="schedule-wrapper">
         <ul>
-          {sessions.length > 0 &&
+          {sessions.length > 0 ? (
             sessions.map(session => {
               return (
                 <li key={uuidv4()}>
                   <div className="session-container">
                     <div className="status">
-                      <span>pending</span>
+                      <span>{session.status}</span>
                     </div>
                     <div className="client-wrapper">
                       <div className="client">
@@ -134,7 +134,12 @@ const Schedule = ({ user, sessions, setSessions }) => {
                   </div>
                 </li>
               );
-            })}
+            })
+          ) : (
+            <div className="session-container">
+              <h3 className="no-appointments">No appointments scheduled</h3>
+            </div>
+          )}
         </ul>
       </div>
     );

@@ -3,7 +3,6 @@ import Card from '../../../Card/Card';
 import { v4 as uuidv4 } from 'uuid';
 
 const DoctorInfo = ({ user }) => {
-  // const tags = ['Orthodontics', 'Prosthodontics'];
   return (
     <Card>
       <div className="user-profile-container">
@@ -59,14 +58,6 @@ const DoctorInfo = ({ user }) => {
               ))}
             </div>
           </div>
-          {/* <div className="grid-item">
-            <div className="user-info">
-              <span>Tags</span>
-              {tags.map(el => (
-                <span key={uuidv4()}>{el}</span>
-              ))}
-            </div>
-          </div> */}
         </div>
       </div>
     </Card>

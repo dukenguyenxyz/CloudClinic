@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../../../Card/Card';
 import moment from 'moment';
+import _ from 'lodash';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import sampleEvents from '../../Appointments/Samples/sampleEvents';
+import { renderUnavailabilities } from '../../Appointments/Appointments';
+import { handleEventStyle } from '../../Appointments/MainCalendar/MainCalendar';
+import '../../Appointments/Appointments.scss';
 
 const localizer = momentLocalizer(moment);
 
 const Upcoming = ({ user }) => {
+  const [unavailabilities, setUnavailabilities] = useState([]);
+
+  useEffect(() => {
+    if (
+      user.isDoctor &&
+      _.has(user.doctorInfo.workSchedule, 'openingTime') &&
+      _.has(user.doctorInfo.workSchedule, 'closingTime') &&
+      _.has(user.doctorInfo.workSchedule, 'lunchBreakStart') &&
+      _.has(user.doctorInfo.workSchedule, 'lunchBreakEnd') &&
+      user.doctorInfo.workSchedule.unavailableDateTimes.length >= 0
+    ) {
+      renderUnavailabilities(user.doctorInfo.workSchedule, setUnavailabilities);
+    }
+  }, [user]);
+
   return (
     <Card>
       <div className="user-profile-container">
@@ -31,17 +49,28 @@ const Upcoming = ({ user }) => {
             </span>
           </div>
         </div>
-        <Calendar
-          events={sampleEvents}
-          startAccessor="start"
-          endAccessor="end"
-          defaultDate={moment().toDate()}
-          localizer={localizer}
-          defaultView="work_week"
-          views={['work_week']}
-          min={moment(user.doctorInfo.workSchedule.openingTime).toDate()}
-          max={moment(user.doctorInfo.workSchedule.closingTime).toDate()}
-        />
+        <div className="appointments-profile-wrapper">
+          <Calendar
+            events={unavailabilities}
+            startAccessor="start"
+            endAccessor="end"
+            defaultDate={moment().toDate()}
+            localizer={localizer}
+            eventPropGetter={event => handleEventStyle(event, user)}
+            defaultView="day"
+            views={['day', 'work_week']}
+            min={
+              !_.isEmpty(user) && user.doctorInfo.workSchedule.openingTime
+                ? moment(user.doctorInfo.workSchedule.openingTime).toDate()
+                : undefined
+            }
+            max={
+              !_.isEmpty(user) && user.doctorInfo.workSchedule.closingTime
+                ? moment(user.doctorInfo.workSchedule.closingTime).toDate()
+                : undefined
+            }
+          />
+        </div>
       </div>
     </Card>
   );

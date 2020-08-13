@@ -35,7 +35,7 @@
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
     "react-headroom": "^3.0.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.3",
     "rrule": "^2.6.4",
     "typescript": "^3.9.7",
     "uuid": "^8.2.0"

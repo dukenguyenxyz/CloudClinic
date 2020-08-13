@@ -3,21 +3,142 @@ import MainCalendar from './MainCalendar/MainCalendar';
 import { RRule } from 'rrule';
 import { v4 } from 'uuid';
 import moment from 'moment';
-import _, { difference } from 'lodash';
+import _ from 'lodash';
 import omitDeep from 'omit-deep-lodash';
 import { AuthContext } from '../../../globalState/index';
 import { DoctorListContext } from '../../../globalState/index';
 import { request } from '../../AxiosTest/config';
 import { updateProfile } from '../../AxiosTest/userRoutes';
-import {
-  round,
-  workingDays,
-  sanitizeDoctorSessions,
-  convertAPIdataToJS,
-  convertUTC,
-} from './helpers';
+import { round, convertUTC } from './helpers';
 import CalendarForm from './CalendarForm/CalendarForm';
 import './Appointments.scss';
+
+export const renderUnavailabilities = (doctor, cb) => {
+  let selectedDoctorUnavailabilites;
+
+  if (doctor.doctorInfo && doctor.doctorInfo.workSchedule) {
+    selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
+  } else {
+    selectedDoctorUnavailabilites = doctor;
+  }
+
+  // const selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
+
+  // Separate lunch break
+  const lunchBreakStart = selectedDoctorUnavailabilites.lunchBreakStart;
+  const lunchBreakEnd = selectedDoctorUnavailabilites.lunchBreakEnd;
+  const lunchBreak = { lunchBreakStart, lunchBreakEnd };
+
+  const lunchBreakDifference = moment(lunchBreakEnd).diff(
+    moment(lunchBreakStart),
+    'minutes'
+  );
+
+  const lunchBreakRRule = convertLunchBreakToRRule(lunchBreak);
+  // console.log(lunchBreakRRule);
+
+  const lunchBreakEvents = convertLunchBreakRruleToCalendarDates(
+    lunchBreakRRule,
+    lunchBreakDifference
+  );
+  // Unavailabilities Array -
+  const doctorUnavailabilities =
+    selectedDoctorUnavailabilites.unavailableDateTimes;
+
+  const unavailabilitiesRRules = convertUnavailabilitiesToRRule(
+    doctorUnavailabilities
+  );
+
+  // console.log(unavailabilitiesRRules);
+
+  const unavailableEvents = convertDoctorUnavailabilityToCalendarDates(
+    unavailabilitiesRRules
+  );
+  // console.log(unavailableEvents);
+
+  const calendarEvents = lunchBreakEvents.concat(
+    _.flattenDeep(unavailableEvents)
+  );
+
+  cb(calendarEvents);
+};
+
+export const convertLunchBreakToRRule = lunchBreak => {
+  const lunchBreakRRule = new RRule({
+    freq: RRule.DAILY,
+    dtstart: convertUTC(lunchBreak.lunchBreakStart),
+    until: convertUTC(moment(lunchBreak.lunchBreakEnd).add(1, 'year').toDate()),
+    interval: 1,
+  });
+
+  return lunchBreakRRule;
+};
+
+export const convertUnavailabilitiesToRRule = unavailabilitiesArr => {
+  return unavailabilitiesArr.map(el => {
+    const difference = moment(el.endDateTime).diff(
+      moment(el.startDateTime),
+      'minutes'
+    );
+
+    // if modifier is not 3 or 2 e.g weekly or daily, it is therefore a one-off unavailability
+    // for now these events are set with a modifier of 0
+    const until =
+      parseInt(el.modifier) === 3 || parseInt(el.modifier) == 2
+        ? convertUTC(moment(el.endDateTime).add(1, 'year').toDate())
+        : convertUTC(moment(el.endDateTime).toDate());
+
+    return [
+      new RRule({
+        freq: parseInt(el.modifier), // must be an integer
+        dtstart: convertUTC(el.startDateTime),
+        until,
+        interval: 1,
+      }),
+      difference,
+    ];
+  });
+};
+
+export const convertDoctorUnavailabilityToCalendarDates = unavailabilitiesRRuleArr => {
+  return unavailabilitiesRRuleArr.map(el => {
+    const ruleAll = el[0].all();
+    return ruleAll.map(startTime => {
+      const start = moment(startTime).toDate();
+      const end = moment(start).add({ minutes: el[1] }).toDate();
+
+      return {
+        id: v4(),
+        title: 'Unavailable',
+        start: start,
+        end: end,
+        same: moment(start).isSame(moment(end)),
+        status: 'unavailable',
+      };
+    });
+  });
+};
+
+export const convertLunchBreakRruleToCalendarDates = (
+  lunchBreakRRule,
+  difference
+) => {
+  const ruleAll = lunchBreakRRule.all();
+
+  return ruleAll.map(startTime => {
+    const start = moment(startTime).toDate();
+    const end = moment(start).add({ minutes: difference }).toDate();
+
+    return {
+      id: v4(),
+      title: 'Lunch Break',
+      start: start,
+      end: end,
+      same: moment(start).isSame(moment(end)),
+      status: 'unavailable',
+    };
+  });
+};
 
 const Appointments = () => {
   const handleShowMonday = () => {
@@ -72,7 +193,7 @@ const Appointments = () => {
   useEffect(() => {
     if (!_.isEmpty(selectedDoctor) && !user.isDoctor) {
       // client view of appointments
-      renderUnavailabilities(selectedDoctor);
+      renderUnavailabilities(selectedDoctor, setUnavailabilities);
     }
 
     if (
@@ -84,7 +205,7 @@ const Appointments = () => {
       _.has(user.doctorInfo.workSchedule, 'lunchBreakEnd') &&
       user.doctorInfo.workSchedule.unavailableDateTimes.length >= 0
     ) {
-      renderUnavailabilities(user.doctorInfo.workSchedule);
+      renderUnavailabilities(user.doctorInfo.workSchedule, setUnavailabilities);
     }
 
     if (
@@ -96,138 +217,9 @@ const Appointments = () => {
       !_.has(user.doctorInfo.workSchedule, 'lunchBreakEnd') &&
       user.doctorInfo.workSchedule.unavailableDateTimes.length === 0
     ) {
-      renderUnavailabilities(doctorAvailability);
+      renderUnavailabilities(doctorAvailability, setUnavailabilities);
     }
   }, [selectedDoctor, doctorAvailability, user]);
-
-  const renderUnavailabilities = doctor => {
-    let selectedDoctorUnavailabilites;
-
-    if (doctor.doctorInfo && doctor.doctorInfo.workSchedule) {
-      selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
-    } else {
-      selectedDoctorUnavailabilites = doctor;
-    }
-
-    // const selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
-
-    // Separate lunch break
-    const lunchBreakStart = selectedDoctorUnavailabilites.lunchBreakStart;
-    const lunchBreakEnd = selectedDoctorUnavailabilites.lunchBreakEnd;
-    const lunchBreak = { lunchBreakStart, lunchBreakEnd };
-
-    const lunchBreakDifference = moment(lunchBreakEnd).diff(
-      moment(lunchBreakStart),
-      'minutes'
-    );
-
-    const lunchBreakRRule = convertLunchBreakToRRule(lunchBreak);
-    // console.log(lunchBreakRRule);
-
-    const lunchBreakEvents = convertLunchBreakRruleToCalendarDates(
-      lunchBreakRRule,
-      lunchBreakDifference
-    );
-    // Unavailabilities Array -
-    const doctorUnavailabilities =
-      selectedDoctorUnavailabilites.unavailableDateTimes;
-
-    const unavailabilitiesRRules = convertUnavailabilitiesToRRule(
-      doctorUnavailabilities
-    );
-
-    // console.log(unavailabilitiesRRules);
-
-    const unavailableEvents = convertDoctorUnavailabilityToCalendarDates(
-      unavailabilitiesRRules
-    );
-    // console.log(unavailableEvents);
-
-    const calendarEvents = lunchBreakEvents.concat(
-      _.flattenDeep(unavailableEvents)
-    );
-
-    setUnavailabilities(calendarEvents);
-  };
-
-  const convertLunchBreakToRRule = lunchBreak => {
-    const lunchBreakRRule = new RRule({
-      freq: RRule.DAILY,
-      dtstart: convertUTC(lunchBreak.lunchBreakStart),
-      until: convertUTC(
-        moment(lunchBreak.lunchBreakEnd).add(1, 'year').toDate()
-      ),
-      interval: 1,
-    });
-
-    return lunchBreakRRule;
-  };
-
-  const convertUnavailabilitiesToRRule = unavailabilitiesArr => {
-    return unavailabilitiesArr.map(el => {
-      const difference = moment(el.endDateTime).diff(
-        moment(el.startDateTime),
-        'minutes'
-      );
-
-      // if modifier is not 3 or 2 e.g weekly or daily, it is therefore a one-off unavailability
-      // for now these events are set with a modifier of 0
-      const until =
-        parseInt(el.modifier) === 3 || parseInt(el.modifier) == 2
-          ? convertUTC(moment(el.endDateTime).add(1, 'year').toDate())
-          : convertUTC(moment(el.endDateTime).toDate());
-
-      return [
-        new RRule({
-          freq: parseInt(el.modifier), // must be an integer
-          dtstart: convertUTC(el.startDateTime),
-          until,
-          interval: 1,
-        }),
-        difference,
-      ];
-    });
-  };
-
-  const convertDoctorUnavailabilityToCalendarDates = unavailabilitiesRRuleArr => {
-    return unavailabilitiesRRuleArr.map(el => {
-      const ruleAll = el[0].all();
-      return ruleAll.map(startTime => {
-        const start = moment(startTime).toDate();
-        const end = moment(start).add({ minutes: el[1] }).toDate();
-
-        return {
-          id: v4(),
-          title: 'Unavailable',
-          start: start,
-          end: end,
-          same: moment(start).isSame(moment(end)),
-          status: 'unavailable',
-        };
-      });
-    });
-  };
-
-  const convertLunchBreakRruleToCalendarDates = (
-    lunchBreakRRule,
-    difference
-  ) => {
-    const ruleAll = lunchBreakRRule.all();
-
-    return ruleAll.map(startTime => {
-      const start = moment(startTime).toDate();
-      const end = moment(start).add({ minutes: difference }).toDate();
-
-      return {
-        id: v4(),
-        title: 'Lunch Break',
-        start: start,
-        end: end,
-        same: moment(start).isSame(moment(end)),
-        status: 'unavailable',
-      };
-    });
-  };
 
   const handleDoctorAvailabilitySubmit = async () => {
     //validations - no empty or dodgy fields
@@ -321,13 +313,6 @@ const Appointments = () => {
 
       return null;
     }
-
-    // const unavailabilityObj = {
-    //   doctorInfo: {
-
-    //     workSchedule: doctorAvailability, // Need to pass params in
-    //   },
-    // };
 
     const unavailabilityObj = {
       doctorInfo: {
