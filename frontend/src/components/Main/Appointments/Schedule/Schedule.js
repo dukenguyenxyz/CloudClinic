@@ -1,21 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import './Schedule.scss';
 import Button from '../../../Button/Button';
-import Image from '../../../../assets/md-19.jpg';
 import moment from 'moment';
 import { request } from '../../../AxiosTest/config'; // config.js
 import { v4 as uuidv4 } from 'uuid';
+import { MessageContext } from '../../../../globalState/index';
 
 const Schedule = ({ user, sessions, setSessions }) => {
-  const styles = {
-    backgroundImage: `url(${Image})`,
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    width: '50px',
-    height: '50px',
-  };
-
+  const { setFlashMessage } = useContext(MessageContext);
   const handleAccept = async () => {
     // try {
     //   const id
@@ -39,8 +31,12 @@ const Schedule = ({ user, sessions, setSessions }) => {
           );
           setSessions(sorted);
         } catch (e) {
-          console.log(e);
-          // spread the error
+          setFlashMessage({
+            message: `Something went wrong - ${e.message}`,
+            type: 'error',
+            icon: 'alert',
+          });
+          return null;
         }
       };
       getSessions();

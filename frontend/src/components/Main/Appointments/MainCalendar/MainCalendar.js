@@ -1,12 +1,12 @@
 // prettier-ignore
 
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { MessageContext } from '../../../../globalState/index';
 
-import { RRule } from 'rrule';
 const localizer = momentLocalizer(moment);
 
 const mapToRBCFormat = e => {
@@ -54,6 +54,7 @@ const MainCalendar = ({
   setDoctorAvailability,
   doctorAvailability,
 }) => {
+  const { setFlashMessage } = useContext(MessageContext);
   const [currentDay, setCurrentDay] = useState(moment().toDate());
 
   useEffect(() => {
@@ -81,14 +82,10 @@ const MainCalendar = ({
         (moment(end).isSameOrAfter(unavailabilities[el].start) &&
           moment(start).isSameOrBefore(unavailabilities[el].start))
       ) {
-        alert(
-          "Appointments cannot overlap with your doctor's unavailability or exisiting time slot"
-        );
-        setClientFormState({
-          ...clientFormState,
-          errors: [
-            'Appointments cannot overlap with your unavailability or an exisiting time slot',
-          ],
+        setFlashMessage({
+          message: `Appointments cannot overlap with your unavailability or an exisiting time slot`,
+          type: 'error',
+          icon: 'alert',
         });
         return null;
       }
@@ -118,8 +115,8 @@ const MainCalendar = ({
             startTime: start,
             endTime: end,
             sessionDuration: moment(end).diff(start, 'minutes').toString(),
-            errors: [],
           });
+          setFlashMessage(null);
         } else {
           setUnavailabilities([
             ...unavailabilities,
@@ -135,13 +132,24 @@ const MainCalendar = ({
             startTime: start,
             endTime: end,
             sessionDuration: moment(end).diff(start, 'minutes').toString(),
-            errors: [],
           });
+
+          setFlashMessage(null);
         }
       } else if (!name && moment(end).diff(start, 'minutes') <= 60) {
-        alert('Please enter your name for the appointment');
+        setFlashMessage({
+          message: `Please enter your name for the appointment`,
+          type: 'error',
+          icon: 'alert',
+        });
+        return null;
       } else {
-        alert('Please only select an appoitnment time between 30 and 60 mins');
+        setFlashMessage({
+          message: `Please only select an appoitnment time between 30 and 60 mins`,
+          type: 'error',
+          icon: 'alert',
+        });
+        return null;
       }
     }
   };
@@ -160,12 +168,10 @@ const MainCalendar = ({
         (moment(end).isSameOrAfter(unavailabilities[el].start) &&
           moment(start).isSameOrBefore(unavailabilities[el].start))
       ) {
-        alert('Unavailabilities cannot overlap with exisiting time slot');
-        setDoctorAvailability({
-          ...doctorAvailability,
-          errors: [
-            "Appointments cannot overlap with your doctor's unavailability or exisiting time slot",
-          ],
+        setFlashMessage({
+          message: `Unavailabilities can\`t overlap`,
+          type: 'error',
+          icon: 'alert',
         });
         return null;
       }
@@ -198,8 +204,9 @@ const MainCalendar = ({
                 title: unavailability,
               },
             ],
-            errors: [],
           });
+
+          setFlashMessage(null);
         } else {
           setUnavailabilities([
             ...unavailabilities,
@@ -211,13 +218,17 @@ const MainCalendar = ({
           ]);
         }
       } else if (!unavailability && moment(end).diff(start, 'minutes') <= 60) {
-        alert('Please enter an unavailability title');
+        setFlashMessage({
+          message: `Please enter an unavailability title`,
+          type: 'error',
+          icon: 'alert',
+        });
+        return null;
       }
     }
   };
 
   const handleShowMonday = () => {
-    const monday = 1;
     const today = moment().isoWeekday();
 
     if (today === 6) {
@@ -237,7 +248,12 @@ const MainCalendar = ({
       event.title.toLowerCase() === 'unavailable' ||
       event.title.toLowerCase() === 'lunch break'
     ) {
-      alert('unavailable');
+      setFlashMessage({
+        message: `unavailable`,
+        type: 'error',
+        icon: 'alert',
+      });
+      return null;
     } else {
       console.log('hello world');
     }
@@ -256,7 +272,13 @@ const MainCalendar = ({
             onNavigate={date => setCurrentDay(date)}
             onSelectEvent={event => handleSelectedEvent(event)}
             onSelectSlot={e =>
-              !_.isEmpty(selectedDoctor) && handleSelectClient(e)
+              !_.isEmpty(selectedDoctor)
+                ? handleSelectClient(e)
+                : setFlashMessage({
+                    message: `Please select a doctor first`,
+                    type: 'error',
+                    icon: 'alert',
+                  })
             }
             selectable="ignoreEvents"
             ignoreEvents
@@ -265,7 +287,6 @@ const MainCalendar = ({
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"
-            defaultDate={moment().toDate()}
             localizer={localizer}
             defaultView="work_week"
             views={['day', 'work_week']}
@@ -311,7 +332,6 @@ const MainCalendar = ({
             events={unavailabilities.map(mapToRBCFormat)}
             startAccessor="start"
             endAccessor="end"
-            defaultDate={moment().toDate()}
             localizer={localizer}
             defaultView="work_week"
             views={['day', 'work_week']}

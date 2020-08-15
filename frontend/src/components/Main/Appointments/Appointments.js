@@ -5,8 +5,11 @@ import { v4 } from 'uuid';
 import moment from 'moment';
 import _ from 'lodash';
 import omitDeep from 'omit-deep-lodash';
-import { AuthContext } from '../../../globalState/index';
-import { DoctorListContext } from '../../../globalState/index';
+import {
+  DoctorListContext,
+  AuthContext,
+  MessageContext,
+} from '../../../globalState/index';
 import { request } from '../../AxiosTest/config';
 import { updateProfile } from '../../AxiosTest/userRoutes';
 import { round, convertUTC } from './helpers';
@@ -21,8 +24,6 @@ export const renderUnavailabilities = (doctor, cb) => {
   } else {
     selectedDoctorUnavailabilites = doctor;
   }
-
-  // const selectedDoctorUnavailabilites = doctor.doctorInfo.workSchedule;
 
   // Separate lunch break
   const lunchBreakStart = selectedDoctorUnavailabilites.lunchBreakStart;
@@ -84,7 +85,7 @@ export const convertUnavailabilitiesToRRule = unavailabilitiesArr => {
     // if modifier is not 3 or 2 e.g weekly or daily, it is therefore a one-off unavailability
     // for now these events are set with a modifier of 0
     const until =
-      parseInt(el.modifier) === 3 || parseInt(el.modifier) == 2
+      parseInt(el.modifier) === 3 || parseInt(el.modifier) === 2
         ? convertUTC(moment(el.endDateTime).add(1, 'year').toDate())
         : convertUTC(moment(el.endDateTime).toDate());
 
@@ -142,7 +143,6 @@ export const convertLunchBreakRruleToCalendarDates = (
 
 const Appointments = () => {
   const handleShowMonday = () => {
-    const monday = 1;
     const today = moment().isoWeekday();
 
     if (today === 6) {
@@ -157,6 +157,7 @@ const Appointments = () => {
   };
 
   const { user, setUser } = useContext(AuthContext);
+  const { setFlashMessage } = useContext(MessageContext);
   const { doctorList } = useContext(DoctorListContext);
   const [unavailabilities, setUnavailabilities] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -169,7 +170,6 @@ const Appointments = () => {
     startTime: round(moment(), moment.duration(30, 'minutes'), 'ceil').toDate(),
     endTime: '',
     sessionDuration: '',
-    errors: [],
   });
   const [doctorAvailability, setDoctorAvailability] = useState({
     openingTime: handleShowMonday().set({ hour: 5, minutes: 0 }).toDate(),
@@ -185,7 +185,6 @@ const Appointments = () => {
         modifier: RRule.WEEKLY,
       },
     ],
-    errors: [],
   });
 
   // Actions
@@ -225,22 +224,19 @@ const Appointments = () => {
     //validations - no empty or dodgy fields
 
     if (checkEmptyDateFields('unavailableDateTimes')) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: [
-          'Please fill in all fields and only include valid dates and times',
-        ],
+      setFlashMessage({
+        message: `Please fill in all date fields correctly`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
     if (checkValidSubDateFields('unavailableDateTimes')) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: [
-          'Please select a valid start/end date time for your unavailability',
-        ],
+      setFlashMessage({
+        message: `Please select a valid start/end date time for your unavailability`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
@@ -251,13 +247,11 @@ const Appointments = () => {
       !moment(doctorAvailability.lunchBreakStart).isValid() ||
       !moment(doctorAvailability.lunchBreakEnd).isValid()
     ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: [
-          'Please fill in all fields and only include valid dates and times',
-        ],
+      setFlashMessage({
+        message: `Please fill in all fields and only include valid dates and times`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
@@ -267,11 +261,11 @@ const Appointments = () => {
         doctorAvailability.openingTime
       )
     ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid closing time'],
+      setFlashMessage({
+        message: `Please select a valid closing time`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
@@ -280,11 +274,11 @@ const Appointments = () => {
         doctorAvailability.closingTime
       )
     ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid opening time'],
+      setFlashMessage({
+        message: `Please select a valid opening time`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
@@ -293,11 +287,11 @@ const Appointments = () => {
         doctorAvailability.lunchBreakEnd
       )
     ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid lunch break start time'],
+      setFlashMessage({
+        message: `Please select a valid lunch break start time`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
@@ -306,11 +300,11 @@ const Appointments = () => {
         doctorAvailability.lunchBreakStart
       )
     ) {
-      setDoctorAvailability({
-        ...doctorAvailability,
-        errors: ['Please select a valid lunch break end time'],
+      setFlashMessage({
+        message: `Please select a valid lunch break end time`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
@@ -321,7 +315,7 @@ const Appointments = () => {
       },
     };
 
-    delete unavailabilityObj.doctorInfo.workSchedule.errors;
+    // delete unavailabilityObj.doctorInfo.workSchedule.errors;
     delete unavailabilityObj.doctorInfo.rating;
 
     try {
@@ -335,16 +329,19 @@ const Appointments = () => {
       setUser(sanitizedData);
     } catch (err) {
       console.log(err);
-      setUser({
-        ...user,
-        errors: [`Something went wrong, ${err.message}`],
+      setFlashMessage({
+        message: `Something went wrong, ${err.message}`,
+        type: 'error',
+        icon: 'alert',
       });
+      return null;
     }
   };
 
   const handleSelect = (e, key) => {
     const id = e.target.selectedOptions[0].id;
     const doctor = doctorList.find(el => el._id === id);
+    setFlashMessage(null);
     setClientFormState({
       ...clientFormState,
       [key]: `Dr. ${doctor.firstName} ${doctor.lastName}`,
@@ -362,17 +359,19 @@ const Appointments = () => {
       !clientFormState.doctor ||
       !clientFormState.sessionDuration
     ) {
-      setClientFormState({
-        ...clientFormState,
-        errors: ['Please fill in all fields'],
+      setFlashMessage({
+        message: `Please fill in all fields`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (moment(clientFormState.startTime).isSameOrBefore(moment())) {
-      setClientFormState({
-        ...clientFormState,
-        errors: ["session booking start time can't be in the past"],
+      setFlashMessage({
+        message: `session booking start time can't be in the past`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
@@ -382,9 +381,10 @@ const Appointments = () => {
         moment(clientFormState.startTime)
       )
     ) {
-      setClientFormState({
-        ...clientFormState,
-        errors: ["session booking start time can't be in the past"],
+      setFlashMessage({
+        message: `session booking start time can't be in the past`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
@@ -408,10 +408,12 @@ const Appointments = () => {
         activeTab: 'schedule',
       });
     } catch (error) {
-      setClientFormState({
-        ...clientFormState,
-        errors: [`something went wrong ${error}`],
+      setFlashMessage({
+        message: `something went wrong ${error.message}`,
+        type: 'error',
+        icon: 'alert',
       });
+      return null;
     }
   };
 
@@ -449,9 +451,10 @@ const Appointments = () => {
   };
 
   const handleUnavailableDateChange = (el, i, key, date, timeBlock) => {
+    setFlashMessage(null);
+
     setDoctorAvailability({
       ...doctorAvailability,
-      errors: [],
       [key]: doctorAvailability[key].map((element, index) => {
         if (index === i) {
           element[timeBlock] = date;
@@ -462,9 +465,10 @@ const Appointments = () => {
   };
 
   const handleUnavailabilityModifiers = (e, i, key) => {
+    setFlashMessage(null);
+
     setDoctorAvailability({
       ...doctorAvailability,
-      errors: [],
       [key]: doctorAvailability[key].map((element, index) => {
         if (index === i) {
           element['modifier'] = e.target.value;
@@ -531,15 +535,16 @@ const Appointments = () => {
             handleShowMonday={handleShowMonday}
           />
         </section>
-        <MainCalendar
-          user={user}
-          doctorAvailability={doctorAvailability}
-          unavailabilities={unavailabilities}
-          setUnavailabilities={setUnavailabilities}
-          doctorList={doctorList}
-          doctorAvailability={doctorAvailability}
-          setDoctorAvailability={setDoctorAvailability}
-        />
+        {tabState.activeTab === 'availability' && (
+          <MainCalendar
+            user={user}
+            unavailabilities={unavailabilities}
+            setUnavailabilities={setUnavailabilities}
+            doctorList={doctorList}
+            doctorAvailability={doctorAvailability}
+            setDoctorAvailability={setDoctorAvailability}
+          />
+        )}
       </div>
     );
   };
@@ -565,16 +570,17 @@ const Appointments = () => {
             handleShowMonday={handleShowMonday}
           />
         </section>
-        <MainCalendar
-          user={user}
-          clientFormState={clientFormState}
-          unavailabilities={unavailabilities}
-          doctorList={doctorList}
-          selectedDoctor={selectedDoctor}
-          setUnavailabilities={setUnavailabilities}
-          setClientFormState={setClientFormState}
-          clientFormState={clientFormState}
-        />
+        {tabState.activeTab === 'availability' && (
+          <MainCalendar
+            user={user}
+            unavailabilities={unavailabilities}
+            doctorList={doctorList}
+            selectedDoctor={selectedDoctor}
+            setUnavailabilities={setUnavailabilities}
+            setClientFormState={setClientFormState}
+            clientFormState={clientFormState}
+          />
+        )}
       </div>
     );
   };

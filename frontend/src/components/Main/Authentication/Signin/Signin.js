@@ -14,15 +14,14 @@ const Signin = () => {
   });
 
   const { setUser } = useContext(AuthContext);
-  const { flashMessage, setFlashMessage } = useContext(MessageContext);
+  const { setFlashMessage } = useContext(MessageContext);
 
   const onValueChange = (e, key) => {
+    setFlashMessage(null);
     setFormState({
       ...formState,
       [key]: e.target.value,
     });
-
-    setFlashMessage(null);
   };
 
   const handleEnterKey = e => {

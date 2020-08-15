@@ -5,7 +5,6 @@ import { navigate } from '@reach/router';
 import {
   url,
   request,
-  JWTHeader,
   JSONHeader,
   newUserClient,
   newUserDoctor,

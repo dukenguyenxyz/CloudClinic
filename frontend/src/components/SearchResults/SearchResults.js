@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import DoctorListItem from '../Home/DoctorListItem/DoctorListItem';
 
 const SearchResults = () => {
-  const { searchValue, setSearchValue } = useContext(SearchContext);
+  const { searchValue } = useContext(SearchContext);
   const { doctorList } = useContext(DoctorListContext);
   const [searchResults, setSearchResults] = useState([]);
 
@@ -17,7 +17,7 @@ const SearchResults = () => {
       });
       setSearchResults(searchDoctorResults);
     }
-  }, [searchValue]);
+  }, [searchValue, doctorList]);
 
   return (
     <div>

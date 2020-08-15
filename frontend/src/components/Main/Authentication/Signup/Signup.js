@@ -5,7 +5,6 @@ import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import '../Form/Form.scss';
 import Button from '../../../Button/Button';
-import { v4 as uuidv4 } from 'uuid';
 import { signUpUser } from '../../../AxiosTest/userRoutes';
 
 const Signup = () => {
@@ -617,6 +616,8 @@ const Signup = () => {
             </div>
           </div>
         );
+      default:
+        return null;
     }
   };
 

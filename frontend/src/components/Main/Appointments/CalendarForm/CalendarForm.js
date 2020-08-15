@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { MessageContext } from '../../../../globalState/index';
 import DatePicker from 'react-datepicker';
 import { Clock, Calendar } from 'react-feather';
 import _ from 'lodash';
@@ -37,6 +38,8 @@ const CalendarForm = ({
   setSessions,
   handleShowMonday,
 }) => {
+  const { setFlashMessage } = useContext(MessageContext);
+
   let handleColor = time => {
     return time.getHours() > 12 ? 'text-success' : 'text-error';
   };
@@ -118,13 +121,14 @@ const CalendarForm = ({
                               ? moment(doctorAvailability.openingTime).toDate()
                               : null
                           }
-                          onChange={date =>
+                          onChange={date => {
                             setDoctorAvailability({
                               ...doctorAvailability,
-                              errors: [],
                               openingTime: moment(date).toDate(),
-                            })
-                          }
+                            });
+
+                            setFlashMessage(null);
+                          }}
                           showTimeSelect
                           showTimeSelectOnly
                           placeholder="Opening Time"
@@ -147,13 +151,14 @@ const CalendarForm = ({
                               ? moment(doctorAvailability.closingTime).toDate()
                               : null
                           }
-                          onChange={date =>
+                          onChange={date => {
                             setDoctorAvailability({
                               ...doctorAvailability,
-                              errors: [],
+
                               closingTime: moment(date).toDate(),
-                            })
-                          }
+                            });
+                            setFlashMessage(null);
+                          }}
                           showTimeSelect
                           showTimeSelectOnly
                           placeholder="Opening Time"
@@ -191,12 +196,13 @@ const CalendarForm = ({
                                 ).toDate()
                               : null
                           }
-                          onChange={date =>
+                          onChange={date => {
                             setDoctorAvailability({
                               ...doctorAvailability,
                               lunchBreakStart: moment(date).toDate(),
-                            })
-                          }
+                            });
+                            setFlashMessage(null);
+                          }}
                           showTimeSelect
                           showTimeSelectOnly
                           minTime={moment().hours(10).minutes(0)._d}
@@ -219,12 +225,13 @@ const CalendarForm = ({
                                 ).toDate()
                               : null
                           }
-                          onChange={date =>
+                          onChange={date => {
                             setDoctorAvailability({
                               ...doctorAvailability,
                               lunchBreakEnd: moment(date).toDate(),
-                            })
-                          }
+                            });
+                            setFlashMessage(null);
+                          }}
                           showTimeSelect
                           showTimeSelectOnly
                           minTime={moment().hours(10).minutes(0)._d}
@@ -475,17 +482,6 @@ const CalendarForm = ({
                   )}
                 </div>
               </div>
-              <div className="auth-error-wrapper">
-                <ul>
-                  {doctorAvailability &&
-                    doctorAvailability.errors &&
-                    doctorAvailability.errors.map((errorMessage, i) => (
-                      <li key={i} className="auth-error-message">
-                        {errorMessage}
-                      </li>
-                    ))}
-                </ul>
-              </div>
               <div className="form-button-wrapper">
                 <Button
                   action="Confirm"
@@ -643,15 +639,6 @@ const CalendarForm = ({
                     </span>
                   </div>
                 </fieldset>
-              </div>
-              <div className="auth-error-wrapper">
-                <ul>
-                  {clientFormState.errors.map((errorMessage, i) => (
-                    <li key={i} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
               </div>
               <div className="form-button-wrapper">
                 <Button

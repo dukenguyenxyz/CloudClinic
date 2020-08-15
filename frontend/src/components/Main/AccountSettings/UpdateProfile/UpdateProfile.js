@@ -3,7 +3,6 @@ import AuthInput from '../../Authentication/Form/AuthInput/AuthInput';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
 import Button from '../../../Button/Button';
-import languages from '../../Authentication/Form/languages';
 import { navigate } from '@reach/router';
 import { AuthContext } from '../../../../globalState/index';
 import { updateProfile } from '../../../AxiosTest/userRoutes';
@@ -16,13 +15,11 @@ import Card from '../../../Card/Card';
 const UpdateProfile = () => {
   const { user, setUser } = useContext(AuthContext);
   const sexOptions = ['male', 'female'];
-  const titleOptions = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Mx', 'Rev', 'Sir'];
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
 
   const [uploadedImage, setUploadedImage] = useState({});
   const [imgSrc, setImgSrc] = useState(null);
-  const [loadingState, setLoadingState] = useState('');
 
   const sanitizeForm = () => {
     const formFormRequest = Object.assign({}, user);
@@ -88,16 +85,6 @@ const UpdateProfile = () => {
     });
   };
 
-  const onNestedArrValueChange = (e, key, i, subKey) => {
-    const targetObject = user[key];
-    targetObject[subKey][i] = e.target.value;
-
-    setUser({
-      ...user,
-      [key]: targetObject,
-    });
-  };
-
   const onNestedArrObjValueChange = (e, key, subKey, i, objKey) => {
     const targetObject = user[key];
     targetObject[subKey][i][objKey] = e.target.value;
@@ -111,16 +98,6 @@ const UpdateProfile = () => {
   const handleRemoveClick = (key, i, subKey) => {
     const targetObject = user[key];
     targetObject[subKey].splice(i, 1);
-    setUser({
-      ...user,
-      [key]: targetObject,
-    });
-  };
-
-  const handleAddClick = (key, subKey) => {
-    const targetObject = user[key];
-    targetObject[subKey].push('');
-
     setUser({
       ...user,
       [key]: targetObject,
@@ -359,9 +336,6 @@ const UpdateProfile = () => {
       try {
         const responseFile = await request.post('/uploads', fd, {
           onUploadProgress: progressEvent => {
-            setLoadingState(
-              `${Math.round(progressEvent.loaded / progressEvent.total) * 100}`
-            );
             console.log(
               'Upload Progress: ' +
                 Math.round(progressEvent.loaded / progressEvent.total) * 100
@@ -385,18 +359,6 @@ const UpdateProfile = () => {
       }
     }
   };
-
-  const previewImage = {
-    // backgroundImage: uploadedImage ? `url(${uploadedImage})` : null,
-    backgroundImage: `url(${uploadedImage})`,
-  };
-
-  // useEffect(() => {
-
-  //   const previewImage = {
-  //     backgroundImage: `url(${uploadedImage})`,
-  //   };
-  // }, [uploadedImage]);
 
   if (user) {
     return (
@@ -444,8 +406,9 @@ const UpdateProfile = () => {
                   </div>
                   <div className="preview-container">
                     <div className="progress"></div>
-                    {/* <div className="preview" style={previewImage} /> */}
-                    {imgSrc ? <img className="preview" src={imgSrc} /> : null}
+                    {imgSrc ? (
+                      <img className="preview" src={imgSrc} alt="" />
+                    ) : null}
                   </div>
                 </div>
               </form>
