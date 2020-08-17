@@ -13,6 +13,7 @@ import moment from 'moment';
 
 import Schedule from '../Schedule/Schedule';
 import { RRule } from 'rrule';
+import DoctorSelect from './DoctorSelect/DoctorSelect';
 
 const CalendarForm = ({
   clientFormState,
@@ -30,7 +31,6 @@ const CalendarForm = ({
   handleDoctorAvailabilitySubmit,
   doctorList,
   handleSubmit,
-  unavailabilities,
   selectedDoctor,
   tabState,
   setTabState,
@@ -358,7 +358,7 @@ const CalendarForm = ({
                                     value={RRule.WEEKLY} // RRule.WEEKLY
                                     checked={
                                       doctorAvailability.unavailableDateTimes[i]
-                                        .modifier == RRule.WEEKLY
+                                        .modifier === RRule.WEEKLY
                                     }
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
@@ -380,7 +380,7 @@ const CalendarForm = ({
                                     value={RRule.DAILY} // RRule.DAILY
                                     checked={
                                       doctorAvailability.unavailableDateTimes[i]
-                                        .modifier == RRule.DAILY
+                                        .modifier === RRule.DAILY
                                     }
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
@@ -400,7 +400,7 @@ const CalendarForm = ({
                                     value={0} // One off event
                                     checked={
                                       doctorAvailability.unavailableDateTimes[i]
-                                        .modifier == 0
+                                        .modifier === 0
                                     }
                                     onChange={e =>
                                       handleUnavailabilityModifiers(
@@ -553,16 +553,19 @@ const CalendarForm = ({
                 <h1>Make an appointment</h1>
               </div>
               <div>
-                <AuthSelect
-                  value={clientFormState.doctor}
-                  placeholder="Doctor"
-                  type="text"
-                  icon="userPlus"
-                  directive="doctor"
-                  options={doctorList}
-                  onValueChange={e => handleSelect(e, 'doctor')}
-                  doctorList={doctorList}
-                />
+                {/*                 
+                  <AuthSelect
+                    value={clientFormState.doctor}
+                    placeholder="Doctor"
+                    type="text"
+                    icon="userPlus"
+                    directive="doctor"
+                    options={doctorList}
+                    onValueChange={e => handleSelect(e, 'doctor')}
+                    doctorList={doctorList}
+                  /> */}
+                <DoctorSelect />
+
                 <h4>Select an appointment date and time</h4>
                 <div className="react-datepicker-master-wrapper">
                   <Clock color="#212429" size={14} />
@@ -586,15 +589,16 @@ const CalendarForm = ({
                         selectedDoctor.doctorInfo.workSchedule.closingTime
                       ).toDate()
                     }
-                    onChange={date =>
+                    onChange={date => {
                       setClientFormState({
                         ...clientFormState,
                         startTime: date,
                         endTime: moment(date)
                           .add(clientFormState.sessionDuration, 'minutes')
                           .toDate(),
-                      })
-                    }
+                      });
+                      setFlashMessage(null);
+                    }}
                     timeClassName={handleColor}
                     filterDate={isWeekday}
                     dateFormat="MMMM d, h:mm aa"

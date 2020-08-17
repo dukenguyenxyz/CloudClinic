@@ -219,7 +219,7 @@ const MainCalendar = ({
         }
       } else if (!unavailability && moment(end).diff(start, 'minutes') <= 60) {
         setFlashMessage({
-          message: `Please enter an unavailability title`,
+          message: `Please enter a title for your unavailability`,
           type: 'error',
           icon: 'alert',
         });
@@ -243,19 +243,22 @@ const MainCalendar = ({
   };
 
   const handleSelectedEvent = event => {
-    console.log(event);
-    if (
-      event.title.toLowerCase() === 'unavailable' ||
-      event.title.toLowerCase() === 'lunch break'
-    ) {
+    if (event.title.toLowerCase() === 'unavailable') {
       setFlashMessage({
-        message: `unavailable`,
+        message: `Unavailable`,
         type: 'error',
         icon: 'alert',
       });
       return null;
-    } else {
-      console.log('hello world');
+    }
+
+    if (event.title.toLowerCase() === 'lunch break') {
+      setFlashMessage({
+        message: `Lunch Break`,
+        type: 'notification',
+        icon: 'notification',
+      });
+      return null;
     }
   };
 

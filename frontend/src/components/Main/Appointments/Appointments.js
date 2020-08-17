@@ -85,7 +85,7 @@ export const convertUnavailabilitiesToRRule = unavailabilitiesArr => {
     // if modifier is not 3 or 2 e.g weekly or daily, it is therefore a one-off unavailability
     // for now these events are set with a modifier of 0
     const until =
-      parseInt(el.modifier) === 3 || parseInt(el.modifier) === 2
+      el.modifier === 3 || el.modifier === 2
         ? convertUTC(moment(el.endDateTime).add(1, 'year').toDate())
         : convertUTC(moment(el.endDateTime).toDate());
 
@@ -341,6 +341,7 @@ const Appointments = () => {
   const handleSelect = (e, key) => {
     const id = e.target.selectedOptions[0].id;
     const doctor = doctorList.find(el => el._id === id);
+    console.log('here');
     setFlashMessage(null);
     setClientFormState({
       ...clientFormState,
@@ -369,7 +370,7 @@ const Appointments = () => {
 
     if (moment(clientFormState.startTime).isSameOrBefore(moment())) {
       setFlashMessage({
-        message: `session booking start time can't be in the past`,
+        message: `Session booking start time can't be in the past`,
         type: 'error',
         icon: 'alert',
       });
@@ -382,7 +383,7 @@ const Appointments = () => {
       )
     ) {
       setFlashMessage({
-        message: `session booking start time can't be in the past`,
+        message: `Session booking start time can't be in the past`,
         type: 'error',
         icon: 'alert',
       });
@@ -409,7 +410,7 @@ const Appointments = () => {
       });
     } catch (error) {
       setFlashMessage({
-        message: `something went wrong ${error.message}`,
+        message: `Something went wrong ${error.message}`,
         type: 'error',
         icon: 'alert',
       });
@@ -448,6 +449,7 @@ const Appointments = () => {
         endTime,
       });
     }
+    setFlashMessage(null);
   };
 
   const handleUnavailableDateChange = (el, i, key, date, timeBlock) => {
@@ -471,7 +473,7 @@ const Appointments = () => {
       ...doctorAvailability,
       [key]: doctorAvailability[key].map((element, index) => {
         if (index === i) {
-          element['modifier'] = e.target.value;
+          element['modifier'] = +e.target.value;
         }
         return element;
       }),

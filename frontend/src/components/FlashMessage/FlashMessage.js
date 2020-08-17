@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { MessageContext } from '../../globalState/index';
 import './FlashMessage.scss';
-import { AlertCircle } from 'react-feather';
+import { AlertCircle, Bell } from 'react-feather';
 
 const FlashMessage = () => {
   const { flashMessage } = useContext(MessageContext);
@@ -12,6 +12,8 @@ const FlashMessage = () => {
     switch (flashMessage.icon) {
       case 'alert':
         return <AlertCircle size={iconSize} />;
+      case 'notification':
+        return <Bell size={iconSize} />;
       default:
         return '';
     }

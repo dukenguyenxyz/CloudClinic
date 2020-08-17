@@ -33,7 +33,7 @@ const MobileMenu = ({ isOpen, user, setIsOpen }) => {
       transition: { ease: 'easeInOut', duration: 1 },
     },
     show: {
-      height: '85%',
+      height: '100%',
       transition: { ease: 'easeInOut', duration: 1 },
     },
     out: {

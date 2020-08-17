@@ -4,16 +4,17 @@ import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import countries from '../../Authentication/Form/countries';
 import Button from '../../../Button/Button';
 import { navigate } from '@reach/router';
-import { AuthContext } from '../../../../globalState/index';
+import { AuthContext, MessageContext } from '../../../../globalState/index';
 import { updateProfile } from '../../../AxiosTest/userRoutes';
 import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 import { request } from '../../../AxiosTest/config.js';
 import { signOutAll, deleteProfile } from '../../../AxiosTest/userRoutes.js';
 import Card from '../../../Card/Card';
 
 const UpdateProfile = () => {
   const { user, setUser } = useContext(AuthContext);
+  const { flashMessage, setFlashMessage } = useContext(MessageContext);
+
   const sexOptions = ['male', 'female'];
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   const severityOptions = [1, 2, 3, 4, 5];
@@ -51,10 +52,6 @@ const UpdateProfile = () => {
       delete formFormRequest._id;
     }
 
-    if (formFormRequest.errors) {
-      delete formFormRequest.errors;
-    }
-
     if (formFormRequest.createdAt) {
       delete formFormRequest.createdAt;
     }
@@ -67,9 +64,9 @@ const UpdateProfile = () => {
   };
 
   const onValueChange = (e, key) => {
+    setFlashMessage(null);
     setUser({
       ...user,
-      errors: [],
       [key]: e.target.value,
     });
   };
@@ -77,10 +74,9 @@ const UpdateProfile = () => {
   const onNestedValueChange = (e, key, subKey) => {
     const targetObject = user[key];
     targetObject[subKey] = e.target.value;
-
+    setFlashMessage(null);
     setUser({
       ...user,
-      errors: [],
       [key]: targetObject,
     });
   };
@@ -120,9 +116,10 @@ const UpdateProfile = () => {
 
       for (let i = 0; i < inputValues.length; i++) {
         if (!inputValues[i]) {
-          setUser({
-            ...user,
-            errors: ['Please enter all fields'],
+          setFlashMessage({
+            message: `Please enter all fields`,
+            type: 'error',
+            icon: 'alert',
           });
           return null;
         }
@@ -158,26 +155,28 @@ const UpdateProfile = () => {
       !user.address.postcode ||
       !user.password
     ) {
-      setUser({
-        ...user,
-        errors: ['Please fill in all the inputs'],
+      setFlashMessage({
+        message: `Please fill in all the inputs`,
+        type: 'error',
+        icon: 'alert',
       });
-
       return null;
     }
 
     if (user.password !== user.confirmPassword) {
-      setUser({
-        ...user,
-        errors: ['Passwords do not match'],
+      setFlashMessage({
+        message: `Passwords do not match`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (!emailRegex.test(user.email)) {
-      setUser({
-        ...user,
-        errors: ['Please enter a valid email'],
+      setFlashMessage({
+        message: `Please enter a valid email`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
@@ -188,16 +187,19 @@ const UpdateProfile = () => {
       checkEmptyInputFields('medication');
 
       if (!user.clientInfo.bloodType) {
-        setUser({
-          ...user,
-          errors: ['Please enter your blood type'],
+        setFlashMessage({
+          message: `Please enter your blood type`,
+          type: 'error',
+          icon: 'alert',
         });
+        return null;
       }
 
       if (!user.clientInfo.weight) {
-        setUser({
-          ...user,
-          errors: ['Please enter your weight'],
+        setFlashMessage({
+          message: `Please enter your weight`,
+          type: 'error',
+          icon: 'alert',
         });
         return null;
       }
@@ -205,11 +207,10 @@ const UpdateProfile = () => {
 
     if (uploadedImage) {
       if (uploadedImage.size > 1000000) {
-        setUser({
-          ...user,
-          errors: [
-            `'${uploadedImage.name}' is too large, please pick a file under 1mb`,
-          ],
+        setFlashMessage({
+          message: `'${uploadedImage.name}' is too large, please pick a file under 1mb`,
+          type: 'error',
+          icon: 'alert',
         });
         return null;
       } else {
@@ -227,16 +228,18 @@ const UpdateProfile = () => {
             setUser(responseUpdateUser.data);
           } catch (err) {
             console.log(err);
-            setUser({
-              ...user,
-              errors: ['network error'],
+            setFlashMessage({
+              message: `Something went wrong - ${err.message}`,
+              type: 'error',
+              icon: 'alert',
             });
+            return null;
           }
         }
       }
     }
-    // console.log(user);
-    if (user.errors.length === 0) {
+
+    if (flashMessage === null) {
       const updateData = async () => {
         const cloneForm = sanitizeForm();
         // console.log(cloneForm);
@@ -247,15 +250,16 @@ const UpdateProfile = () => {
           navigate('/profile');
         } catch (err) {
           console.log(err);
-          setUser({
-            ...user,
-            errors: ['network error'],
+          setFlashMessage({
+            message: `Something went wrong - ${err.message}`,
+            type: 'error',
+            icon: 'alert',
           });
+          return null;
         }
       };
       updateData();
     }
-    // console.log(user.errors);
   };
 
   const handleSignOutAll = async () => {
@@ -311,19 +315,19 @@ const UpdateProfile = () => {
       Object.keys(uploadedImage).length === 0 &&
       uploadedImage.constructor === Object
     ) {
-      setUser({
-        ...user,
-        errors: ['Please include an image'],
+      setFlashMessage({
+        message: `Please include an image`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
 
     if (uploadedImage.size > 1000000) {
-      setUser({
-        ...user,
-        errors: [
-          `'${uploadedImage.name}' is too large, please pick a file under 1mb`,
-        ],
+      setFlashMessage({
+        message: `'${uploadedImage.name}' is too large, please pick a file under 1mb`,
+        type: 'error',
+        icon: 'alert',
       });
       return null;
     }
@@ -352,10 +356,12 @@ const UpdateProfile = () => {
         navigate('/profile');
       } catch (err) {
         console.log(err);
-        setUser({
-          ...user,
-          errors: ['network error'],
+        setFlashMessage({
+          message: `something went wrong - ${err.message}`,
+          type: 'error',
+          icon: 'alert',
         });
+        return null;
       }
     }
   };
@@ -846,17 +852,6 @@ const UpdateProfile = () => {
                   }
                 />
               </>
-            )}
-            {user.errors && (
-              <div className="auth-error-wrapper">
-                <ul>
-                  {user.errors.map(errorMessage => (
-                    <li key={uuidv4()} className="auth-error-message">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             )}
             <Button
               action="Update"
