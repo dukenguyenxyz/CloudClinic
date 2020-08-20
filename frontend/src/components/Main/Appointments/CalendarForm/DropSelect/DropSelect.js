@@ -129,7 +129,7 @@ const DropSelect = ({ doctorList }) => {
                 onKeyUp={e => handleKeyPress(e, index)}
               >
                 <div>
-                  <img src={doctor.img} alt="" />
+                  <img src={doctor.profileImage} alt="" />
                   <span>{`Dr. ${doctor.firstName} ${doctor.lastName}`}</span>
                 </div>
               </Option>
@@ -141,12 +141,9 @@ const DropSelect = ({ doctorList }) => {
   );
 };
 
-const selectWidth = 300;
-const padding = 16;
-const labelContainerWidth = selectWidth - padding * 2;
-
 const DropSelectWrapper = styled.div`
   position: relative;
+  overflow: hidden;
 `;
 
 const Select = styled.div`
@@ -155,11 +152,11 @@ const Select = styled.div`
   height: ${props => (props.isOpen ? '24rem' : '3rem')};
   transition: height 0.5s ease-in-out;
   overflow: scroll;
-  width: ${selectWidth + 'px'};
   background: #ffffff;
   cursor: pointer;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  margin-bottom: 20px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -168,10 +165,11 @@ const Select = styled.div`
 const LabelContainer = styled.div`
   position: absolute;
   display: flex;
+  height: 2.9rem;
   align-items: center;
   justify-content: space-between;
-  width: ${labelContainerWidth + 'px'};
-  padding: ${'0' + ' ' + padding + 'px'};
+  width: 99.6%;
+  padding: 0 16px;
   background-color: #fff;
   overflow: hidden;
   border-top-left-radius: 4px;
@@ -183,6 +181,7 @@ const LabelContainer = styled.div`
 const Input = styled.input`
   outline: none;
   border: none;
+  width: inherit;
   ::placeholder {
     text-transform: uppercase;
     font-size: 12px;
