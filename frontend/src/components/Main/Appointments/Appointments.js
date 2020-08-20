@@ -85,7 +85,7 @@ export const convertUnavailabilitiesToRRule = unavailabilitiesArr => {
     // if modifier is not 3 or 2 e.g weekly or daily, it is therefore a one-off unavailability
     // for now these events are set with a modifier of 0
     const until =
-      el.modifier === 3 || el.modifier === 2
+      +el.modifier === 3 || +el.modifier === 2
         ? convertUTC(moment(el.endDateTime).add(1, 'year').toDate())
         : convertUTC(moment(el.endDateTime).toDate());
 
@@ -341,7 +341,6 @@ const Appointments = () => {
   const handleSelect = (e, key) => {
     const id = e.target.selectedOptions[0].id;
     const doctor = doctorList.find(el => el._id === id);
-    console.log('here');
     setFlashMessage(null);
     setClientFormState({
       ...clientFormState,

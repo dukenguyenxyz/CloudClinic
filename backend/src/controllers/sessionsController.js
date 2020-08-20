@@ -19,6 +19,8 @@ exports.viewSessions = async (req, res) => {
       ? await Session.find({ doctor: req.user.id })
       : await Session.find({ client: req.user.id });
 
+    console.log(sessions);
+
     const getSessions = async () => {
       let sanitizedSessions;
       if (!req.user.isDoctor) {
@@ -39,7 +41,7 @@ exports.viewSessions = async (req, res) => {
       return Promise.all(sanitizedSessions);
     };
 
-    if (sessions) {
+    if (sessions.length > 0) {
       const awaitedSessions = await getSessions();
       console.log(awaitedSessions);
 

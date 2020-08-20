@@ -8,12 +8,10 @@ import '../../Authentication/Form/Form.scss';
 import './CalendarForm.scss';
 import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import Button from '../../../Button/Button';
-
 import moment from 'moment';
-
 import Schedule from '../Schedule/Schedule';
 import { RRule } from 'rrule';
-import DoctorSelect from './DoctorSelect/DoctorSelect';
+import DropSelect from './DropSelect/DropSelect';
 
 const CalendarForm = ({
   clientFormState,
@@ -509,6 +507,8 @@ const CalendarForm = ({
   };
 
   const ClientForm = () => {
+    console.log(doctorList);
+
     return (
       <div className="tab-wrapper">
         <div className="tab-container">
@@ -553,19 +553,18 @@ const CalendarForm = ({
                 <h1>Make an appointment</h1>
               </div>
               <div>
-                {/*                 
-                  <AuthSelect
-                    value={clientFormState.doctor}
-                    placeholder="Doctor"
-                    type="text"
-                    icon="userPlus"
-                    directive="doctor"
-                    options={doctorList}
-                    onValueChange={e => handleSelect(e, 'doctor')}
-                    doctorList={doctorList}
-                  /> */}
-                <DoctorSelect />
+                {/* <AuthSelect
+                  value={clientFormState.doctor}
+                  placeholder="Doctor"
+                  type="text"
+                  icon="userPlus"
+                  directive="doctor"
+                  options={doctorList}
+                  onValueChange={e => handleSelect(e, 'doctor')}
+                  doctorList={doctorList}
+                /> */}
 
+                <DropSelect doctorList={doctorList} />
                 <h4>Select an appointment date and time</h4>
                 <div className="react-datepicker-master-wrapper">
                   <Clock color="#212429" size={14} />

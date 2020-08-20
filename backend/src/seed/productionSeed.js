@@ -44,7 +44,7 @@ const generateUser = (sex) => {
     lastName,
     sex,
     dateOfBirth: moment()
-      .subtract(_.random(20, 50), 'years')
+      .subtract(_.random(30, 70), 'years')
       .format('YYYY-MM-DD'),
     phoneNumber: faker.phone.phoneNumber(),
     address: {
@@ -55,7 +55,11 @@ const generateUser = (sex) => {
       country: faker.address.country(),
       postcode: parseInt(faker.address.zipCode(), 10),
     },
-    email: faker.internet.email(firstName, lastName, 'gmail.com'),
+    email: faker.internet.email(
+      firstName.toLowerCase(),
+      lastName.toLowerCase(),
+      'gmail.com'
+    ),
     password: '123456789',
   };
 };

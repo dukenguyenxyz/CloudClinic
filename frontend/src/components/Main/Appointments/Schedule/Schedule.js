@@ -25,18 +25,21 @@ const Schedule = ({ user, sessions, setSessions }) => {
       const getSessions = async () => {
         try {
           const response = await request.get('sessions');
-
           const sorted = response.data.sort((a, b) =>
             moment(a.createDate).isBefore(moment(b.createDate)) ? 1 : -1
           );
           setSessions(sorted);
         } catch (e) {
-          setFlashMessage({
-            message: `Something went wrong - ${e.message}`,
-            type: 'error',
-            icon: 'alert',
-          });
-          return null;
+          if (e.response.status === 404) {
+            return null;
+          } else {
+            setFlashMessage({
+              message: `Something went wrong - ${e.response.data.error}`,
+              type: 'error',
+              icon: 'alert',
+            });
+            return null;
+          }
         }
       };
       getSessions();
