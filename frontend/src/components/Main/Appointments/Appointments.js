@@ -338,13 +338,13 @@ const Appointments = () => {
     }
   };
 
-  const handleSelect = (e, key) => {
-    const id = e.target.selectedOptions[0].id;
+  const handleSelect = (e, selDoctor) => {
+    const id = selDoctor._id;
     const doctor = doctorList.find(el => el._id === id);
     setFlashMessage(null);
     setClientFormState({
       ...clientFormState,
-      [key]: `Dr. ${doctor.firstName} ${doctor.lastName}`,
+      doctor: `Dr. ${doctor.firstName} ${doctor.lastName}`,
     });
 
     setSelectedDoctor(doctor);
@@ -562,6 +562,7 @@ const Appointments = () => {
             user={user}
             doctorList={doctorList}
             selectedDoctor={selectedDoctor}
+            setSelectedDoctor={setSelectedDoctor}
             handleSubmit={handleSubmit}
             unavailabilities={unavailabilities}
             sessions={sessions}
@@ -569,6 +570,7 @@ const Appointments = () => {
             tabState={tabState}
             setTabState={setTabState}
             handleShowMonday={handleShowMonday}
+            setUnavailabilities={setUnavailabilities}
           />
         </section>
         {tabState.activeTab === 'availability' && (

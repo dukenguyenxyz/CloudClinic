@@ -3,19 +3,24 @@ import { motion, useCycle } from 'framer-motion';
 import styled from 'styled-components';
 import Icon from './Icon';
 
-const DropSelect = ({ doctorList }) => {
+const DropSelect = ({
+  doctorList,
+  handleSelect,
+  setClientFormState,
+  clientFormState,
+  setSelectedDoctor,
+  setUnavailabilities,
+}) => {
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const [doctors] = useState(null);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [pull, cyclePull] = useCycle({ translateX: 61 }, { translateX: 16 });
 
   useEffect(() => {
-    if (selectedDoctor) {
+    if (clientFormState.doctor) {
       cyclePull();
     }
-  }, [selectedDoctor]);
+  }, [clientFormState.doctor]);
 
   useEffect(() => {
     const searchDoctorResults = doctorList.filter(doctor => {
@@ -23,14 +28,7 @@ const DropSelect = ({ doctorList }) => {
       return doctorName.includes(searchValue.toLowerCase());
     });
     setSearchResults(searchDoctorResults);
-  }, [searchValue, doctors]);
-
-  const selectDoctor = index => {
-    setSelectedDoctor(
-      `Dr. ${searchResults[index].firstName} ${searchResults[index].lastName}`
-    );
-    setOpen(!open);
-  };
+  }, [searchValue]);
 
   const handleOpen = e => {
     if (e.currentTarget.dataset.tag === undefined) setOpen(!open);
@@ -38,40 +36,14 @@ const DropSelect = ({ doctorList }) => {
 
   const hanldeRemoveDoctor = e => {
     e.stopPropagation();
-    setSelectedDoctor(null);
+    setClientFormState({
+      ...clientFormState,
+      doctor: '',
+    });
+    setSelectedDoctor({});
+    setUnavailabilities([]);
     setSearchValue('');
     cyclePull();
-  };
-
-  const handleKeyPress = (e, index) => {
-    if (
-      (e.keyCode === 8 || e.keyCode === 46) &&
-      e.currentTarget.tabIndex === 1 &&
-      !searchValue
-    ) {
-      setSearchValue(''); // reset search value
-      setSelectedDoctor(null); // delete key to remove doctor
-    }
-
-    if ((e.keyCode === 8 || e.keyCode === 46) && searchValue) {
-      setSelectedDoctor(null); // delete key to remove doctor
-    }
-
-    if (e.keyCode === 40 && e.currentTarget.tabIndex === 1) setOpen(!open); // open on down arrow
-    if (e.keyCode === 38 && e.currentTarget.tabIndex === 1 && open === true)
-      // close on up arrow
-      setOpen(false);
-    if (e.keyCode === 13 && open === true && typeof index === 'number') {
-      selectDoctor(index);
-      setTimeout(() => {
-        setSearchValue('');
-      }, 500);
-    }
-
-    if (e.keyCode === 27 && e.currentTarget.tabIndex > 1 && open === true) {
-      // escape key to close dropdown
-      setOpen(false);
-    }
   };
 
   const handleInputChange = e => {
@@ -92,11 +64,10 @@ const DropSelect = ({ doctorList }) => {
             id="select"
             onClick={e => handleOpen(e)}
             tabIndex={1}
-            onKeyUp={e => handleKeyPress(e)}
           >
             <Input
               placeholder="Select a doctor"
-              value={selectedDoctor ? selectedDoctor : searchValue}
+              value={searchValue || clientFormState.doctor}
               onChange={e => handleInputChange(e)}
               tabIndex={2}
             />
@@ -124,9 +95,12 @@ const DropSelect = ({ doctorList }) => {
             {searchResults.map((doctor, index) => (
               <Option
                 key={doctor.id}
-                onClick={() => selectDoctor(index)}
+                onClick={e => {
+                  handleSelect(e, doctor);
+                  setSearchValue('');
+                  setOpen(!open);
+                }}
                 tabIndex={index + 3}
-                onKeyUp={e => handleKeyPress(e, index)}
               >
                 <div>
                   <img src={doctor.profileImage} alt="" />
@@ -147,7 +121,7 @@ const DropSelectWrapper = styled.div`
 `;
 
 const Select = styled.div`
-  border: 1px solid #cccccc;
+  border: 1px solid #dde2e5;
   border-radius: 4px;
   height: ${props => (props.isOpen ? '24rem' : '3rem')};
   transition: height 0.5s ease-in-out;
@@ -195,7 +169,7 @@ const LabelControls = styled(motion.div)`
   svg {
     transition: color 0.15s ease-in-out;
     &:hover {
-      color: #cccccc;
+      color: #dde2e5;
     }
   }
 `;
@@ -210,7 +184,7 @@ const LabelButton = styled(motion.div)`
 const Divider = styled(motion.div)`
   height: 16px;
   width: 1px;
-  background: #cccccc;
+  background: #dde2e5;
   margin: 0 0.25rem;
 `;
 
@@ -219,8 +193,8 @@ const Chevron = styled.div`
   transform-origin: center;
   transform: ${props =>
     props.isOpen
-      ? 'translateY(-2px) rotate(-180deg)'
-      : 'translateY(2px) rotate(0deg)'};
+      ? 'translateY(-4px) rotate(-180deg)'
+      : 'translateY(4px) rotate(0deg)'};
 `;
 
 const OptionsContainer = styled.ul`
@@ -231,7 +205,7 @@ const Option = styled.li`
   display: flex;
   padding: 1rem;
   font-size: 14px;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid #dde2e5;
   background: #ffffff;
   cursor: pointer;
   align-items: center;

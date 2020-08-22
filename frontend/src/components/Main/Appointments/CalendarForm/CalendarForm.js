@@ -6,7 +6,7 @@ import _ from 'lodash';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../Authentication/Form/Form.scss';
 import './CalendarForm.scss';
-import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
+// import AuthSelect from '../../Authentication/Form/AuthSelect/AuthSelect';
 import Button from '../../../Button/Button';
 import moment from 'moment';
 import Schedule from '../Schedule/Schedule';
@@ -23,8 +23,10 @@ const CalendarForm = ({
   handleAddClick,
   handleRemoveClick,
   handleUnavailableDateChange,
+  setUnavailabilities,
   user,
   round,
+  setSelectedDoctor,
   handleUnavailabilityModifiers,
   handleDoctorAvailabilitySubmit,
   doctorList,
@@ -60,7 +62,6 @@ const CalendarForm = ({
   };
 
   const DoctorForm = () => {
-    // console.log(doctorAvailability);
     return (
       <div className="tab-wrapper">
         <div className="tab-container">
@@ -564,7 +565,14 @@ const CalendarForm = ({
                   doctorList={doctorList}
                 /> */}
 
-                <DropSelect doctorList={doctorList} />
+                <DropSelect
+                  doctorList={doctorList}
+                  setClientFormState={setClientFormState}
+                  handleSelect={handleSelect}
+                  clientFormState={clientFormState}
+                  setSelectedDoctor={setSelectedDoctor}
+                  setUnavailabilities={setUnavailabilities}
+                />
                 <h4>Select an appointment date and time</h4>
                 <div className="react-datepicker-master-wrapper">
                   <Clock color="#212429" size={14} />
