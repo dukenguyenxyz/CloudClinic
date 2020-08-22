@@ -16,12 +16,6 @@ const Navbar = ({ location }) => {
     { width: '208px' }
   );
 
-  // useEffect(() => {
-  //   return () => {
-  //     cycleMenu();
-  //   };
-  // }, [isOpen]);
-
   useEffect(() => {
     window.addEventListener('resize', handleResize);
   });

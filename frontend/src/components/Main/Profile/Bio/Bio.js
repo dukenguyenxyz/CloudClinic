@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../../../Card/Card';
 import moment from 'moment';
+import placeholder from '../../../../assets/placeholder.jpg';
 
 const Bio = ({ user }) => {
   const age = moment().diff(moment(user.dateOfBirth), 'years');
@@ -9,11 +10,11 @@ const Bio = ({ user }) => {
     <Card>
       <div className="user-profile-container">
         <div className="user-header-wrapper">
-          <img
-            className="avatar"
-            src={user.profileImage ? user.profileImage : null}
-            alt=""
-          />
+          {user && user.profileImage ? (
+            <img className="avatar" src={user.profileImage} alt="" />
+          ) : (
+            <img className="avatar" src={placeholder} alt="" />
+          )}
           <div className="name">
             {user.isDoctor && 'Dr.'} {user.firstName}
             <br />

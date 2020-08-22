@@ -46,13 +46,13 @@ function App() {
 
   const headerVariants = {
     initial: {
-      opacity: 0,
+      opacity: 1,
     },
     in: {
       opacity: 1,
     },
     out: {
-      opacity: 0,
+      opacity: 1,
     },
   };
 

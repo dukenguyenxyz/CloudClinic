@@ -508,8 +508,6 @@ const CalendarForm = ({
   };
 
   const ClientForm = () => {
-    console.log(doctorList);
-
     return (
       <div className="tab-wrapper">
         <div className="tab-container">

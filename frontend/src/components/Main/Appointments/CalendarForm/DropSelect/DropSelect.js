@@ -55,6 +55,16 @@ const DropSelect = ({
     }
   };
 
+  const handleKeyDown = e => {
+    if (e.keyCode === 8) {
+      setClientFormState({
+        ...clientFormState,
+        doctor: '',
+      });
+      cyclePull();
+    }
+  };
+
   return (
     <div>
       <DropSelectWrapper>
@@ -70,6 +80,7 @@ const DropSelect = ({
               value={searchValue || clientFormState.doctor}
               onChange={e => handleInputChange(e)}
               tabIndex={2}
+              onKeyDown={e => handleKeyDown(e)}
             />
             <LabelControls
               animate={pull}

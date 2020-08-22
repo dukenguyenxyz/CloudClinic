@@ -3,6 +3,7 @@ import './Profile.scss';
 import { LogOut } from 'react-feather';
 import { motion } from 'framer-motion';
 import { signOut } from '../../AxiosTest/userRoutes';
+import placeholder from '../../../assets/placeholder.jpg';
 
 const Profile = ({ isOpen, user, setUser }) => {
   const name = {
@@ -33,10 +34,18 @@ const Profile = ({ isOpen, user, setUser }) => {
     }
   };
 
+  if (user && user.profileImage === undefined) {
+    console.log('hello');
+  }
+
   return (
     <div className="navbar-profile-wrapper">
       <div className="profile">
-        <img className="avatar" src={user ? user.profileImage : null} alt="" />
+        {user && user.profileImage ? (
+          <img className="avatar" src={user.profileImage} alt="" />
+        ) : (
+          <img className="avatar" src={placeholder} alt="" />
+        )}
         <motion.span
           className="name"
           variants={name}

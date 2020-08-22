@@ -70,7 +70,7 @@ const Schedule = ({ user, sessions, setSessions }) => {
                         <div className="name">{`${session.user.firstName} ${session.user.lastName}`}</div>
                         <div className="booking">
                           {`${moment(session.startTime).format(
-                            'ddd Mo MMM hh:mm'
+                            'ddd Do MMM hh:mm'
                           )} - ${moment(session.endTime).format('hh:mm A')}`}
                         </div>
                       </div>
@@ -125,7 +125,7 @@ const Schedule = ({ user, sessions, setSessions }) => {
                         <div className="name">{`Dr. ${session.user.firstName} ${session.user.lastName}`}</div>
                         <div className="booking">
                           {`${moment(session.startTime).format(
-                            'ddd Mo MMM hh:mm'
+                            'ddd Do MMM hh:mm'
                           )} - ${moment(session.endTime).format('hh:mm A')}`}
                         </div>
                       </div>
