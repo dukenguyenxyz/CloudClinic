@@ -43,7 +43,7 @@
     "faker": "^4.1.0",
     "jest": "^26.1.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "moment": "^2.27.0",
     "mongoose": "^5.9.22",
     "mongoose-seed": "^0.6.0",
