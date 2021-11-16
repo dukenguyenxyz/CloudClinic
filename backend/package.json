@@ -23,7 +23,7 @@
   "homepage": "https://github.com/dukeraphaelng/CloudClinic#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "aws-sdk": "^2.723.0",
+    "aws-sdk": "^2.814.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
